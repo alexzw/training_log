@@ -1134,7 +1134,7 @@
 <!-- SIDEBAR -->
 <div class="sidebar">
   <div class="sidebar-header">
-    <div class="logo">
+    <div class="logo" onclick="logoutToLockScreen()" style="cursor:pointer;" title="返回登入畫面">
       <div class="logo-icon">
         <svg viewBox="0 0 20 20" fill="none">
           <path d="M10 2.5C10 2.5 6 5 6 9.5C6 11.5 7.5 13 10 13C12.5 13 14 11.5 14 9.5C14 5 10 2.5 10 2.5Z" fill="white" opacity="0.9"/>
@@ -1160,7 +1160,7 @@
       <div class="user-chevron">▼</div>
     </div>
     <div class="user-dropdown" id="userDropdown">
-      <div class="user-dropdown-header">用戶列表</div>
+      <div class="user-dropdown-header">切換帳號（需驗證密碼）</div>
       <div class="user-list" id="userList"></div>
       <hr class="user-drop-divider">
       <div class="user-add-row">
@@ -1202,6 +1202,11 @@
     <a onclick="navigate('goals', this)">
       <span class="nav-icon"><span>🎯</span></span>
       <span>目標追蹤</span>
+    </a>
+    <div class="nav-section-label">帳號</div>
+    <a onclick="navigate('settings', this)">
+      <span class="nav-icon"><span>⚙️</span></span>
+      <span>用戶設定</span>
     </a>
   </nav>
 
@@ -1271,6 +1276,16 @@
             <div class="bmi-marker" id="bmi-marker" style="left:50%"></div>
           </div>
           <div class="bmi-labels"><span>偏瘦 &lt;18.5</span><span>正常 18.5–24</span><span>過重 24–27</span><span>肥胖 &gt;27</span></div>
+          <div style="margin-top:14px;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:12px;color:var(--text3);white-space:nowrap;">身高</span>
+            <input type="number" id="bmi-height-input" class="form-input" placeholder="輸入身高 cm"
+              min="100" max="250"
+              style="max-width:130px;padding:7px 10px;font-size:13px;"
+              onkeydown="if(event.key==='Enter') saveBmiHeight()"
+              oninput="updateBmiHeightPreview()">
+            <button class="btn btn-primary" onclick="saveBmiHeight()" style="padding:7px 14px;font-size:12px;border-radius:8px;white-space:nowrap;">儲存</button>
+            <span id="bmi-height-saved" style="font-size:11px;color:var(--green);opacity:0;transition:opacity 0.3s;">已儲存 ✓</span>
+          </div>
         </div>
         <div class="stat-card" style="grid-column:2;">
           <div class="stat-label">本月消耗熱量</div>
@@ -1308,16 +1323,13 @@
             <div class="form-group">
               <label class="form-label">日期</label>
               <input type="date" class="form-input" id="log-date">
+              <input type="hidden" id="log-height">
             </div>
             <div class="form-group">
               <label class="form-label">今日體重（kg）</label>
               <input type="number" step="0.1" class="form-input" id="log-weight" placeholder="例：75.5">
             </div>
-            <div class="form-group">
-              <label class="form-label">身高（cm）<span style="color:var(--text3);font-weight:400;font-size:11px;"> 用於計算 BMI</span></label>
-              <input type="number" class="form-input" id="log-height" placeholder="例：175" min="100" max="250">
-            </div>
-            <div class="form-group">
+<div class="form-group">
               <label class="form-label">訓練類型</label>
               <select class="form-input" id="log-type">
                 <option value="">— 選擇類型 —</option>
@@ -1535,23 +1547,55 @@
       </div>
       <div id="goals-display"></div>
 
-      <!-- Password Settings -->
-      <div class="card" style="margin-top:20px;">
-        <div class="card-title">帳號安全設定</div>
-        <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">為你的帳號設定密碼，其他人無法未經授權查看你的資料。</div>
+    </div>
+
+
+    <!-- SETTINGS -->
+    <div class="page" id="page-settings">
+
+      <!-- Profile -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">個人資料</div>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+          <div class="user-avatar av-0" id="settings-avatar" style="width:52px;height:52px;font-size:20px;">?</div>
+          <div>
+            <div style="font-size:17px;font-weight:700;" id="settings-username">—</div>
+            <div style="font-size:12px;color:var(--text3);">目前登入帳號</div>
+          </div>
+        </div>
         <div class="form-group">
-          <label class="form-label">目前密碼（留空表示無密碼）</label>
-          <input type="password" class="form-input" id="pwd-current" placeholder="輸入目前密碼" maxlength="20">
+          <label class="form-label">身高（cm）<span style="font-weight:400;color:var(--text3);font-size:11px;"> 用於計算 BMI</span></label>
+          <div style="display:flex;gap:8px;">
+            <input type="number" class="form-input" id="settings-height" placeholder="例：175" min="100" max="250">
+            <button class="btn btn-primary" onclick="saveSettingsHeight()" style="padding:10px 18px;white-space:nowrap;">儲存</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">密碼安全</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:16px;">設定密碼後，每次登入需要輸入密碼才能進入你的帳號。</div>
+        <div class="form-group">
+          <label class="form-label">目前密碼</label>
+          <input type="password" class="form-input" id="settings-pwd-current" placeholder="無密碼請留空" maxlength="20">
         </div>
         <div class="form-group">
           <label class="form-label">新密碼</label>
-          <input type="password" class="form-input" id="pwd-new" placeholder="輸入新密碼（留空表示移除密碼）" maxlength="20">
+          <input type="password" class="form-input" id="settings-pwd-new" placeholder="新密碼（留空表示移除密碼）" maxlength="20">
         </div>
         <div class="form-group">
           <label class="form-label">確認新密碼</label>
-          <input type="password" class="form-input" id="pwd-confirm" placeholder="再次輸入新密碼" maxlength="20">
+          <input type="password" class="form-input" id="settings-pwd-confirm" placeholder="再次輸入新密碼" maxlength="20">
         </div>
-        <button class="btn btn-primary" onclick="changePassword()">更新密碼</button>
+        <button class="btn btn-primary" onclick="changePasswordFromSettings()">更新密碼</button>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="card">
+        <div class="card-title" style="color:var(--red);">危險區域</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">登出後將返回登入畫面，需要重新選擇帳號並輸入密碼。</div>
+        <button class="btn" style="background:var(--red-light);color:var(--red);border-radius:10px;" onclick="logoutToLockScreen()">登出此帳號</button>
       </div>
     </div>
 
@@ -1581,6 +1625,10 @@
   <div class="bottom-nav-item" onclick="mobileNavigate('goals',this)" data-page="goals">
     <span class="bottom-nav-icon">🎯</span>
     <span class="bottom-nav-label">目標</span>
+  </div>
+  <div class="bottom-nav-item" onclick="mobileNavigate('settings',this)" data-page="settings">
+    <span class="bottom-nav-icon">⚙️</span>
+    <span class="bottom-nav-label">設定</span>
   </div>
 </nav>
 
@@ -1841,7 +1889,7 @@ function renderUserList() {
   }
 
   el.innerHTML = users.map((u, i) => `
-    <div class="user-item ${u.id === currentUserId ? 'selected' : ''}" onclick="switchUser('${u.id}')">
+    <div class="user-item ${u.id === currentUserId ? 'selected' : ''}" onclick="requestSwitchUser('${u.id}')">
       <div class="user-item-avatar ${avatarClass(i)}">${initials(u.name)}</div>
       <div class="user-item-name">${u.name}</div>
       <span class="user-item-check">✓</span>
@@ -1954,6 +2002,7 @@ function renderPage(p) {
   if (p==='photos') renderPhotos();
   if (p==='plan') renderPlans();
   if (p==='goals') renderGoals();
+  if (p==='settings') renderSettingsPage();
 }
 
 // ── PRE-FILL HEIGHT ──
@@ -2220,6 +2269,96 @@ async function submitNewUser() {
   unlockApp(uid);
 }
 
+
+// ── BMI HEIGHT INLINE EDIT ──
+function saveBmiHeight() {
+  const val = parseFloat(document.getElementById('bmi-height-input').value);
+  if (!val || val < 100 || val > 250) { showToast('請輸入有效身高（100–250 cm）'); return; }
+  data.goals.height = val;
+  saveAndSync();
+  renderDashboard();
+  const saved = document.getElementById('bmi-height-saved');
+  saved.style.opacity = '1';
+  setTimeout(() => { saved.style.opacity = '0'; }, 2000);
+}
+
+function updateBmiHeightPreview() {
+  // live update BMI while typing
+  const val = parseFloat(document.getElementById('bmi-height-input').value);
+  if (val >= 100 && val <= 250) {
+    data.goals.height = val;
+    renderDashboard();
+  }
+}
+
+// ── SETTINGS PAGE ──
+function renderSettingsPage() {
+  const users = getUsers();
+  const user = users.find(u => u.id === currentUserId);
+  const idx = users.indexOf(user);
+  if (user) {
+    document.getElementById('settings-username').textContent = user.name;
+    document.getElementById('settings-avatar').textContent = initials(user.name);
+    document.getElementById('settings-avatar').className = 'user-avatar ' + avatarClass(idx);
+  }
+  const h = data.goals && data.goals.height;
+  if (h) document.getElementById('settings-height').value = h;
+  // clear password fields
+  ['settings-pwd-current','settings-pwd-new','settings-pwd-confirm'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+}
+
+function saveSettingsHeight() {
+  const val = parseFloat(document.getElementById('settings-height').value);
+  if (!val || val < 100 || val > 250) { showToast('請輸入有效身高'); return; }
+  data.goals.height = val;
+  saveAndSync();
+  showToast('✓ 身高已儲存，BMI 已更新');
+  // also update bmi-height-input on dashboard if visible
+  const bmiInput = document.getElementById('bmi-height-input');
+  if (bmiInput) bmiInput.value = val;
+}
+
+async function changePasswordFromSettings() {
+  const cur = document.getElementById('settings-pwd-current').value;
+  const nw = document.getElementById('settings-pwd-new').value;
+  const cf = document.getElementById('settings-pwd-confirm').value;
+  if (nw !== cf) { showToast('兩次密碼不一致'); return; }
+  const valid = await verifyPassword(currentUserId, cur);
+  if (!valid) { showToast('目前密碼錯誤'); return; }
+  await setUserPassword(currentUserId, nw);
+  ['settings-pwd-current','settings-pwd-new','settings-pwd-confirm'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  showToast(nw ? '✓ 密碼已更新' : '✓ 密碼已移除');
+}
+
+// ── LOGOUT → LOCK SCREEN ──
+function logoutToLockScreen() {
+  // hide app, show lock screen
+  document.getElementById('lockScreen').classList.remove('hidden');
+  renderLockUserList();
+  showLockUserSelect();
+}
+
+// ── SWITCH USER WITH PASSWORD ──
+// Called from sidebar user switcher — goes through lock screen
+function requestSwitchUser(uid) {
+  if (uid === currentUserId) { closeUserDropdown(); return; }
+  closeUserDropdown();
+  // Show lock screen targeting that user
+  document.getElementById('lockScreen').classList.remove('hidden');
+  selectLockUser(uid);
+}
+
+function requestSwitchUserMobile(uid) {
+  if (uid === currentUserId) { closeMobileUserModal(); return; }
+  closeMobileUserModal();
+  document.getElementById('lockScreen').classList.remove('hidden');
+  selectLockUser(uid);
+}
+
 // ── DASHBOARD ──
 function renderDashboard() {
   const ws = data.weights.sort((a,b) => b.date.localeCompare(a.date));
@@ -2273,6 +2412,9 @@ function renderDashboard() {
         </div>`).join('');
 
   drawChart('weightChart', ws.slice(0,30).reverse(), 560, 160);
+  // pre-fill height input
+  const hInp = document.getElementById('bmi-height-input');
+  if (hInp && data.goals && data.goals.height) hInp.value = data.goals.height;
 
   // BMI
   const height = data.goals && data.goals.height;
@@ -2663,7 +2805,7 @@ function renderMobileUserList() {
     return;
   }
   el.innerHTML = users.map((u, i) => `
-    <div class="modal-user-item ${u.id === currentUserId ? 'selected' : ''}" onclick="switchUserMobile('${u.id}')">
+    <div class="modal-user-item ${u.id === currentUserId ? 'selected' : ''}" onclick="requestSwitchUserMobile('${u.id}')">
       <div class="modal-user-avatar ${avatarClass(i)}">${initials(u.name)}</div>
       <span style="flex:1">${u.name}</span>
       ${u.id === currentUserId ? '<span class="modal-check">✓</span>' : `<button class="modal-del" onclick="event.stopPropagation();deleteUser('${u.id}')">刪除</button>`}
