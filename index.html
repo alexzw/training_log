@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Training Log</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f5f7;
+    --surface: #ffffff;
+    --surface2: #f5f5f7;
+    --surface3: #e8e8ed;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.12);
+    --accent: #0071e3;
+    --accent-hover: #0077ed;
+    --accent-light: rgba(0,113,227,0.08);
+    --red: #ff3b30;
+    --red-light: rgba(255,59,48,0.1);
+    --green: #30d158;
+    --green-light: rgba(48,209,88,0.1);
+    --orange: #ff9f0a;
+    --orange-light: rgba(255,159,10,0.1);
+    --text: #1d1d1f;
+    --text2: #6e6e73;
+    --text3: #a1a1a6;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --radius: 14px;
+    --radius-sm: 10px;
+    --radius-xs: 8px;
+    --sidebar-w: 240px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    padding: 0;
+  }
+
+  .sidebar-header {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(145deg, #1d1d1f 0%, #3a3a3c 100%);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  .logo-icon svg { width: 20px; height: 20px; }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+
+  .logo-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.2px;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: var(--text3);
+    font-weight: 400;
+    letter-spacing: 0.1px;
+  }
+
+  nav {
+    padding: 12px 10px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .nav-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text3);
+    letter-spacing: 0.5px;
+    padding: 10px 10px 4px;
+    text-transform: uppercase;
+  }
+
+  nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: var(--radius-xs);
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    margin-bottom: 2px;
+  }
+
+  nav a:hover { background: var(--surface3); color: var(--text); }
+
+  nav a.active {
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  nav a .nav-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+    background: var(--surface3);
+    transition: background 0.15s;
+  }
+
+  nav a.active .nav-icon { background: var(--accent); filter: none; }
+  nav a.active .nav-icon span { filter: brightness(10); }
+
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  /* ─── MAIN ─── */
+  .main {
+    margin-left: var(--sidebar-w);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─── TOPBAR ─── */
+  .topbar {
+    position: sticky;
+    top: 0;
+    background: rgba(245,245,247,0.9);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border);
+    padding: 0 36px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+  }
+
+  .topbar-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+
+  .topbar-date {
+    font-size: 13px;
+    color: var(--text3);
+    font-weight: 400;
+  }
+
+  .content { padding: 28px 36px; flex: 1; }
+
+  /* ─── PAGES ─── */
+  .page { display: none; animation: fadeUp 0.25s ease; }
+  .page.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text2);
+    letter-spacing: 0.1px;
+    margin-bottom: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ─── STATS GRID ─── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 20px 22px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .stat-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+
+  .stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text3);
+    margin-bottom: 6px;
+    letter-spacing: 0.1px;
+  }
+
+  .stat-value {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .stat-unit { font-size: 13px; color: var(--text3); margin-bottom: 6px; }
+
+  .stat-change {
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .stat-change.up { color: var(--red); }
+  .stat-change.down { color: var(--green); }
+  .stat-change.neutral { color: var(--text3); }
+
+  /* ─── DASHBOARD GRID ─── */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 16px;
+  }
+
+  /* ─── CHART ─── */
+  .weight-chart { height: 180px; }
+  .chart-svg { width: 100%; height: 100%; overflow: visible; }
+
+  /* ─── FORM ─── */
+  .log-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .form-group { margin-bottom: 14px; }
+
+  .form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+    margin-bottom: 6px;
+  }
+
+  .form-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-xs);
+    color: var(--text);
+    padding: 10px 13px;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    appearance: none;
+  }
+
+  .form-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,113,227,0.15);
+    background: var(--surface);
+  }
+
+  textarea.form-input { resize: vertical; min-height: 90px; line-height: 1.5; }
+  select.form-input { cursor: pointer; }
+
+  /* ─── BUTTONS ─── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 20px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    border-radius: 980px;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-primary:hover { background: var(--accent-hover); box-shadow: 0 2px 8px rgba(0,113,227,0.3); }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-secondary {
+    background: var(--surface3);
+    color: var(--text);
+  }
+
+  .btn-secondary:hover { background: #dcdce0; }
+
+  .btn-danger {
+    background: var(--red-light);
+    color: var(--red);
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+
+  .btn-danger:hover { background: rgba(255,59,48,0.18); }
+
+  /* ─── PHOTO UPLOAD ─── */
+  .photo-upload-area {
+    border: 2px dashed var(--border2);
+    border-radius: var(--radius-sm);
+    padding: 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    background: var(--surface2);
+  }
+
+  .photo-upload-area:hover { border-color: var(--accent); background: var(--accent-light); }
+  .photo-upload-area input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .photo-item {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background: var(--surface3);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+
+  .photo-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+  .photo-item:hover img { transform: scale(1.04); }
+
+  .photo-item .photo-date {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.55));
+    padding: 20px 10px 8px;
+    font-size: 11px;
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .photo-item .photo-delete {
+    position: absolute;
+    top: 7px; right: 7px;
+    background: rgba(255,59,48,0.85);
+    color: white;
+    border: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 12px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+
+  .photo-item:hover .photo-delete { display: flex; }
+
+  /* ─── WORKOUT ENTRIES ─── */
+  .workout-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .workout-entry {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: start;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s;
+  }
+
+  .workout-entry:hover { box-shadow: var(--shadow); }
+
+  .workout-entry.rest { opacity: 0.7; }
+
+  .entry-date { font-size: 12px; color: var(--text3); margin-bottom: 4px; font-weight: 400; }
+
+  .entry-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+
+  .entry-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .entry-tag {
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .entry-tag.red { background: var(--red-light); color: var(--red); }
+  .entry-tag.green { background: var(--green-light); color: var(--green); }
+
+  .entry-exercises {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text2);
+    white-space: pre-line;
+    line-height: 1.6;
+  }
+
+  .entry-notes {
+    margin-top: 5px;
+    font-size: 13px;
+    color: var(--text3);
+    font-style: italic;
+  }
+
+  /* ─── PLAN CARDS ─── */
+  .plan-phases {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s, transform 0.2s;
+    position: relative;
+  }
+
+  .phase-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+
+  .phase-card.active-phase { border-color: var(--accent); border-width: 1.5px; }
+
+  .active-badge {
+    display: inline-flex;
+    align-items: center;
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .phase-name { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; margin-bottom: 4px; }
+  .phase-duration { font-size: 12px; color: var(--text3); margin-bottom: 14px; }
+
+  .phase-exercises { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+
+  .phase-exercises li {
+    font-size: 13px;
+    color: var(--text2);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .phase-exercises li::before {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-bar {
+    height: 5px;
+    background: var(--surface3);
+    border-radius: 10px;
+    margin-top: 14px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #34aadc);
+    border-radius: 10px;
+    transition: width 0.6s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  /* ─── GOAL CARDS ─── */
+  .goal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .goal-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+  .goal-meta { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+  .goal-circle { width: 70px; height: 70px; position: relative; flex-shrink: 0; }
+  .goal-circle svg { transform: rotate(-90deg); }
+
+  .goal-percent {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  /* ─── WEIGHT TABLE ─── */
+  .weight-table { width: 100%; border-collapse: collapse; }
+
+  .weight-table th {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text3);
+    text-align: left;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.2px;
+  }
+
+  .weight-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .weight-table tr:last-child td { border-bottom: none; }
+  .weight-table tbody tr:hover td { background: var(--surface2); }
+
+  /* ─── BADGES ─── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-orange { background: var(--orange-light); color: var(--orange); }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .badge-blue { background: var(--accent-light); color: var(--accent); }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: rgba(28,28,30,0.92);
+    backdrop-filter: blur(20px);
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 980px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), opacity 0.3s;
+    z-index: 10000;
+    opacity: 0;
+    white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  /* ─── SECTION TITLE ─── */
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  /* ─── EMPTY STATE ─── */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text3);
+    font-size: 14px;
+  }
+
+  .empty-state .empty-icon { font-size: 32px; margin-bottom: 10px; }
+
+  /* ─── SEGMENT CONTROL (filter) ─── */
+  .segment-control {
+    display: inline-flex;
+    background: var(--surface3);
+    border-radius: 9px;
+    padding: 3px;
+    gap: 2px;
+  }
+
+  .segment-control select {
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    outline: none;
+    border-radius: 7px;
+  }
+
+  .segment-control select:focus { background: var(--surface); }
+
+  /* ─── DIVIDER ─── */
+  hr.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 720px) {
+    :root { --sidebar-w: 64px; }
+    .sidebar-header { padding: 18px 14px; }
+    .logo-text, .nav-section-label, nav a span:not(.nav-icon), .sidebar-footer-text { display: none; }
+    nav a { justify-content: center; padding: 9px; }
+    .logo { justify-content: center; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .log-grid { grid-template-columns: 1fr; }
+    .content { padding: 20px; }
+    .topbar { padding: 0 20px; }
+  }
+
+  @media (max-width: 960px) and (min-width: 721px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .log-grid { grid-template-columns: 1fr; }
+    .content { padding: 20px 24px; }
+  }
+
+  @media (max-width: 600px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ─── CHART TOOLTIP ─── */
+  .chart-tooltip {
+    position: absolute;
+    background: rgba(28,28,30,0.88);
+    backdrop-filter: blur(12px);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  .chart-wrap { position: relative; }
+
+  /* ─── USER SWITCHER ─── */
+  .user-switcher {
+    padding: 10px 10px 6px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .user-current {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .user-current:hover { background: var(--surface3); }
+  .user-avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .user-info { flex: 1; min-width: 0; }
+  .user-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-hint { font-size: 11px; color: var(--text3); }
+  .user-chevron { color: var(--text3); font-size: 10px; flex-shrink: 0; transition: transform 0.2s; }
+  .user-switcher.open .user-chevron { transform: rotate(180deg); }
+
+  .user-dropdown {
+    position: absolute;
+    left: 10px; right: 10px; top: calc(100% - 2px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lg);
+    z-index: 200; overflow: hidden;
+    display: none;
+  }
+  .user-dropdown.open { display: block; animation: fadeUp 0.18s ease; }
+  .user-dropdown-header {
+    padding: 10px 14px 6px;
+    font-size: 11px; font-weight: 600; color: var(--text3);
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .user-list { max-height: 180px; overflow-y: auto; }
+  .user-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 14px; cursor: pointer; transition: background 0.12s;
+    font-size: 13px; font-weight: 500; color: var(--text);
+  }
+  .user-item:hover { background: var(--surface2); }
+  .user-item.selected { color: var(--accent); }
+  .user-item-avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  .user-item-name { flex: 1; }
+  .user-item-check { opacity: 0; color: var(--accent); font-size: 13px; }
+  .user-item.selected .user-item-check { opacity: 1; }
+  .user-item-del {
+    background: none; border: none; color: var(--text3);
+    cursor: pointer; font-size: 13px; padding: 2px 5px;
+    border-radius: 4px; opacity: 0; line-height: 1;
+  }
+  .user-item:hover .user-item-del { opacity: 1; }
+  .user-item:hover .user-item-check { opacity: 0; }
+  .user-item.selected:hover .user-item-check { opacity: 1; }
+  .user-drop-divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+  .user-add-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px 12px;
+  }
+  .user-add-input {
+    flex: 1; background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: 7px; padding: 7px 10px;
+    font-family: inherit; font-size: 13px; color: var(--text); outline: none;
+  }
+  .user-add-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0,113,227,0.15); }
+  .user-add-btn {
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 7px; padding: 7px 13px;
+    font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+  .user-add-btn:hover { background: var(--accent-hover); }
+  .av-0 { background: linear-gradient(135deg,#0071e3,#34aadc); }
+  .av-1 { background: linear-gradient(135deg,#30d158,#00b341); }
+  .av-2 { background: linear-gradient(135deg,#ff9f0a,#e06800); }
+  .av-3 { background: linear-gradient(135deg,#ff375f,#d4003e); }
+  .av-4 { background: linear-gradient(135deg,#bf5af2,#8e40c0); }
+  .av-5 { background: linear-gradient(135deg,#5ac8fa,#007aff); }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 20 20" fill="none">
+          <path d="M10 2.5C10 2.5 6 5 6 9.5C6 11.5 7.5 13 10 13C12.5 13 14 11.5 14 9.5C14 5 10 2.5 10 2.5Z" fill="white" opacity="0.9"/>
+          <path d="M7 13.5C7 13.5 7 16 10 17C13 16 13 13.5 13 13.5" stroke="white" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+          <line x1="10" y1="13" x2="10" y2="17" stroke="white" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-name">Training Log</span>
+        <span class="logo-sub">健身追蹤</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- USER SWITCHER -->
+  <div class="user-switcher" id="userSwitcher">
+    <div class="user-current" onclick="toggleUserDropdown()">
+      <div class="user-avatar av-0" id="currentAvatar">?</div>
+      <div class="user-info">
+        <div class="user-name" id="currentUserName">未選擇用戶</div>
+        <div class="user-hint">點擊切換用戶</div>
+      </div>
+      <div class="user-chevron">▼</div>
+    </div>
+    <div class="user-dropdown" id="userDropdown">
+      <div class="user-dropdown-header">用戶列表</div>
+      <div class="user-list" id="userList"></div>
+      <hr class="user-drop-divider">
+      <div class="user-add-row">
+        <input class="user-add-input" id="newUserInput" placeholder="輸入新用戶名稱" maxlength="20"
+          onkeydown="if(event.key==='Enter') addUser()">
+        <button class="user-add-btn" onclick="addUser()">新增</button>
+      </div>
+    </div>
+  </div>
+
+  <nav>
+    <div class="nav-section-label">主要</div>
+    <a class="active" onclick="navigate('dashboard', this)">
+      <span class="nav-icon"><span>📊</span></span>
+      <span>總覽</span>
+    </a>
+    <a onclick="navigate('log', this)">
+      <span class="nav-icon"><span>✏️</span></span>
+      <span>今日記錄</span>
+    </a>
+    <div class="nav-section-label">記錄</div>
+    <a onclick="navigate('history', this)">
+      <span class="nav-icon"><span>📋</span></span>
+      <span>訓練歷史</span>
+    </a>
+    <a onclick="navigate('weight', this)">
+      <span class="nav-icon"><span>⚖️</span></span>
+      <span>體重追蹤</span>
+    </a>
+    <a onclick="navigate('photos', this)">
+      <span class="nav-icon"><span>📷</span></span>
+      <span>身材照片</span>
+    </a>
+    <div class="nav-section-label">規劃</div>
+    <a onclick="navigate('plan', this)">
+      <span class="nav-icon"><span>🗓</span></span>
+      <span>訓練計劃</span>
+    </a>
+    <a onclick="navigate('goals', this)">
+      <span class="nav-icon"><span>🎯</span></span>
+      <span>目標追蹤</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <span class="sidebar-footer-text" id="sidebarDate"></span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="pageTitle">總覽</div>
+    <div class="topbar-date" id="headerDate"></div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">當前體重</div>
+          <div class="stat-value" id="dash-weight">—</div>
+          <div class="stat-unit">公斤</div>
+          <div class="stat-change neutral" id="dash-weight-change">尚無數據</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">距離目標</div>
+          <div class="stat-value" id="dash-remaining">—</div>
+          <div class="stat-unit">公斤</div>
+          <div class="stat-change neutral" id="dash-target-weight">未設定目標</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">本月訓練</div>
+          <div class="stat-value" id="dash-sessions">0</div>
+          <div class="stat-unit">次</div>
+          <div class="stat-change neutral">本月累計</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">連續訓練</div>
+          <div class="stat-value" id="dash-streak">0</div>
+          <div class="stat-unit">天</div>
+          <div class="stat-change neutral">保持節奏 💪</div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-title">體重趨勢（近 30 天）</div>
+          <div class="weight-chart chart-wrap">
+            <svg class="chart-svg" id="weightChart" viewBox="0 0 560 160" preserveAspectRatio="none"></svg>
+            <div class="chart-tooltip" id="chartTooltip"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">最近記錄</div>
+          <div class="workout-list" id="recent-logs" style="max-height:200px;overflow-y:auto;">
+            <div class="empty-state" style="padding:20px 0;">
+              <div class="empty-icon">📋</div>尚無記錄
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOG TODAY -->
+    <div class="page" id="page-log">
+      <div class="log-grid">
+        <div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">基本資訊</div>
+            <div class="form-group">
+              <label class="form-label">日期</label>
+              <input type="date" class="form-input" id="log-date">
+            </div>
+            <div class="form-group">
+              <label class="form-label">今日體重（kg）</label>
+              <input type="number" step="0.1" class="form-input" id="log-weight" placeholder="例：75.5">
+            </div>
+            <div class="form-group">
+              <label class="form-label">訓練類型</label>
+              <select class="form-input" id="log-type">
+                <option value="">— 選擇類型 —</option>
+                <option value="chest">胸部訓練</option>
+                <option value="back">背部訓練</option>
+                <option value="legs">腿部訓練</option>
+                <option value="shoulders">肩部訓練</option>
+                <option value="arms">手臂訓練</option>
+                <option value="core">核心訓練</option>
+                <option value="cardio">有氧訓練</option>
+                <option value="fullbody">全身訓練</option>
+                <option value="rest">休息日</option>
+              </select>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">訓練時間</div>
+            <div class="form-group">
+              <label class="form-label">開始</label>
+              <input type="time" class="form-input" id="log-start">
+            </div>
+            <div class="form-group">
+              <label class="form-label">結束</label>
+              <input type="time" class="form-input" id="log-end">
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">訓練內容</div>
+            <div class="form-group">
+              <label class="form-label">訓練動作（每行一個）</label>
+              <textarea class="form-input" id="log-exercises" placeholder="例：&#10;臥推 4×10 80kg&#10;啞鈴飛鳥 3×12 20kg&#10;繩索夾胸 3×15" style="min-height:110px;"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">備注 / 今日感受</label>
+              <textarea class="form-input" id="log-notes" placeholder="今天狀態如何？有什麼突破？" style="min-height:72px;"></textarea>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">今日照片（選填）</div>
+            <div class="photo-upload-area" id="logPhotoArea">
+              <input type="file" accept="image/*" id="log-photo" multiple onchange="handleLogPhoto(event)">
+              <div style="font-size:28px;margin-bottom:6px;">📷</div>
+              <div style="font-size:13px;color:var(--text3);">點擊上傳今日身材照片</div>
+            </div>
+            <div id="log-photo-previews" class="photo-grid"></div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="saveLog()">儲存今日記錄</button>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="page" id="page-history">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+        <div class="section-title" style="margin:0;">訓練歷史</div>
+        <div class="segment-control">
+          <select onchange="renderHistory(this.value)" id="history-filter">
+            <option value="all">全部類型</option>
+            <option value="chest">胸部</option>
+            <option value="back">背部</option>
+            <option value="legs">腿部</option>
+            <option value="shoulders">肩部</option>
+            <option value="arms">手臂</option>
+            <option value="core">核心</option>
+            <option value="cardio">有氧</option>
+            <option value="fullbody">全身</option>
+            <option value="rest">休息日</option>
+          </select>
+        </div>
+      </div>
+      <div class="workout-list" id="history-list">
+        <div class="empty-state"><div class="empty-icon">📋</div>尚無訓練記錄</div>
+      </div>
+    </div>
+
+    <!-- WEIGHT -->
+    <div class="page" id="page-weight">
+      <div class="log-grid" style="margin-bottom:18px;">
+        <div class="card">
+          <div class="card-title">設定目標體重</div>
+          <div class="form-group">
+            <label class="form-label">目標體重（kg）</label>
+            <input type="number" step="0.1" class="form-input" id="target-weight-input" placeholder="例：70.0">
+          </div>
+          <button class="btn btn-primary" onclick="setTargetWeight()">設定目標</button>
+        </div>
+        <div class="card">
+          <div class="card-title">新增體重記錄</div>
+          <div class="form-group">
+            <label class="form-label">日期</label>
+            <input type="date" class="form-input" id="weight-date-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">體重（kg）</label>
+            <input type="number" step="0.1" class="form-input" id="weight-value-input" placeholder="例：75.5">
+          </div>
+          <button class="btn btn-primary" onclick="addWeightRecord()">新增</button>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-title">體重趨勢</div>
+        <div class="weight-chart chart-wrap" style="height:200px;">
+          <svg class="chart-svg" id="weightChartFull" viewBox="0 0 760 200" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">體重記錄</div>
+        <table class="weight-table">
+          <thead>
+            <tr>
+              <th>日期</th><th>體重</th><th>變化</th><th>狀態</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="weight-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PHOTOS -->
+    <div class="page" id="page-photos">
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-title">上傳照片</div>
+        <div class="photo-upload-area">
+          <input type="file" accept="image/*" id="photo-upload" multiple onchange="handlePhotoUpload(event)">
+          <div style="font-size:34px;margin-bottom:8px;">📸</div>
+          <div style="font-size:14px;font-weight:500;color:var(--text2);">點擊或拖曳上傳</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:4px;">支援 JPG、PNG，可一次多選</div>
+        </div>
+      </div>
+      <div class="section-title">所有照片</div>
+      <div class="photo-grid" id="all-photos">
+        <div class="empty-state" style="grid-column:1/-1;">
+          <div class="empty-icon">📷</div>尚無照片
+        </div>
+      </div>
+    </div>
+
+    <!-- PLAN -->
+    <div class="page" id="page-plan">
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-title">新增訓練計劃</div>
+        <div class="log-grid">
+          <div>
+            <div class="form-group">
+              <label class="form-label">計劃名稱</label>
+              <input type="text" class="form-input" id="plan-name" placeholder="例：增肌期第一階段">
+            </div>
+            <div class="form-group">
+              <label class="form-label">開始日期</label>
+              <input type="date" class="form-input" id="plan-start">
+            </div>
+            <div class="form-group">
+              <label class="form-label">結束日期</label>
+              <input type="date" class="form-input" id="plan-end">
+            </div>
+          </div>
+          <div>
+            <div class="form-group">
+              <label class="form-label">計劃說明 / 訓練重點</label>
+              <textarea class="form-input" id="plan-desc" placeholder="描述這個階段的目標和訓練內容..." style="min-height:140px;"></textarea>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="addPlan()">新增計劃</button>
+      </div>
+      <div class="section-title">所有計劃</div>
+      <div class="plan-phases" id="plan-list">
+        <div class="empty-state" style="grid-column:1/-1;">
+          <div class="empty-icon">🗓</div>尚無訓練計劃
+        </div>
+      </div>
+    </div>
+
+    <!-- GOALS -->
+    <div class="page" id="page-goals">
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-title">設定目標</div>
+        <div class="log-grid">
+          <div>
+            <div class="form-group">
+              <label class="form-label">目標體重（kg）</label>
+              <input type="number" step="0.1" class="form-input" id="goal-weight" placeholder="例：70.0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">目標達成日期</label>
+              <input type="date" class="form-input" id="goal-date">
+            </div>
+          </div>
+          <div>
+            <div class="form-group">
+              <label class="form-label">每週目標訓練次數</label>
+              <input type="number" class="form-input" id="goal-sessions" placeholder="例：4" min="1" max="7">
+            </div>
+            <div class="form-group">
+              <label class="form-label">其他目標描述</label>
+              <input type="text" class="form-input" id="goal-desc" placeholder="例：深蹲 100kg、體脂 15%">
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="saveGoals()">儲存目標</button>
+      </div>
+      <div id="goals-display"></div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── MULTI-USER ──
+const USERS_KEY = 'tl_users';
+const CUR_KEY   = 'tl_current_user';
+
+function getUsers() {
+  return JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+}
+
+function saveUsers(users) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+function getCurrentUserId() {
+  return localStorage.getItem(CUR_KEY) || null;
+}
+
+function setCurrentUserId(id) {
+  localStorage.setItem(CUR_KEY, id);
+}
+
+function userDataKey(uid) { return 'tl_data_' + uid; }
+
+function loadUserData(uid) {
+  return JSON.parse(localStorage.getItem(userDataKey(uid)) || 'null') || {
+    logs: [], weights: [], photos: [], plans: [], goals: {}
+  };
+}
+
+function saveUserData(uid, d) {
+  localStorage.setItem(userDataKey(uid), JSON.stringify(d));
+}
+
+function avatarClass(idx) { return 'av-' + (idx % 6); }
+
+function initials(name) {
+  return name.trim().slice(0, 2).toUpperCase() || '?';
+}
+
+// ── CURRENT USER STATE ──
+let currentUserId = null;
+let data = { logs: [], weights: [], photos: [], plans: [], goals: {} };
+
+function save() {
+  if (currentUserId) saveUserData(currentUserId, data);
+}
+
+function switchUser(uid) {
+  currentUserId = uid;
+  setCurrentUserId(uid);
+  data = loadUserData(uid);
+
+  const users = getUsers();
+  const user = users.find(u => u.id === uid);
+  if (user) {
+    const idx = users.indexOf(user);
+    document.getElementById('currentUserName').textContent = user.name;
+    document.getElementById('currentAvatar').textContent = initials(user.name);
+    document.getElementById('currentAvatar').className = 'user-avatar ' + avatarClass(idx);
+  }
+
+  closeUserDropdown();
+  renderUserList();
+  renderDashboard();
+  showToast('已切換到 ' + (user ? user.name : ''));
+}
+
+function addUser() {
+  const input = document.getElementById('newUserInput');
+  const name = input.value.trim();
+  if (!name) { input.focus(); return; }
+
+  const users = getUsers();
+  if (users.find(u => u.name === name)) {
+    showToast('此名稱已存在'); return;
+  }
+
+  const uid = 'user_' + Date.now();
+  users.push({ id: uid, name });
+  saveUsers(users);
+  input.value = '';
+  renderUserList();
+  switchUser(uid);
+}
+
+function deleteUser(uid) {
+  let users = getUsers();
+  if (users.length <= 1) { showToast('至少保留一個用戶'); return; }
+  users = users.filter(u => u.id !== uid);
+  saveUsers(users);
+  localStorage.removeItem(userDataKey(uid));
+  if (currentUserId === uid) {
+    switchUser(users[0].id);
+  } else {
+    renderUserList();
+  }
+}
+
+function renderUserList() {
+  const users = getUsers();
+  const el = document.getElementById('userList');
+
+  if (users.length === 0) {
+    el.innerHTML = '<div style="padding:10px 14px;font-size:13px;color:var(--text3);">尚無用戶，請新增</div>';
+    return;
+  }
+
+  el.innerHTML = users.map((u, i) => `
+    <div class="user-item ${u.id === currentUserId ? 'selected' : ''}" onclick="switchUser('${u.id}')">
+      <div class="user-item-avatar ${avatarClass(i)}">${initials(u.name)}</div>
+      <div class="user-item-name">${u.name}</div>
+      <span class="user-item-check">✓</span>
+      <button class="user-item-del" onclick="event.stopPropagation();deleteUser('${u.id}')" title="刪除">✕</button>
+    </div>
+  `).join('');
+}
+
+function toggleUserDropdown() {
+  const sw = document.getElementById('userSwitcher');
+  const dd = document.getElementById('userDropdown');
+  const isOpen = dd.classList.contains('open');
+  if (isOpen) {
+    closeUserDropdown();
+  } else {
+    dd.classList.add('open');
+    sw.classList.add('open');
+  }
+}
+
+function closeUserDropdown() {
+  document.getElementById('userDropdown').classList.remove('open');
+  document.getElementById('userSwitcher').classList.remove('open');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', e => {
+  if (!document.getElementById('userSwitcher').contains(e.target)) {
+    closeUserDropdown();
+  }
+});
+
+// ── INIT USERS ──
+(function initUsers() {
+  let users = getUsers();
+  // Migrate old single-user data
+  const oldData = localStorage.getItem('tl_data');
+  if (oldData && users.length === 0) {
+    const uid = 'user_' + Date.now();
+    users = [{ id: uid, name: '我' }];
+    saveUsers(users);
+    localStorage.setItem(userDataKey(uid), oldData);
+    localStorage.removeItem('tl_data');
+    setCurrentUserId(uid);
+  }
+
+  if (users.length === 0) {
+    // First time — show empty state and prompt
+    document.getElementById('currentUserName').textContent = '請新增用戶';
+    document.getElementById('currentAvatar').textContent = '+';
+    toggleUserDropdown();
+  } else {
+    const savedId = getCurrentUserId();
+    const validUser = users.find(u => u.id === savedId) || users[0];
+    switchUser(validUser.id);
+  }
+
+  renderUserList();
+})();
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── NAV ──
+const pageTitles = {
+  dashboard:'總覽', log:'今日記錄', history:'訓練歷史',
+  weight:'體重追蹤', photos:'身材照片', plan:'訓練計劃', goals:'目標追蹤'
+};
+
+function navigate(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  if (el) el.classList.add('active');
+  document.getElementById('pageTitle').textContent = pageTitles[page];
+  renderPage(page);
+}
+
+function renderPage(p) {
+  if (p==='dashboard') renderDashboard();
+  if (p==='history') renderHistory('all');
+  if (p==='weight') renderWeightPage();
+  if (p==='photos') renderPhotos();
+  if (p==='plan') renderPlans();
+  if (p==='goals') renderGoals();
+}
+
+// ── INIT DATES ──
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('log-date').value = today;
+document.getElementById('weight-date-input').value = today;
+const dateStr = new Date().toLocaleDateString('zh-TW',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
+document.getElementById('headerDate').textContent = dateStr;
+document.getElementById('sidebarDate').textContent = today;
+
+// ── TYPE MAP ──
+const typeMap = {
+  chest:'胸部訓練', back:'背部訓練', legs:'腿部訓練',
+  shoulders:'肩部訓練', arms:'手臂訓練', core:'核心訓練',
+  cardio:'有氧訓練', fullbody:'全身訓練', rest:'休息日'
+};
+
+// ── LOG TODAY ──
+let pendingLogPhotos = [];
+
+function handleLogPhoto(e) {
+  Array.from(e.target.files).forEach(f => {
+    const r = new FileReader();
+    r.onload = ev => {
+      pendingLogPhotos.push({src:ev.target.result, date:document.getElementById('log-date').value});
+      const preview = document.getElementById('log-photo-previews');
+      preview.innerHTML = pendingLogPhotos.map(p =>
+        `<div class="photo-item" style="height:110px;"><img src="${p.src}"><div class="photo-date">${p.date}</div></div>`
+      ).join('');
+    };
+    r.readAsDataURL(f);
+  });
+}
+
+function saveLog() {
+  const date = document.getElementById('log-date').value;
+  const weight = document.getElementById('log-weight').value;
+  const type = document.getElementById('log-type').value;
+  const start = document.getElementById('log-start').value;
+  const end = document.getElementById('log-end').value;
+  const exercises = document.getElementById('log-exercises').value;
+  const notes = document.getElementById('log-notes').value;
+
+  if (!date) { showToast('請選擇日期'); return; }
+
+  data.logs.unshift({
+    id: Date.now(), date,
+    weight: weight ? parseFloat(weight) : null,
+    type, start, end, exercises, notes,
+    photos: [...pendingLogPhotos]
+  });
+
+  if (weight) {
+    const idx = data.weights.findIndex(w => w.date === date);
+    if (idx >= 0) data.weights[idx].value = parseFloat(weight);
+    else data.weights.push({date, value: parseFloat(weight)});
+    data.weights.sort((a,b) => b.date.localeCompare(a.date));
+  }
+
+  pendingLogPhotos.forEach(p => data.photos.push(p));
+  save();
+
+  pendingLogPhotos = [];
+  document.getElementById('log-photo-previews').innerHTML = '';
+  ['log-exercises','log-notes','log-weight'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('log-type').value = '';
+  document.getElementById('log-start').value = '';
+  document.getElementById('log-end').value = '';
+  showToast('✓ 記錄已儲存');
+}
+
+// ── DASHBOARD ──
+function renderDashboard() {
+  const ws = data.weights.sort((a,b) => b.date.localeCompare(a.date));
+  const latest = ws[0], prev = ws[1];
+
+  if (latest) {
+    document.getElementById('dash-weight').textContent = latest.value.toFixed(1);
+    if (prev) {
+      const diff = (latest.value - prev.value).toFixed(1);
+      const el = document.getElementById('dash-weight-change');
+      el.innerHTML = (diff > 0 ? '▲ +' : diff < 0 ? '▼ ' : '') + diff + ' kg 較前次';
+      el.className = 'stat-change ' + (diff > 0 ? 'up' : diff < 0 ? 'down' : 'neutral');
+    }
+  }
+
+  const goal = data.goals;
+  if (goal.weight && latest) {
+    const rem = (latest.value - goal.weight);
+    document.getElementById('dash-remaining').textContent = Math.abs(rem).toFixed(1);
+    document.getElementById('dash-target-weight').textContent = '目標：' + goal.weight + ' kg';
+  }
+
+  const now = new Date();
+  const monthLogs = data.logs.filter(l => {
+    const d = new Date(l.date);
+    return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear() && l.type && l.type!=='rest';
+  });
+  document.getElementById('dash-sessions').textContent = monthLogs.length;
+
+  let streak = 0, check = new Date();
+  for (let i=0; i<60; i++) {
+    const ds = check.toISOString().split('T')[0];
+    if (data.logs.find(l => l.date===ds && l.type && l.type!=='rest')) {
+      streak++; check.setDate(check.getDate()-1);
+    } else break;
+  }
+  document.getElementById('dash-streak').textContent = streak;
+
+  // Recent
+  const recent = data.logs.slice(0,4);
+  const rl = document.getElementById('recent-logs');
+  rl.innerHTML = recent.length === 0
+    ? '<div class="empty-state" style="padding:16px 0;"><div class="empty-icon">📋</div>尚無記錄</div>'
+    : recent.map(l => `
+        <div class="workout-entry" style="padding:12px 14px;">
+          <div>
+            <div class="entry-date">${l.date}</div>
+            <div class="entry-title" style="font-size:14px;">${typeMap[l.type]||'未知'}</div>
+          </div>
+          ${l.weight ? `<div style="font-size:15px;font-weight:700;color:var(--accent)">${l.weight}<span style="font-size:11px;color:var(--text3);font-weight:400;"> kg</span></div>` : ''}
+        </div>`).join('');
+
+  drawChart('weightChart', ws.slice(0,30).reverse(), 560, 160);
+}
+
+// ── CHART ──
+function drawChart(id, weights, W, H) {
+  const svg = document.getElementById(id);
+  if (!svg || weights.length < 2) { if(svg) svg.innerHTML=''; return; }
+  const vals = weights.map(w=>w.value);
+  const min = Math.min(...vals)-1.5, max = Math.max(...vals)+1.5;
+  const pad = {l:36, r:12, t:12, b:28};
+  const cw = W-pad.l-pad.r, ch = H-pad.t-pad.b;
+  const x = i => pad.l+(i/(vals.length-1))*cw;
+  const y = v => pad.t+ch-((v-min)/(max-min))*ch;
+
+  // grid
+  let grid='';
+  for(let i=0;i<=3;i++){
+    const yv = pad.t+(ch/3)*i;
+    const val = (max-(max-min)*i/3).toFixed(1);
+    grid+=`<line x1="${pad.l}" y1="${yv}" x2="${W-pad.r}" y2="${yv}" stroke="#e5e5ea" stroke-width="1"/>`;
+    grid+=`<text x="${pad.l-6}" y="${yv+4}" text-anchor="end" fill="#a1a1a6" font-size="9.5" font-family="'Noto Sans TC',sans-serif">${val}</text>`;
+  }
+  // date labels
+  let dateLabels='';
+  if(weights.length>0){
+    [0, Math.floor((weights.length-1)/2), weights.length-1].forEach(i=>{
+      if(weights[i]) dateLabels+=`<text x="${x(i)}" y="${H-4}" text-anchor="middle" fill="#a1a1a6" font-size="9" font-family="'Noto Sans TC',sans-serif">${weights[i].date.slice(5)}</text>`;
+    });
+  }
+  // goal line
+  const gw = data.goals.weight;
+  let goalLine='';
+  if(gw && gw>=min && gw<=max){
+    const gy=y(gw);
+    goalLine=`<line x1="${pad.l}" y1="${gy}" x2="${W-pad.r}" y2="${gy}" stroke="#ff3b30" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.5"/>
+    <text x="${W-pad.r+4}" y="${gy+3.5}" fill="#ff3b30" font-size="9" font-family="'Noto Sans TC',sans-serif" opacity="0.7">目標</text>`;
+  }
+  // area
+  const pts = vals.map((v,i)=>`${x(i)},${y(v)}`).join(' ');
+  const area = `${x(0)},${H-pad.b} ${pts} ${x(vals.length-1)},${H-pad.b}`;
+
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="g_${id}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#0071e3" stop-opacity="0.12"/>
+        <stop offset="100%" stop-color="#0071e3" stop-opacity="0.01"/>
+      </linearGradient>
+    </defs>
+    ${grid}${dateLabels}${goalLine}
+    <polygon points="${area}" fill="url(#g_${id})"/>
+    <polyline points="${pts}" fill="none" stroke="#0071e3" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    ${vals.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="3.5" fill="#fff" stroke="#0071e3" stroke-width="1.8"/>`).join('')}
+  `;
+}
+
+// ── HISTORY ──
+function renderHistory(filter) {
+  filter = filter || document.getElementById('history-filter').value;
+  let logs = data.logs.slice();
+  if(filter!=='all') logs=logs.filter(l=>l.type===filter);
+  const el = document.getElementById('history-list');
+  if(logs.length===0){
+    el.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div>尚無訓練記錄</div>';
+    return;
+  }
+  el.innerHTML = logs.map(l=>{
+    const dur = l.start&&l.end ? calcDur(l.start,l.end) : null;
+    return `<div class="workout-entry ${l.type==='rest'?'rest':''}">
+      <div>
+        <div class="entry-date">${l.date}${l.start?' · '+l.start+(l.end?' — '+l.end:''):''}</div>
+        <div class="entry-title">${typeMap[l.type]||'未知'}</div>
+        <div class="entry-meta">
+          ${dur?`<span class="entry-tag">⏱ ${dur}</span>`:''}
+          ${l.weight?`<span class="entry-tag">⚖ ${l.weight} kg</span>`:''}
+          ${l.photos&&l.photos.length?`<span class="entry-tag green">📷 ${l.photos.length} 張</span>`:''}
+        </div>
+        ${l.exercises?`<div class="entry-exercises">${l.exercises}</div>`:''}
+        ${l.notes?`<div class="entry-notes">${l.notes}</div>`:''}
+      </div>
+      <button class="btn btn-danger" onclick="deleteLog(${l.id})">刪除</button>
+    </div>`;
+  }).join('');
+}
+
+function calcDur(s,e){
+  const [sh,sm]=s.split(':').map(Number), [eh,em]=e.split(':').map(Number);
+  let m=(eh*60+em)-(sh*60+sm); if(m<=0) m+=24*60;
+  return m>=60 ? Math.floor(m/60)+'小時'+(m%60?m%60+'分':'') : m+'分鐘';
+}
+
+function deleteLog(id){
+  data.logs=data.logs.filter(l=>l.id!==id); save(); renderHistory();
+  showToast('已刪除記錄');
+}
+
+// ── WEIGHT PAGE ──
+function setTargetWeight(){
+  const v=parseFloat(document.getElementById('target-weight-input').value);
+  if(!v) return;
+  data.goals.weight=v; save();
+  showToast('目標體重設定為 '+v+' kg');
+  renderWeightPage();
+}
+
+function addWeightRecord(){
+  const date=document.getElementById('weight-date-input').value;
+  const val=parseFloat(document.getElementById('weight-value-input').value);
+  if(!date||!val){showToast('請填寫日期和體重');return;}
+  const idx=data.weights.findIndex(w=>w.date===date);
+  if(idx>=0) data.weights[idx].value=val;
+  else data.weights.push({date,value:val});
+  data.weights.sort((a,b)=>b.date.localeCompare(a.date));
+  save(); renderWeightPage();
+  showToast('體重記錄已新增');
+}
+
+function renderWeightPage(){
+  const weights=data.weights.slice().sort((a,b)=>b.date.localeCompare(a.date));
+  const tbody=document.getElementById('weight-tbody');
+  if(weights.length===0){
+    tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:32px;">尚無記錄</td></tr>';
+  } else {
+    tbody.innerHTML=weights.map((w,i)=>{
+      const prev=weights[i+1];
+      const diff=prev?(w.value-prev.value).toFixed(1):null;
+      const goal=data.goals.weight;
+      const rem=goal?(w.value-goal).toFixed(1):null;
+      let badge='';
+      if(rem!==null){
+        if(Math.abs(rem)<0.5) badge='<span class="badge badge-green">達標 🎉</span>';
+        else if(rem>0) badge=`<span class="badge badge-orange">距目標 -${rem} kg</span>`;
+        else badge=`<span class="badge badge-blue">超出 ${Math.abs(rem)} kg</span>`;
+      }
+      return `<tr>
+        <td style="color:var(--text2)">${w.date}</td>
+        <td style="font-weight:700;font-size:15px;">${w.value.toFixed(1)} <span style="font-size:12px;font-weight:400;color:var(--text3)">kg</span></td>
+        <td style="font-weight:600;color:${diff>0?'var(--red)':diff<0?'var(--green)':'var(--text3)'}">
+          ${diff!==null?(diff>0?'▲ +':'▼ ')+diff:''}</td>
+        <td>${badge}</td>
+        <td><button class="btn btn-danger" onclick="deleteWeight('${w.date}')">刪除</button></td>
+      </tr>`;
+    }).join('');
+  }
+  drawChart('weightChartFull', weights.slice().reverse(), 760, 200);
+}
+
+function deleteWeight(date){
+  data.weights=data.weights.filter(w=>w.date!==date); save(); renderWeightPage();
+}
+
+// ── PHOTOS ──
+function handlePhotoUpload(e){
+  Array.from(e.target.files).forEach(f=>{
+    const r=new FileReader();
+    r.onload=ev=>{
+      data.photos.push({src:ev.target.result, date:today, name:f.name});
+      save(); renderPhotos();
+    };
+    r.readAsDataURL(f);
+  });
+}
+
+function renderPhotos(){
+  const el=document.getElementById('all-photos');
+  if(data.photos.length===0){
+    el.innerHTML='<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">📷</div>尚無照片</div>';
+    return;
+  }
+  el.innerHTML=data.photos.slice().reverse().map((p,i)=>`
+    <div class="photo-item">
+      <img src="${p.src}" alt="">
+      <div class="photo-date">${p.date}</div>
+      <button class="photo-delete" onclick="deletePhoto(${data.photos.length-1-i})">✕</button>
+    </div>`).join('');
+}
+
+function deletePhoto(idx){ data.photos.splice(idx,1); save(); renderPhotos(); }
+
+// ── PLANS ──
+function addPlan(){
+  const name=document.getElementById('plan-name').value;
+  const start=document.getElementById('plan-start').value;
+  const end=document.getElementById('plan-end').value;
+  const desc=document.getElementById('plan-desc').value;
+  if(!name){showToast('請輸入計劃名稱');return;}
+  data.plans.unshift({id:Date.now(),name,start,end,desc});
+  save();
+  document.getElementById('plan-name').value='';
+  document.getElementById('plan-desc').value='';
+  renderPlans(); showToast('訓練計劃已新增');
+}
+
+function renderPlans(){
+  const el=document.getElementById('plan-list');
+  if(data.plans.length===0){
+    el.innerHTML='<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">🗓</div>尚無訓練計劃</div>';
+    return;
+  }
+  el.innerHTML=data.plans.map(p=>{
+    const isActive=p.start&&p.end&&today>=p.start&&today<=p.end;
+    const total=p.start&&p.end?Math.ceil((new Date(p.end)-new Date(p.start))/86400000):0;
+    const elapsed=p.start?Math.max(0,Math.ceil((new Date(today)-new Date(p.start))/86400000)):0;
+    const pct=total>0?Math.min(100,Math.round(elapsed/total*100)):0;
+    return `<div class="phase-card ${isActive?'active-phase':''}">
+      ${isActive?'<div class="active-badge">進行中</div>':''}
+      <div class="phase-name">${p.name}</div>
+      <div class="phase-duration">${p.start||'?'} → ${p.end||'?'}</div>
+      ${p.desc?`<ul class="phase-exercises">${p.desc.split('\n').filter(Boolean).map(l=>`<li>${l}</li>`).join('')}</ul>`:''}
+      ${total>0?`<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div style="font-size:11px;color:var(--text3);margin-top:6px;">${pct}% 完成 · 共 ${total} 天</div>`:''}
+      <div style="margin-top:14px;">
+        <button class="btn btn-danger" onclick="deletePlan(${p.id})">刪除計劃</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function deletePlan(id){ data.plans=data.plans.filter(p=>p.id!==id); save(); renderPlans(); }
+
+// ── GOALS ──
+function saveGoals(){
+  const weight=parseFloat(document.getElementById('goal-weight').value);
+  const date=document.getElementById('goal-date').value;
+  const sessions=parseInt(document.getElementById('goal-sessions').value);
+  const desc=document.getElementById('goal-desc').value;
+  if(weight) data.goals.weight=weight;
+  if(date) data.goals.date=date;
+  if(sessions) data.goals.sessions=sessions;
+  if(desc) data.goals.desc=desc;
+  save(); showToast('目標已儲存'); renderGoals();
+}
+
+function renderGoals(){
+  const g=data.goals;
+  if(!g.weight&&!g.sessions){
+    document.getElementById('goals-display').innerHTML='<div class="empty-state"><div class="empty-icon">🎯</div>尚未設定目標</div>';
+    return;
+  }
+  const weights=data.weights.sort((a,b)=>b.date.localeCompare(a.date));
+  const latest=weights[0];
+  let html='';
+
+  if(g.weight&&latest){
+    const start=weights[weights.length-1]?.value||latest.value;
+    const totalChange=Math.abs(start-g.weight);
+    const done=Math.abs(latest.value-g.weight);
+    const pct=totalChange>0?Math.max(0,Math.round((1-done/totalChange)*100)):(latest.value===g.weight?100:0);
+    const C=2*Math.PI*28, offset=C-(pct/100)*C;
+    html+=`<div class="goal-card">
+      <div>
+        <div class="goal-title">目標體重</div>
+        <div class="goal-meta">
+          當前 ${latest.value.toFixed(1)} kg &nbsp;→&nbsp; 目標 ${g.weight} kg
+          ${g.date?' · 截止日：'+g.date:''}
+        </div>
+        <div style="margin-top:10px;font-size:13px;color:${latest.value>g.weight?'var(--orange)':'var(--green)'};">
+          ${latest.value>g.weight?`還需減少 ${(latest.value-g.weight).toFixed(1)} kg`:latest.value<g.weight?`還需增加 ${(g.weight-latest.value).toFixed(1)} kg`:'🎉 目標已達成！'}
+        </div>
+      </div>
+      <div class="goal-circle">
+        <svg viewBox="0 0 70 70" width="70" height="70">
+          <circle cx="35" cy="35" r="28" fill="none" stroke="#e5e5ea" stroke-width="6"/>
+          <circle cx="35" cy="35" r="28" fill="none" stroke="${pct>=100?'var(--green)':'var(--accent)'}" stroke-width="6"
+            stroke-dasharray="${C}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
+        </svg>
+        <div class="goal-percent" style="color:${pct>=100?'var(--green)':'var(--accent)'}">${pct}%</div>
+      </div>
+    </div>`;
+  }
+
+  if(g.sessions){
+    const now=new Date(), ws2=new Date(now);
+    ws2.setDate(now.getDate()-now.getDay());
+    const weekSess=data.logs.filter(l=>{
+      const d=new Date(l.date); return d>=ws2&&l.type&&l.type!=='rest';
+    }).length;
+    const pct2=Math.min(100,Math.round(weekSess/g.sessions*100));
+    const C=2*Math.PI*28, offset=C-(pct2/100)*C;
+    html+=`<div class="goal-card">
+      <div>
+        <div class="goal-title">本週訓練目標</div>
+        <div class="goal-meta">
+          目標：每週 ${g.sessions} 次 &nbsp;·&nbsp; 本週已完成：${weekSess} 次
+          ${g.desc?'<br>'+g.desc:''}
+        </div>
+      </div>
+      <div class="goal-circle">
+        <svg viewBox="0 0 70 70" width="70" height="70">
+          <circle cx="35" cy="35" r="28" fill="none" stroke="#e5e5ea" stroke-width="6"/>
+          <circle cx="35" cy="35" r="28" fill="none" stroke="${pct2>=100?'var(--green)':'#30d158'}" stroke-width="6"
+            stroke-dasharray="${C}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
+        </svg>
+        <div class="goal-percent" style="color:var(--green)">${pct2}%</div>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('goals-display').innerHTML = html||'<div class="empty-state">請設定目標</div>';
+}
+
+// ── INIT ──
+
+</script>
+</body>
+</html>
