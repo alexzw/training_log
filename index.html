@@ -958,6 +958,122 @@
   .chart-wrap { position: relative; }
 
 
+
+  /* ─── DYNAMIC EXERCISE LIST (log page) ─── */
+  .ex-list-row {
+    display: grid;
+    grid-template-columns: 1fr 60px 70px 32px;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .ex-list-row .set-input {
+    padding: 9px 10px;
+    font-size: 13px;
+  }
+  .ex-list-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: grid;
+    grid-template-columns: 1fr 60px 70px 32px;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .ex-list-add-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .weight-diff-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-left: 8px;
+    transition: all 0.3s;
+  }
+  .weight-diff-down { background: var(--green-light); color: var(--green); }
+  .weight-diff-up { background: var(--red-light); color: var(--red); }
+  .weight-diff-flat { background: var(--surface3); color: var(--text3); }
+
+  /* ─── REST TIMER ─── */
+  .rest-timer-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+    margin-bottom: 12px;
+  }
+  .rest-timer-display {
+    text-align: center;
+    margin: 10px 0;
+  }
+  .rest-clock {
+    font-size: 52px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .rest-clock.urgent { color: var(--red); animation: pulse-red 0.8s infinite; }
+  @keyframes pulse-red { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  .rest-presets {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 12px 0 8px;
+  }
+  .rest-preset-btn {
+    padding: 8px 18px;
+    border-radius: 980px;
+    border: 1.5px solid var(--border2);
+    background: var(--surface2);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .rest-preset-btn:hover, .rest-preset-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .rest-controls { display: flex; gap: 8px; justify-content: center; margin-top: 8px; }
+  .rest-ctrl-btn {
+    padding: 9px 22px;
+    border-radius: 980px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .rest-start-btn { background: var(--green); color: #fff; }
+  .rest-start-btn:hover { background: #27b84a; }
+  .rest-reset-btn { background: var(--surface3); color: var(--text2); }
+  .rest-reset-btn:hover { background: var(--surface2); }
+  .rest-progress {
+    height: 4px;
+    background: var(--surface3);
+    border-radius: 2px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  .rest-progress-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 1s linear, background 0.5s;
+  }
+  .rest-progress-bar.urgent { background: var(--red); }
+
   /* ─── WORKOUT TIMER ─── */
   .timer-display {
     text-align: center;
@@ -1608,8 +1724,11 @@
               <input type="hidden" id="log-height">
             </div>
             <div class="form-group">
-              <label class="form-label">今日體重（kg）</label>
-              <input type="number" step="0.1" class="form-input" id="log-weight" placeholder="例：75.5">
+              <div style="display:flex;align-items:center;gap:0;">
+                <label class="form-label">今日體重（kg）</label>
+                <span id="weightDiffBadge" style="display:none;" class="weight-diff-badge"></span>
+              </div>
+              <input type="number" step="0.1" class="form-input" id="log-weight" placeholder="例：75.5" oninput="updateWeightDiff()">
             </div>
 <div class="form-group">
               <label class="form-label">訓練類型</label>
@@ -1641,10 +1760,22 @@
         </div>
         <div>
           <div class="card" style="margin-bottom:16px;">
-            <div class="card-title">訓練內容</div>
-            <div class="form-group">
-              <label class="form-label">訓練動作（每行一個）</label>
-              <textarea class="form-input" id="log-exercises" placeholder="例：&#10;臥推 4×10 80kg&#10;啞鈴飛鳥 3×12 20kg&#10;繩索夾胸 3×15" style="min-height:110px;"></textarea>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+              <div class="card-title" style="margin:0;">訓練動作</div>
+              <button class="btn" style="padding:7px 12px;font-size:12px;background:var(--surface2);border-radius:8px;gap:5px;" onclick="copyYesterdayExercises()">📋 複製昨日訓練</button>
+            </div>
+            <div class="ex-list-col-label">
+              <span>動作名稱</span><span style="text-align:center;">組數</span><span style="text-align:center;">重量(kg)</span><span></span>
+            </div>
+            <div id="logExerciseList"></div>
+            <div class="ex-list-add-row">
+              <button class="add-set-btn" onclick="addLogExerciseRow()" style="flex:1;">＋ 新增動作</button>
+              <button class="add-set-btn" onclick="openLogExPicker()" style="flex:1;border-style:solid;background:var(--accent-light);color:var(--accent);border-color:transparent;">📚 從動作庫選取</button>
+            </div>
+            <textarea id="log-exercises" style="display:none;"></textarea>
+            <div id="logExPickerWrap" style="display:none;margin-top:10px;">
+              <input type="text" class="form-input" id="logExPickerInput" placeholder="搜尋動作..." oninput="renderLogExPicker()" style="margin-bottom:8px;">
+              <div id="logExPickerList" style="max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;"></div>
             </div>
             <div class="form-group">
               <label class="form-label">運動時長（分鐘）<span style="color:var(--text3);font-weight:400;font-size:11px;"> 用於計算消耗熱量</span></label>
@@ -1934,6 +2065,29 @@
             <div style="font-size:11px;color:var(--text3);margin-bottom:2px;">預估熱量</div>
             <div style="font-size:22px;font-weight:700;" id="timerCalories">0</div>
           </div>
+        </div>
+      </div>
+
+      <!-- REST TIMER -->
+      <div class="rest-timer-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">⏱ 組間休息計時</div>
+          <span id="restStatusLabel" style="font-size:11px;color:var(--text3);">選擇時長開始</span>
+        </div>
+        <div class="rest-progress"><div class="rest-progress-bar" id="restProgressBar" style="width:100%"></div></div>
+        <div class="rest-timer-display">
+          <div class="rest-clock" id="restClock">01:00</div>
+        </div>
+        <div class="rest-presets">
+          <button class="rest-preset-btn active" onclick="setRestPreset(30,this)">30s</button>
+          <button class="rest-preset-btn" onclick="setRestPreset(60,this)">60s</button>
+          <button class="rest-preset-btn" onclick="setRestPreset(90,this)">90s</button>
+          <button class="rest-preset-btn" onclick="setRestPreset(120,this)">2分</button>
+          <button class="rest-preset-btn" onclick="setRestPreset(180,this)">3分</button>
+        </div>
+        <div class="rest-controls">
+          <button class="rest-ctrl-btn rest-start-btn" id="restStartBtn" onclick="toggleRest()">▶ 開始休息</button>
+          <button class="rest-ctrl-btn rest-reset-btn" onclick="resetRest()">↺ 重置</button>
         </div>
       </div>
 
@@ -2463,7 +2617,7 @@ function navigate(page, el) {
 
 function renderPage(p) {
   if (p==='dashboard') renderDashboard();
-  if (p==='log') prefillHeight();
+  if (p==='log') { prefillHeight(); renderLogExerciseList(); updateWeightDiff(); }
   if (p==='history') renderHistory('all');
   if (p==='weight') renderWeightPage();
   if (p==='photos') renderPhotos();
@@ -2530,26 +2684,171 @@ function handleLogPhoto(e) {
   });
 }
 
+// ── DYNAMIC EXERCISE LIST (log page) ──
+let logExercises = []; // [{name, sets, weight}]
+
+function addLogExerciseRow(name='', sets='', weight='') {
+  logExercises.push({name, sets, weight});
+  renderLogExerciseList();
+}
+
+function removeLogExerciseRow(i) {
+  logExercises.splice(i, 1);
+  renderLogExerciseList();
+}
+
+function updateLogExercise(i, field, val) {
+  logExercises[i][field] = val;
+}
+
+function renderLogExerciseList() {
+  const el = document.getElementById('logExerciseList');
+  if (!el) return;
+  if (logExercises.length === 0) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--text3);padding:8px 0 4px;">尚未新增動作</div>';
+    return;
+  }
+  el.innerHTML = logExercises.map((ex, i) => `
+    <div class="ex-list-row">
+      <input class="set-input" type="text" placeholder="動作名稱" value="${ex.name}"
+        oninput="updateLogExercise(${i},'name',this.value)" list="exNameDatalist">
+      <input class="set-input" type="number" placeholder="組數" min="1" value="${ex.sets}"
+        oninput="updateLogExercise(${i},'sets',this.value)" style="text-align:center;">
+      <input class="set-input" type="number" placeholder="kg" step="0.5" value="${ex.weight}"
+        oninput="updateLogExercise(${i},'weight',this.value)" style="text-align:center;">
+      <button class="set-del-btn" onclick="removeLogExerciseRow(${i})">✕</button>
+    </div>`).join('');
+}
+
+function openLogExPicker() {
+  const wrap = document.getElementById('logExPickerWrap');
+  wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+  if (wrap.style.display === 'block') {
+    document.getElementById('logExPickerInput').value = '';
+    renderLogExPicker();
+    setTimeout(() => document.getElementById('logExPickerInput').focus(), 100);
+  }
+}
+
+function renderLogExPicker() {
+  const q = document.getElementById('logExPickerInput').value.toLowerCase();
+  const filtered = EXERCISES.filter(e =>
+    e.name.toLowerCase().includes(q) || e.muscle.includes(q)
+  );
+  const el = document.getElementById('logExPickerList');
+  el.innerHTML = filtered.slice(0,15).map(e => `
+    <div onclick="pickLogExercise('${e.name}')"
+      style="padding:9px 12px;cursor:pointer;font-size:13px;display:flex;justify-content:space-between;transition:background 0.1s;"
+      onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <span style="font-weight:500;">${e.name}</span>
+      <span style="color:var(--text3);font-size:11px;">${e.muscle}</span>
+    </div>`).join('') || '<div style="padding:10px 12px;font-size:13px;color:var(--text3);">找不到動作</div>';
+}
+
+function pickLogExercise(name) {
+  addLogExerciseRow(name, '', '');
+  document.getElementById('logExPickerWrap').style.display = 'none';
+}
+
+function copyYesterdayExercises() {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  const yDate = yesterday.toISOString().split('T')[0];
+
+  // Find most recent log before today
+  const pastLogs = data.logs.filter(l => l.date < new Date().toISOString().split('T')[0]);
+  if (pastLogs.length === 0) { showToast('找不到之前的訓練記錄'); return; }
+  const lastLog = pastLogs[0];
+
+  // Parse exercises from the log
+  if (lastLog.exercises_structured && lastLog.exercises_structured.length > 0) {
+    logExercises = lastLog.exercises_structured.map(e => ({...e}));
+  } else if (lastLog.exercises) {
+    // Parse from text format
+    const lines = lastLog.exercises.split('
+').filter(l => l.trim());
+    logExercises = lines.map(l => {
+      const parts = l.split(/\s+/);
+      return { name: parts[0] || l, sets: parts[1] || '', weight: parts[2] || '' };
+    });
+  } else {
+    showToast('上次記錄沒有訓練動作'); return;
+  }
+  renderLogExerciseList();
+  showToast(`✓ 已複製 ${lastLog.date} 的訓練（共 ${logExercises.length} 個動作）`);
+}
+
+function getExercisesText() {
+  return logExercises.map(ex => {
+    let s = ex.name || '未知動作';
+    if (ex.sets) s += ` ${ex.sets}組`;
+    if (ex.weight) s += ` × ${ex.weight}kg`;
+    return s;
+  }).join('
+');
+}
+
+// ── WEIGHT DIFF ──
+function updateWeightDiff() {
+  const val = parseFloat(document.getElementById('log-weight').value);
+  const badge = document.getElementById('weightDiffBadge');
+  if (!val || isNaN(val)) { badge.style.display = 'none'; return; }
+
+  const sorted = [...data.weights].sort((a,b) => b.date.localeCompare(a.date));
+  const today = new Date().toISOString().split('T')[0];
+
+  // Yesterday's weight
+  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+  const yDate = yesterday.toISOString().split('T')[0];
+  const yWeight = sorted.find(w => w.date <= yDate);
+
+  // Last week average (7 days ago)
+  const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate()-7);
+  const weekAgoDate = weekAgo.toISOString().split('T')[0];
+  const weekWeights = sorted.filter(w => w.date <= weekAgoDate && w.date >= new Date(weekAgo.getFullYear(), weekAgo.getMonth(), weekAgo.getDate()-6).toISOString().split('T')[0]);
+  const weekAvg = weekWeights.length > 0 ? weekWeights.reduce((s,w)=>s+w.value,0)/weekWeights.length : null;
+
+  let diff, label;
+  if (yWeight) {
+    diff = val - yWeight.value;
+    label = '較昨日';
+  } else if (weekAvg) {
+    diff = val - weekAvg;
+    label = '較上週均';
+  } else if (sorted.length > 0) {
+    diff = val - sorted[0].value;
+    label = '較上次';
+  } else {
+    badge.style.display = 'none'; return;
+  }
+
+  const sign = diff > 0 ? '+' : '';
+  badge.textContent = `${sign}${diff.toFixed(1)}kg ${label}`;
+  badge.style.display = 'inline-flex';
+  badge.className = 'weight-diff-badge ' + (diff < 0 ? 'weight-diff-down' : diff > 0 ? 'weight-diff-up' : 'weight-diff-flat');
+}
+
 function saveLog() {
   const date = document.getElementById('log-date').value;
   const weight = document.getElementById('log-weight').value;
   const type = document.getElementById('log-type').value;
   const start = document.getElementById('log-start').value;
   const end = document.getElementById('log-end').value;
-  const exercises = document.getElementById('log-exercises').value;
   const notes = document.getElementById('log-notes').value;
-  const height = document.getElementById('log-height').value;
   const duration = document.getElementById('log-duration').value;
 
   if (!date) { showToast('請選擇日期'); return; }
 
-  // save height to user profile
-  if (height) { data.goals.height = parseFloat(height); document.getElementById('log-height').value = height; }
+  const exercisesText = getExercisesText();
 
   data.logs.unshift({
     id: Date.now(), date,
     weight: weight ? parseFloat(weight) : null,
-    type, start, end, exercises, notes,
+    type, start, end,
+    exercises: exercisesText,
+    exercises_structured: [...logExercises],
+    notes,
     duration: duration ? parseInt(duration) : null,
     calories: duration && weight ? calcCalories(type, parseInt(duration), parseFloat(weight)||70) : null,
     photos: [...pendingLogPhotos]
@@ -2566,12 +2865,15 @@ function saveLog() {
   saveAndSync();
 
   pendingLogPhotos = [];
+  logExercises = [];
   document.getElementById('log-photo-previews').innerHTML = '';
-  ['log-exercises','log-notes','log-weight'].forEach(id => document.getElementById(id).value = '');
+  renderLogExerciseList();
+  ['log-notes','log-weight'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('log-type').value = '';
   document.getElementById('log-start').value = '';
   document.getElementById('log-end').value = '';
   document.getElementById('log-duration').value = '';
+  document.getElementById('weightDiffBadge').style.display = 'none';
   showToast('✓ 記錄已儲存');
 }
 
@@ -3413,6 +3715,12 @@ const EXERCISES = [
     tips:['記住順序：推腿→後仰→拉手', '每分鐘划20-30次是適中速度'] },
 ];
 
+// populate exercise name datalist
+function populateExDatalist() {
+  const dl = document.getElementById('exNameDatalist');
+  if (dl) dl.innerHTML = EXERCISES.map(e => `<option value="${e.name}">`).join('');
+}
+
 // ══════════════════════════════════════════════════════════
 // WORKOUT TIMER
 // ══════════════════════════════════════════════════════════
@@ -3747,6 +4055,112 @@ function closeExDetail() {
 }
 
 
+
+// ── REST TIMER ──
+let restDuration = 30;   // seconds selected
+let restRemaining = 30;
+let restRunning = false;
+let restInterval = null;
+let restTotal = 30;
+
+function setRestPreset(seconds, btn) {
+  document.querySelectorAll('.rest-preset-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  restDuration = seconds;
+  restTotal = seconds;
+  if (!restRunning) {
+    restRemaining = seconds;
+    updateRestClock();
+    updateRestProgress(1);
+  }
+}
+
+function toggleRest() {
+  if (restRunning) {
+    pauseRest();
+  } else {
+    startRest();
+  }
+}
+
+function startRest() {
+  if (restRemaining <= 0) {
+    restRemaining = restDuration;
+    restTotal = restDuration;
+  }
+  restRunning = true;
+  document.getElementById('restStartBtn').textContent = '⏸ 暫停';
+  document.getElementById('restStatusLabel').textContent = '休息中...';
+  restInterval = setInterval(restTick, 1000);
+}
+
+function pauseRest() {
+  restRunning = false;
+  clearInterval(restInterval);
+  document.getElementById('restStartBtn').textContent = '▶ 繼續';
+  document.getElementById('restStatusLabel').textContent = '已暫停';
+}
+
+function resetRest() {
+  restRunning = false;
+  clearInterval(restInterval);
+  restRemaining = restDuration;
+  restTotal = restDuration;
+  updateRestClock();
+  updateRestProgress(1);
+  document.getElementById('restStartBtn').textContent = '▶ 開始休息';
+  document.getElementById('restStatusLabel').textContent = '選擇時長開始';
+  document.getElementById('restClock').classList.remove('urgent');
+}
+
+function restTick() {
+  restRemaining--;
+  updateRestClock();
+  updateRestProgress(restRemaining / restTotal);
+
+  if (restRemaining <= 5) {
+    document.getElementById('restClock').classList.add('urgent');
+  }
+
+  if (restRemaining <= 0) {
+    clearInterval(restInterval);
+    restRunning = false;
+    document.getElementById('restClock').classList.remove('urgent');
+    document.getElementById('restStartBtn').textContent = '▶ 再來一次';
+    document.getElementById('restStatusLabel').textContent = '休息結束！';
+    // play a beep if possible
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [0, 0.15, 0.3].forEach(t => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.3, ctx.currentTime + t);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.12);
+        osc.start(ctx.currentTime + t);
+        osc.stop(ctx.currentTime + t + 0.12);
+      });
+    } catch(e) {}
+    showToast('✅ 休息結束，繼續加油！');
+  }
+}
+
+function updateRestClock() {
+  const m = Math.floor(restRemaining / 60);
+  const s = restRemaining % 60;
+  const el = document.getElementById('restClock');
+  if (el) el.textContent = `${pad(m)}:${pad(s)}`;
+}
+
+function updateRestProgress(ratio) {
+  const bar = document.getElementById('restProgressBar');
+  if (!bar) return;
+  bar.style.width = (ratio * 100) + '%';
+  bar.className = 'rest-progress-bar' + (ratio < 0.15 ? ' urgent' : '');
+}
+
+
 // ── MOBILE NAV ──
 function mobileNavigate(page, el) {
   navigate(page, null);
@@ -3863,6 +4277,8 @@ function startRealtimeSync(uid) {
 }
 
 // ── INIT ──
+populateExDatalist();
+renderLogExerciseList();
 
 </script>
 
@@ -3929,5 +4345,6 @@ function startRealtimeSync(uid) {
   </div>
 </div>
 
+<datalist id="exNameDatalist"></datalist>
 </body>
 </html>
