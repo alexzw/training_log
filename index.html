@@ -783,9 +783,6 @@
     .bmi-value { font-size: 28px; }
     .bmi-labels { font-size: 9px; }
     /* inline height edit — stack on mobile */
-    #bmi-height-inline { flex-wrap: wrap; }
-    #bmi-height-input { max-width: 100% !important; flex: 1; }
-    #bmi-height-saved { width: 100%; margin-top: 2px; }
 
     .goal-circle { margin: 0 auto; }
 
@@ -959,6 +956,259 @@
   }
 
   .chart-wrap { position: relative; }
+
+
+  /* ─── WORKOUT TIMER ─── */
+  .timer-display {
+    text-align: center;
+    padding: 32px 20px;
+  }
+  .timer-clock {
+    font-size: 72px;
+    font-weight: 700;
+    letter-spacing: -3px;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .timer-label {
+    font-size: 13px;
+    color: var(--text3);
+    font-weight: 500;
+    margin-bottom: 28px;
+  }
+  .timer-controls {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .timer-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 28px;
+    border-radius: 980px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .timer-btn-start { background: var(--green); color: #fff; }
+  .timer-btn-start:hover { background: #27b84a; }
+  .timer-btn-pause { background: var(--orange); color: #fff; }
+  .timer-btn-pause:hover { background: #e08c00; }
+  .timer-btn-stop { background: var(--red); color: #fff; }
+  .timer-btn-stop:hover { background: #e0332a; }
+  .timer-btn-resume { background: var(--accent); color: #fff; }
+  .timer-btn-resume:hover { background: var(--accent-hover); }
+
+  .workout-set-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .workout-set-row:last-child { border-bottom: none; }
+  .set-input {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text);
+    width: 100%;
+    outline: none;
+  }
+  .set-input:focus { border-color: var(--accent); }
+  .set-del-btn {
+    background: none;
+    border: none;
+    color: var(--text3);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    line-height: 1;
+    border-radius: 6px;
+    transition: color 0.15s;
+  }
+  .set-del-btn:hover { color: var(--red); }
+  .workout-ex-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .workout-ex-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .workout-ex-name {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .workout-ex-body { padding: 10px 16px 14px; }
+  .set-col-labels {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 0 0 6px;
+  }
+  .add-set-btn {
+    background: none;
+    border: 1.5px dashed var(--border2);
+    color: var(--accent);
+    border-radius: 8px;
+    padding: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    width: 100%;
+    margin-top: 8px;
+    transition: background 0.12s;
+  }
+  .add-set-btn:hover { background: var(--accent-light); }
+  .add-ex-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 13px;
+    background: var(--accent-light);
+    color: var(--accent);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 4px;
+  }
+  .add-ex-btn:hover { background: rgba(0,113,227,0.14); }
+  .timer-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--text3);
+  }
+  .status-dot.running { background: var(--green); box-shadow: 0 0 0 3px rgba(48,209,88,0.2); animation: pulse 1.5s infinite; }
+  .status-dot.paused { background: var(--orange); }
+  @keyframes pulse { 0%,100%{ box-shadow: 0 0 0 3px rgba(48,209,88,0.2); } 50%{ box-shadow: 0 0 0 6px rgba(48,209,88,0.1); } }
+
+  /* ─── EXERCISE LIBRARY ─── */
+  .lib-search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .lib-search-input {
+    flex: 1;
+    min-width: 160px;
+    background: var(--surface);
+    border: 1.5px solid var(--border2);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+  }
+  .lib-search-input:focus { border-color: var(--accent); }
+  .lib-filter-select {
+    background: var(--surface);
+    border: 1.5px solid var(--border2);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+    cursor: pointer;
+  }
+  .ex-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: box-shadow 0.15s, transform 0.15s;
+  }
+  .ex-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+  .ex-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .ex-card-name { font-size: 15px; font-weight: 600; flex: 1; }
+  .ex-card-muscle { font-size: 11px; font-weight: 600; color: var(--accent); background: var(--accent-light); padding: 2px 9px; border-radius: 20px; }
+  .ex-card-desc { font-size: 13px; color: var(--text2); line-height: 1.5; }
+  .ex-card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .ex-tag { font-size: 11px; color: var(--text3); background: var(--surface2); padding: 2px 8px; border-radius: 6px; }
+  .ex-detail-modal {
+    position: fixed; inset: 0; z-index: 600;
+    background: rgba(0,0,0,0.3); backdrop-filter: blur(6px);
+    display: none; align-items: flex-end; justify-content: center;
+  }
+  .ex-detail-modal.open { display: flex; }
+  .ex-detail-sheet {
+    background: var(--surface);
+    border-radius: 20px 20px 0 0;
+    width: 100%; max-width: 640px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px 24px 40px;
+    animation: slideSheet 0.28s cubic-bezier(0.22,1,0.36,1);
+  }
+  .ex-step {
+    display: flex; gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .ex-step:last-child { border-bottom: none; }
+  .ex-step-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .ex-step-text { font-size: 14px; color: var(--text2); line-height: 1.6; }
+  .muscle-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; background: var(--surface2); border: 1px solid var(--border2); padding: 4px 10px; border-radius: 20px; margin: 3px; color: var(--text2); }
+
+  /* ─── MOBILE: workout timer adjustments ─── */
+  @media (max-width: 600px) {
+    .timer-clock { font-size: 52px; }
+    .workout-set-row { grid-template-columns: 2fr 1fr 1fr auto; }
+    .set-col-labels { grid-template-columns: 2fr 1fr 1fr auto; }
+    .workout-set-row .rpe-col { display: none; }
+    .set-col-labels .rpe-col { display: none; }
+  }
 
   /* ─── DELETE CONFIRM MODAL ─── */
   .delete-modal {
@@ -1216,6 +1466,14 @@
       <span class="nav-icon"><span>✏️</span></span>
       <span>今日記錄</span>
     </a>
+    <a onclick="navigate('workout', this)">
+      <span class="nav-icon"><span>⏱️</span></span>
+      <span>實時訓練</span>
+    </a>
+    <a onclick="navigate('library', this)">
+      <span class="nav-icon"><span>📚</span></span>
+      <span>動作庫</span>
+    </a>
     <div class="nav-section-label">記錄</div>
     <a onclick="navigate('history', this)">
       <span class="nav-icon"><span>📋</span></span>
@@ -1310,18 +1568,7 @@
           <div class="bmi-bar-wrap" id="bmi-bar-wrap" style="opacity:0.3;">
             <div class="bmi-marker" id="bmi-marker" style="left:50%"></div>
           </div>
-          <div class="bmi-labels"><span>偏瘦 &lt;18.5</span><span>正常 18.5–24</span><span>過重 24–27</span><span>肥胖 &gt;27</span></div>
-          <div id="bmi-height-inline" style="margin-top:14px;display:flex;align-items:center;gap:8px;">
-            <span style="font-size:12px;color:var(--text3);white-space:nowrap;">身高</span>
-            <input type="number" id="bmi-height-input" class="form-input" placeholder="輸入身高 cm"
-              min="100" max="250"
-              style="max-width:130px;padding:7px 10px;font-size:13px;"
-              onkeydown="if(event.key==='Enter') saveBmiHeight()"
-              oninput="updateBmiHeightPreview()">
-            <button class="btn btn-primary" onclick="saveBmiHeight()" style="padding:7px 14px;font-size:12px;border-radius:8px;white-space:nowrap;">儲存</button>
-            <span id="bmi-height-saved" style="font-size:11px;color:var(--green);opacity:0;transition:opacity 0.3s;">已儲存 ✓</span>
-          </div>
-        </div>
+          <div class="bmi-labels"><span>偏瘦 &lt;18.5</span><span>正常 18.5–24</span><span>過重 24–27</span><span>肥胖 &gt;27</span></div></div>
         <div class="stat-card" style="grid-column:2;">
           <div class="stat-label">本月消耗熱量</div>
           <div class="stat-value" id="dash-calories">0</div>
@@ -1629,8 +1876,142 @@
       <!-- Danger zone -->
       <div class="card">
         <div class="card-title" style="color:var(--red);">危險區域</div>
-        <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">登出後將返回登入畫面，需要重新選擇帳號並輸入密碼。</div>
-        <button class="btn" style="background:var(--red-light);color:var(--red);border-radius:10px;" onclick="logoutToLockScreen()">登出此帳號</button>
+
+        <!-- Logout -->
+        <div style="padding:14px 0;border-bottom:1px solid var(--border);">
+          <div style="font-size:14px;font-weight:600;margin-bottom:4px;">登出帳號</div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:12px;">返回登入畫面，資料不會遺失。</div>
+          <button class="btn" style="background:var(--surface2);color:var(--text);border:1px solid var(--border2);border-radius:10px;" onclick="logoutToLockScreen()">登出此帳號</button>
+        </div>
+
+        <!-- Delete account -->
+        <div style="padding-top:14px;">
+          <div style="font-size:14px;font-weight:600;margin-bottom:4px;color:var(--red);">刪除帳號</div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:12px;">永久刪除此帳號及所有資料，此操作不可復原。</div>
+          <div id="delete-self-section">
+            <button class="btn" style="background:var(--red-light);color:var(--red);border-radius:10px;" onclick="showDeleteSelfConfirm()">刪除此帳號</button>
+          </div>
+          <div id="delete-self-confirm" style="display:none;">
+            <input type="password" class="form-input" id="delete-self-pwd" placeholder="輸入密碼確認（無密碼留空）" maxlength="20" style="margin-bottom:8px;">
+            <div id="delete-self-error" style="font-size:12px;color:var(--red);min-height:16px;margin-bottom:8px;"></div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn" style="flex:1;background:var(--surface2);color:var(--text);border:1px solid var(--border2);border-radius:10px;" onclick="cancelDeleteSelf()">取消</button>
+              <button class="btn" style="flex:1;background:var(--red);color:#fff;border-radius:10px;" onclick="confirmDeleteSelf()">確認刪除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- WORKOUT TIMER PAGE -->
+    <div class="page" id="page-workout">
+      <!-- Timer card -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="timer-status-bar">
+          <div class="status-dot" id="timerDot"></div>
+          <span id="timerStatusLabel">尚未開始</span>
+        </div>
+        <div class="timer-display">
+          <div class="timer-clock" id="timerClock">00:00:00</div>
+          <div class="timer-label" id="timerSubLabel">按開始計時</div>
+        </div>
+        <div class="timer-controls" id="timerControls">
+          <button class="timer-btn timer-btn-start" onclick="timerStart()">▶ 開始</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:24px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+          <div style="text-align:center;">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:2px;">組數</div>
+            <div style="font-size:22px;font-weight:700;" id="timerSets">0</div>
+          </div>
+          <div style="width:1px;height:36px;background:var(--border);"></div>
+          <div style="text-align:center;">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:2px;">動作數</div>
+            <div style="font-size:22px;font-weight:700;" id="timerExCount">0</div>
+          </div>
+          <div style="width:1px;height:36px;background:var(--border);"></div>
+          <div style="text-align:center;">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:2px;">預估熱量</div>
+            <div style="font-size:22px;font-weight:700;" id="timerCalories">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exercise list -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div class="section-title" style="margin:0;">本次訓練動作</div>
+        <div style="display:flex;gap:8px;">
+          <select class="lib-filter-select" id="workout-type-select" style="font-size:13px;padding:7px 12px;">
+            <option value="">— 訓練類型 —</option>
+            <option value="chest">胸部</option>
+            <option value="back">背部</option>
+            <option value="legs">腿部</option>
+            <option value="shoulders">肩部</option>
+            <option value="arms">手臂</option>
+            <option value="core">核心</option>
+            <option value="cardio">有氧</option>
+            <option value="fullbody">全身</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="workoutExerciseList"></div>
+
+      <button class="add-ex-btn" onclick="addWorkoutExercise()">＋ 新增動作</button>
+
+      <!-- Add exercise modal (inline) -->
+      <div id="addExModal" style="display:none;margin-top:12px;">
+        <div class="card">
+          <div class="card-title">選擇或輸入動作</div>
+          <input type="text" class="form-input" id="addExInput" placeholder="搜尋動作名稱..." oninput="filterAddExList()" style="margin-bottom:10px;">
+          <div id="addExSuggestions" style="max-height:200px;overflow-y:auto;"></div>
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button class="btn btn-primary" onclick="confirmAddExercise()">新增</button>
+            <button class="btn" style="background:var(--surface2);" onclick="document.getElementById('addExModal').style.display='none'">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXERCISE LIBRARY PAGE -->
+    <div class="page" id="page-library">
+      <div class="lib-search">
+        <input type="text" class="lib-search-input" id="libSearchInput" placeholder="🔍 搜尋動作名稱..." oninput="renderLibrary()">
+        <select class="lib-filter-select" id="libMuscleFilter" onchange="renderLibrary()">
+          <option value="">全部部位</option>
+          <option value="胸部">胸部</option>
+          <option value="背部">背部</option>
+          <option value="腿部">腿部</option>
+          <option value="肩部">肩部</option>
+          <option value="手臂">手臂</option>
+          <option value="核心">核心</option>
+          <option value="有氧">有氧</option>
+        </select>
+        <select class="lib-filter-select" id="libTypeFilter" onchange="renderLibrary()">
+          <option value="">全部器材</option>
+          <option value="槓鈴">槓鈴</option>
+          <option value="啞鈴">啞鈴</option>
+          <option value="機器">機器</option>
+          <option value="徒手">徒手</option>
+          <option value="繩索">繩索</option>
+        </select>
+      </div>
+      <div id="libList"></div>
+    </div>
+
+    <!-- EXERCISE DETAIL MODAL -->
+    <div class="ex-detail-modal" id="exDetailModal">
+      <div class="modal-backdrop" onclick="closeExDetail()"></div>
+      <div class="ex-detail-sheet" id="exDetailSheet">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div style="flex:1;">
+            <div style="font-size:20px;font-weight:700;margin-bottom:4px;" id="exDetailName"></div>
+            <div id="exDetailMuscles" style="display:flex;flex-wrap:wrap;"></div>
+          </div>
+          <button onclick="closeExDetail()" style="background:var(--surface2);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;line-height:1;color:var(--text2);">×</button>
+        </div>
+        <div id="exDetailContent"></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:20px;" onclick="addToWorkoutFromLibrary()">＋ 加入本次訓練</button>
       </div>
     </div>
 
@@ -1648,6 +2029,10 @@
   <div class="bottom-nav-item" onclick="mobileNavigate('log',this)" data-page="log">
     <span class="bottom-nav-icon">✏️</span>
     <span class="bottom-nav-label">記錄</span>
+  </div>
+  <div class="bottom-nav-item" onclick="mobileNavigate('workout',this)" data-page="workout">
+    <span class="bottom-nav-icon">⏱️</span>
+    <span class="bottom-nav-label">訓練</span>
   </div>
   <div class="bottom-nav-item" onclick="mobileNavigate('weight',this)" data-page="weight">
     <span class="bottom-nav-icon">⚖️</span>
@@ -1976,7 +2361,6 @@ function renderUserList() {
       <div class="user-item-avatar ${avatarClass(i)}">${initials(u.name)}</div>
       <div class="user-item-name">${u.name}</div>
       <span class="user-item-check">✓</span>
-      <button class="user-item-del" onclick="event.stopPropagation();requestDeleteUser('${u.id}')" title="刪除">✕</button>
     </div>
   `).join('');
 }
@@ -2086,6 +2470,8 @@ function renderPage(p) {
   if (p==='plan') renderPlans();
   if (p==='goals') renderGoals();
   if (p==='settings') renderSettingsPage();
+  if (p==='workout') renderWorkoutTimer();
+  if (p==='library') renderLibrary();
 }
 
 // ── PRE-FILL HEIGHT ──
@@ -2353,27 +2739,6 @@ async function submitNewUser() {
 }
 
 
-// ── BMI HEIGHT INLINE EDIT ──
-function saveBmiHeight() {
-  const val = parseFloat(document.getElementById('bmi-height-input').value);
-  if (!val || val < 100 || val > 250) { showToast('請輸入有效身高（100–250 cm）'); return; }
-  data.goals.height = val;
-  saveAndSync();
-  renderDashboard();
-  const saved = document.getElementById('bmi-height-saved');
-  saved.style.opacity = '1';
-  setTimeout(() => { saved.style.opacity = '0'; }, 2000);
-}
-
-function updateBmiHeightPreview() {
-  // live update BMI while typing
-  const val = parseFloat(document.getElementById('bmi-height-input').value);
-  if (val >= 100 && val <= 250) {
-    data.goals.height = val;
-    renderDashboard();
-  }
-}
-
 // ── SETTINGS PAGE ──
 function renderSettingsPage() {
   const users = getUsers();
@@ -2398,9 +2763,6 @@ function saveSettingsHeight() {
   data.goals.height = val;
   saveAndSync();
   showToast('✓ 身高已儲存，BMI 已更新');
-  // also update bmi-height-input on dashboard if visible
-  const bmiInput = document.getElementById('bmi-height-input');
-  if (bmiInput) bmiInput.value = val;
 }
 
 async function changePasswordFromSettings() {
@@ -2415,6 +2777,49 @@ async function changePasswordFromSettings() {
     document.getElementById(id).value = '';
   });
   showToast(nw ? '✓ 密碼已更新' : '✓ 密碼已移除');
+}
+
+
+// ── DELETE SELF ACCOUNT (from settings page) ──
+function showDeleteSelfConfirm() {
+  document.getElementById('delete-self-section').style.display = 'none';
+  document.getElementById('delete-self-confirm').style.display = 'block';
+  document.getElementById('delete-self-pwd').value = '';
+  document.getElementById('delete-self-error').textContent = '';
+  document.getElementById('delete-self-pwd').focus();
+}
+
+function cancelDeleteSelf() {
+  document.getElementById('delete-self-section').style.display = 'block';
+  document.getElementById('delete-self-confirm').style.display = 'none';
+}
+
+async function confirmDeleteSelf() {
+  const pwd = document.getElementById('delete-self-pwd').value;
+  const valid = await verifyPassword(currentUserId, pwd);
+  if (!valid) {
+    document.getElementById('delete-self-error').textContent = '密碼錯誤';
+    document.getElementById('delete-self-pwd').value = '';
+    document.getElementById('delete-self-pwd').focus();
+    return;
+  }
+  const users = getUsers();
+  if (users.length <= 1) { showToast('至少保留一個帳號'); cancelDeleteSelf(); return; }
+  // perform delete
+  const uid = currentUserId;
+  const remaining = users.filter(u => u.id !== uid);
+  saveUsers(remaining);
+  localStorage.removeItem(userDataKey(uid));
+  localStorage.removeItem(pwdKey(uid));
+  if (window._firestoreReady) {
+    try {
+      await window._fsDeleteDoc(window._fsDoc(window._db, 'users', uid));
+      await window._fsDeleteDoc(window._fsDoc(window._db, 'photos', uid));
+      await window._fsDeleteDoc(window._fsDoc(window._db, 'passwords', uid));
+    } catch(e) { console.warn('delete from firestore:', e); }
+  }
+  showToast('帳號已刪除');
+  logoutToLockScreen();
 }
 
 // ── LOGOUT → LOCK SCREEN ──
@@ -2495,9 +2900,6 @@ function renderDashboard() {
         </div>`).join('');
 
   drawChart('weightChart', ws.slice(0,30).reverse(), 560, 160);
-  // pre-fill height input
-  const hInp = document.getElementById('bmi-height-input');
-  if (hInp && data.goals && data.goals.height) hInp.value = data.goals.height;
 
   // BMI
   const height = data.goals && data.goals.height;
@@ -2510,7 +2912,6 @@ function renderDashboard() {
     const bmi = latest.value / ((height/100) ** 2);
     bmiVal.textContent = bmi.toFixed(1);
     bmiBar.style.opacity = '1';
-    // BMI scale: 15 to 35 = 0% to 100%
     const pct = Math.min(100, Math.max(0, (bmi - 15) / (35 - 15) * 100));
     bmiMark.style.left = pct + '%';
     let cat, color, bg;
@@ -2524,11 +2925,12 @@ function renderDashboard() {
     bmiSub.textContent = '身高 ' + height + ' cm · 體重 ' + latest.value.toFixed(1) + ' kg';
   } else {
     bmiVal.textContent = '—';
-    bmiSub.textContent = height ? '請記錄體重' : '請在今日記錄填寫身高';
+    bmiSub.textContent = height ? '請記錄體重' : '請至用戶設定填寫身高';
     bmiCat.textContent = '—';
     bmiCat.style.background = '#e5e5ea';
     bmiCat.style.color = 'var(--text3)';
     bmiBar.style.opacity = '0.3';
+    bmiMark.style.left = '50%';
   }
 
   // Monthly calories
@@ -2836,6 +3238,515 @@ function renderGoals(){
 }
 
 
+
+// ══════════════════════════════════════════════════════════
+// EXERCISE DATABASE
+// ══════════════════════════════════════════════════════════
+const EXERCISES = [
+  // CHEST
+  { id:'b1', name:'槓鈴臥推', muscle:'胸部', equipment:'槓鈴', difficulty:'中級',
+    desc:'最經典的胸部訓練動作，主要鍛鍊胸大肌，同時刺激三角肌前束與三頭肌。',
+    muscles:['胸大肌（主）','三角肌前束','三頭肌'],
+    steps:['躺在臥推凳上，雙腳平踩地面，背部自然弓起。','雙手握距略寬於肩，掌心朝前握緊槓鈴。','深吸氣，緩慢將槓鈴下放至乳頭位置，感受胸部拉伸。','用力將槓鈴推起，呼氣，頂端鎖緊收縮胸肌。'],
+    tips:['保持肩胛骨收緊貼凳', '不要讓手腕過度後仰', '下放時控制速度約2秒'] },
+  { id:'b2', name:'上斜槓鈴臥推', muscle:'胸部', equipment:'槓鈴', difficulty:'中級',
+    desc:'針對胸大肌上束，讓胸型更飽滿立體。',
+    muscles:['胸大肌上束（主）','三角肌前束','三頭肌'],
+    steps:['將凳子調至30-45度角。','以同臥推方式握槓，下放至鎖骨附近。','推起時特別感受上胸收縮。'],
+    tips:['角度不超過45度以免變成肩部訓練', '組間可搭配下斜動作平衡發展'] },
+  { id:'b3', name:'啞鈴飛鳥', muscle:'胸部', equipment:'啞鈴', difficulty:'初級',
+    desc:'孤立胸肌的優質拉伸動作，強調內側收縮感。',
+    muscles:['胸大肌（主）'],
+    steps:['躺平，雙手各持啞鈴，手臂微彎呈弧形。','慢慢向兩側展開，感受胸部充分拉伸。','收縮胸肌，將啞鈴沿弧線合回起始位置。'],
+    tips:['手肘微彎保持固定角度全程', '不要追求重量，感受才是關鍵'] },
+  { id:'b4', name:'繩索夾胸', muscle:'胸部', equipment:'繩索', difficulty:'初級',
+    desc:'全程保持張力的胸肌孤立動作，適合訓練末段收縮感。',
+    muscles:['胸大肌（主）','胸小肌'],
+    steps:['將兩側繩索調至高位，站在兩者中間。','雙手握住把手，呈半弓步站姿。','沿弧線將兩手向下向中收，在中間交叉夾緊停頓1秒。','緩慢回到起始位置。'],
+    tips:['動作全程保持核心穩定', '夾緊時可做小幅交叉加強收縮'] },
+  { id:'b5', name:'雙槓撐體', muscle:'胸部', equipment:'徒手', difficulty:'中級',
+    desc:'利用自身體重訓練下胸與三頭，需有一定基礎。',
+    muscles:['胸大肌下束（主）','三頭肌','三角肌前束'],
+    steps:['握住雙槓，雙臂撐起身體。','身體略微前傾，緩慢下沉至手肘90度。','撐起回到起點，避免鎖死手肘。'],
+    tips:['前傾角度越大越針對胸肌', '若覺得困難可先用輔助帶'] },
+  { id:'b6', name:'伏地挺身', muscle:'胸部', equipment:'徒手', difficulty:'初級',
+    desc:'全身性推力動作，隨時隨地可以練習。',
+    muscles:['胸大肌','三頭肌','三角肌前束','核心'],
+    steps:['雙手略寬於肩，腳趾撐地，身體呈一直線。','緩慢下降至胸部接近地面。','用力推起，不要聳肩。'],
+    tips:['核心全程收緊避免塌腰', '寬手距偏胸，窄手距偏三頭'] },
+
+  // BACK
+  { id:'c1', name:'槓鈴硬舉', muscle:'背部', equipment:'槓鈴', difficulty:'高級',
+    desc:'全身性複合動作之王，主要鍛鍊下背、臀部與腿後肌，同時需要全身協調。',
+    muscles:['豎脊肌（主）','臀大肌','腿後肌','斜方肌'],
+    steps:['站在槓鈴前，雙腳與肩同寬，腳尖朝前。','俯身，雙手握槓（正握或正反握），手臂垂直地面。','深吸氣，收緊核心與背部，以臀腿力量將槓鈴提起。','站直後肩胛夾緊，再控制地將槓鈴放回地面。'],
+    tips:['全程保持背部平直，嚴禁圓背', '槓鈴貼腿移動，減少槓桿力矩', '初學者先從輕重量掌握動作模式'] },
+  { id:'c2', name:'槓鈴俯身划船', muscle:'背部', equipment:'槓鈴', difficulty:'中級',
+    desc:'增加背部厚度的黃金動作，主要刺激背闊肌中部與菱形肌。',
+    muscles:['背闊肌（主）','菱形肌','二頭肌'],
+    steps:['俯身約45度，背部保持平直。','槓鈴位於雙腿間，雙手正握略寬於肩。','以肘為軸，將槓鈴提拉至腹部，頂端夾緊背部。','緩慢放回，感受背闊肌拉伸。'],
+    tips:['腰椎要中立，不要圓背', '想像用手肘而非雙手在拉'] },
+  { id:'c3', name:'引體向上', muscle:'背部', equipment:'徒手', difficulty:'高級',
+    desc:'上肢拉力之王，對背寬發展效果極佳。',
+    muscles:['背闊肌（主）','二頭肌','菱形肌'],
+    steps:['雙手正握單槓，握距略寬於肩。','以肩胛骨下沉為啟動，將身體拉起至下巴超過單槓。','控制緩慢下降，充分拉伸背闊肌。'],
+    tips:['避免借助腿部甩動的慣性', '下放時要完全伸展手臂', '若做不到可先用輔助帶或高位下拉機器'] },
+  { id:'c4', name:'高位下拉', muscle:'背部', equipment:'機器', difficulty:'初級',
+    desc:'引體向上的機器替代版，適合初學者或體重較重者。',
+    muscles:['背闊肌（主）','二頭肌'],
+    steps:['坐好調整膝墊固定大腿，握距略寬於肩。','將拉桿拉至鎖骨前方，同時向後仰約15度。','夾緊背部2秒，緩慢放回到起始位置。'],
+    tips:['不要讓重量帶著你彈起', '想像手肘插入腰包的感覺'] },
+  { id:'c5', name:'坐姿划船', muscle:'背部', equipment:'機器', difficulty:'初級',
+    desc:'安全有效的背部厚度動作，適合學習正確划船感受。',
+    muscles:['背闊肌中部','菱形肌','二頭肌'],
+    steps:['坐於座位上，腳踩踏板，背部挺直。','雙手握把，以肘帶動，將把手拉向腹部。','夾緊肩胛骨停留1秒，再控制放回。'],
+    tips:['不要用身體大幅晃動借力', '拉到最後時感受兩邊肩胛骨互相夾緊'] },
+
+  // LEGS
+  { id:'d1', name:'槓鈴深蹲', muscle:'腿部', equipment:'槓鈴', difficulty:'高級',
+    desc:'下半身訓練的核心動作，同時刺激股四頭、臀部、腿後肌及核心。',
+    muscles:['股四頭肌（主）','臀大肌','腿後肌','核心'],
+    steps:['將槓鈴置於斜方肌上方，雙腳與肩同寬，腳尖略朝外。','深吸氣，核心收緊，緩慢屈膝下蹲。','大腿至少平行地面，膝蓋對準腳尖方向。','用力站起，呼氣，避免膝蓋內扣。'],
+    tips:['腰椎保持中立，嚴禁圓腰', '可先從高箱深蹲或自重深蹲開始', '視線保持前方偏上方'] },
+  { id:'d2', name:'腿舉機', muscle:'腿部', equipment:'機器', difficulty:'初級',
+    desc:'安全有效訓練股四頭的動作，適合大重量刺激。',
+    muscles:['股四頭肌（主）','臀大肌'],
+    steps:['坐好調整靠背，雙腳踩踏板與肩同寬。','緩慢彎曲膝蓋至接近胸口。','用力蹬出，不要鎖死膝蓋。'],
+    tips:['腳位越低越針對股四頭', '腳位越高越針對臀大肌與腿後'] },
+  { id:'d3', name:'羅馬尼亞硬舉', muscle:'腿部', equipment:'槓鈴', difficulty:'中級',
+    desc:'主要針對腿後肌與臀部的鉸鏈動作。',
+    muscles:['腿後肌（主）','臀大肌','豎脊肌'],
+    steps:['站直持槓鈴，雙腳與髖同寬。','以髖為軸，屈髖俯身，槓鈴貼腿下滑。','感受腿後充分拉伸後，啟動臀部推髖站起。'],
+    tips:['全程膝蓋只微彎，勿變成深蹲', '俯身時保持背部中立'] },
+  { id:'d4', name:'跨步蹲', muscle:'腿部', equipment:'啞鈴', difficulty:'初級',
+    desc:'單腿訓練可矯正左右肌力失衡，同時訓練平衡。',
+    muscles:['股四頭肌','臀大肌','腿後肌'],
+    steps:['雙手持啞鈴，一腳向前跨一大步。','後膝向地面下沉，前膝維持在腳踝正上方。','推回站立，換腳重複。'],
+    tips:['步伐要夠大，避免前膝超過腳尖太多', '核心收緊保持上身直立'] },
+  { id:'d5', name:'腿彎舉', muscle:'腿部', equipment:'機器', difficulty:'初級',
+    desc:'孤立訓練腿後肌的最佳機器動作。',
+    muscles:['腿後肌（主）'],
+    steps:['俯臥於機器上，腳踝置於滾輪下方。','將腳踝向臀部方向彎曲，頂端停留1秒。','緩慢放回。'],
+    tips:['避免臀部抬起借力', '頂端盡量讓腿後完全收縮'] },
+
+  // SHOULDERS
+  { id:'e1', name:'槓鈴肩推', muscle:'肩部', equipment:'槓鈴', difficulty:'中級',
+    desc:'肩部訓練的基礎複合動作，主要刺激三角肌前束與中束。',
+    muscles:['三角肌（主）','三頭肌','斜方肌'],
+    steps:['坐姿或站姿均可，將槓鈴置於鎖骨位置。','深吸氣，核心收緊，用力向上推起。','頂端三角肌完全收縮，緩慢下放。'],
+    tips:['不要過度後仰借力', '控制下放速度，感受三角肌離心收縮'] },
+  { id:'e2', name:'啞鈴側平舉', muscle:'肩部', equipment:'啞鈴', difficulty:'初級',
+    desc:'發展三角肌中束、讓肩膀更寬的關鍵動作。',
+    muscles:['三角肌中束（主）'],
+    steps:['站直持啞鈴，手臂微彎。','以肩為軸，將手臂向兩側舉起至肩膀高度。','小指略高於拇指，緩慢放回。'],
+    tips:['不要借助身體搖晃', '舉到肩膀高度即可，過高會轉移至斜方肌', '重量不用大，感受最重要'] },
+  { id:'e3', name:'俯身側平舉', muscle:'肩部', equipment:'啞鈴', difficulty:'初級',
+    desc:'鍛鍊三角肌後束，改善圓肩體態。',
+    muscles:['三角肌後束（主）','菱形肌'],
+    steps:['俯身約90度，雙膝微彎。','雙手持啞鈴自然垂下。','以肩為軸，向兩側舉起啞鈴至肩高。','緩慢放回。'],
+    tips:['想像兩隻手肘向天花板舉起', '避免用力甩動'] },
+  { id:'e4', name:'啞鈴肩推', muscle:'肩部', equipment:'啞鈴', difficulty:'初級',
+    desc:'比槓鈴肩推活動範圍更大，可強化肌肉連結感。',
+    muscles:['三角肌（主）','三頭肌'],
+    steps:['坐姿，啞鈴置於肩旁，掌心朝前。','向上推起，頂端啞鈴略微靠近但不相碰。','緩慢下放至起始位置。'],
+    tips:['可以在頂端稍微旋腕增加刺激', '確保坐姿穩定，腰背不要懸空'] },
+
+  // ARMS
+  { id:'f1', name:'槓鈴彎舉', muscle:'手臂', equipment:'槓鈴', difficulty:'初級',
+    desc:'最基礎且最有效的二頭肌訓練動作。',
+    muscles:['肱二頭肌（主）','肱肌'],
+    steps:['站直，雙手正握槓鈴，與肩同寬。','以肘為軸，將槓鈴向上彎起至二頭完全收縮。','緩慢放回，完全伸展二頭肌。'],
+    tips:['手肘保持固定在體側，不要前後擺動', '頂端停留1秒感受收縮'] },
+  { id:'f2', name:'窄握臥推', muscle:'手臂', equipment:'槓鈴', difficulty:'中級',
+    desc:'三頭肌的複合動作，同時有一定的胸肌刺激。',
+    muscles:['肱三頭肌（主）','胸大肌內側'],
+    steps:['握距約與肩同寬或略窄。','下放槓鈴至胸口，肘關節保持緊靠身體。','推起鎖死，感受三頭肌完全收縮。'],
+    tips:['手腕要保持中立，不過度外翻', '下放時手肘不要外展過多'] },
+  { id:'f3', name:'繩索下壓', muscle:'手臂', equipment:'繩索', difficulty:'初級',
+    desc:'三頭肌孤立動作，全程保持張力。',
+    muscles:['肱三頭肌（主）'],
+    steps:['站於繩索機前，雙手握住V形或繩索把手。','雙臂夾緊體側，向下伸直手臂。','頂端三頭完全鎖死停留1秒，緩慢回放。'],
+    tips:['上臂必須保持靜止不動', '下壓到完全伸直才能充分收縮三頭'] },
+  { id:'f4', name:'錘式彎舉', muscle:'手臂', equipment:'啞鈴', difficulty:'初級',
+    desc:'同時刺激二頭肌與肱橈肌，讓手臂更飽滿。',
+    muscles:['肱二頭肌','肱橈肌（主）'],
+    steps:['雙手持啞鈴，掌心相對（中立握法）。','以肘為軸，將啞鈴向上彎起。','緩慢放回完全伸展。'],
+    tips:['掌心全程保持相對，不要旋轉', '可以交替或同時進行'] },
+
+  // CORE
+  { id:'g1', name:'卷腹', muscle:'核心', equipment:'徒手', difficulty:'初級',
+    desc:'針對腹直肌上段的基礎動作。',
+    muscles:['腹直肌（主）'],
+    steps:['仰臥，雙膝彎曲，雙手放於耳旁或交叉胸前。','收縮腹肌，將肩胛骨抬離地面。','頂端停留1秒，緩慢放回，不要讓頭部碰地。'],
+    tips:['不是仰臥起坐，只需抬起上背', '頸部放鬆，用腹部發力', '呼氣時用力收縮'] },
+  { id:'g2', name:'平板支撐', muscle:'核心', equipment:'徒手', difficulty:'初級',
+    desc:'靜態核心穩定訓練，訓練深層核心肌群。',
+    muscles:['腹橫肌（主）','豎脊肌','臀肌'],
+    steps:['前臂撐地，手肘在肩膀正下方。','腳趾撐地，身體呈一直線。','收緊核心與臀肌，保持呼吸。'],
+    tips:['不要讓腰部下沉或臀部抬高', '目視地面保持頸椎中立', '初學者從30秒開始'] },
+  { id:'g3', name:'俄羅斯轉體', muscle:'核心', equipment:'徒手', difficulty:'初級',
+    desc:'強化腹斜肌的旋轉動作。',
+    muscles:['腹外斜肌（主）','腹內斜肌'],
+    steps:['坐在地上，雙腿彎曲抬起，身體後仰呈V型。','雙手合十，向左右兩側輪流觸碰地面。'],
+    tips:['可手持啞鈴增加阻力', '旋轉來自腰部而非手臂'] },
+  { id:'g4', name:'懸吊舉腿', muscle:'核心', equipment:'徒手', difficulty:'中級',
+    desc:'強化腹直肌下段的進階動作。',
+    muscles:['腹直肌下段（主）','髂腰肌'],
+    steps:['懸掛於單槓上，雙腿並攏。','收縮腹肌，將雙腿抬起至水平或更高。','緩慢放回，不要讓身體大幅擺盪。'],
+    tips:['若做不到直腿，先從彎腿版本開始', '避免依靠慣性甩腿'] },
+
+  // CARDIO
+  { id:'h1', name:'跑步機慢跑', muscle:'有氧', equipment:'機器', difficulty:'初級',
+    desc:'最普及的有氧訓練，可改善心肺功能與燃燒脂肪。',
+    muscles:['全身'],
+    steps:['設定速度從步行開始，逐漸提升至慢跑速度。','維持輕鬆可對話的強度（心率約65-75% 最大心率）。','逐漸冷卻，減速至步行結束。'],
+    tips:['保持上身直立，不要前傾抓扶手', '穿著合適跑鞋', '每週至少進行3次，每次30分鐘以上'] },
+  { id:'h2', name:'跳繩', muscle:'有氧', equipment:'徒手', difficulty:'初級',
+    desc:'高效便捷的有氧訓練，熱量消耗高。',
+    muscles:['全身','小腿'],
+    steps:['雙手握住跳繩把柄，繩子在身後。','小臂帶動手腕旋轉甩繩。','雙腳稍微跳起讓繩子通過，保持輕盈落地。'],
+    tips:['落地時用前腳掌緩衝，保護膝蓋', '初學者先練習單次跳，再連續跳', '每次10-15分鐘即可有效鍛鍊'] },
+  { id:'h3', name:'划船機', muscle:'有氧', equipment:'機器', difficulty:'初級',
+    desc:'全身性有氧訓練，同時鍛鍊上下半身與核心。',
+    muscles:['全身','背部','腿部'],
+    steps:['固定腳踝，手握把手，身體微前傾。','腿先蹬，然後身體後傾，最後手臂拉向腹部。','逆序放回：手臂先伸，身體前傾，腿再彎曲。'],
+    tips:['記住順序：推腿→後仰→拉手', '每分鐘划20-30次是適中速度'] },
+];
+
+// ══════════════════════════════════════════════════════════
+// WORKOUT TIMER
+// ══════════════════════════════════════════════════════════
+let timerState = 'idle'; // idle | running | paused
+let timerSeconds = 0;
+let timerInterval = null;
+let workoutExercises = []; // [{name, sets:[{weight,reps,rpe,done}]}]
+let currentWorkoutType = '';
+
+function timerStart() {
+  timerState = 'running';
+  timerInterval = setInterval(timerTick, 1000);
+  updateTimerUI();
+}
+
+function timerPause() {
+  timerState = 'paused';
+  clearInterval(timerInterval);
+  updateTimerUI();
+}
+
+function timerResume() {
+  timerState = 'running';
+  timerInterval = setInterval(timerTick, 1000);
+  updateTimerUI();
+}
+
+function timerStop() {
+  if (timerSeconds === 0) { showToast('請先開始計時'); return; }
+  clearInterval(timerInterval);
+  timerState = 'idle';
+  // auto-save to log
+  autoSaveWorkout();
+}
+
+function timerTick() {
+  timerSeconds++;
+  updateTimerClock();
+  updateCaloriesEstimate();
+}
+
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function updateTimerClock() {
+  const h = Math.floor(timerSeconds/3600);
+  const m = Math.floor((timerSeconds%3600)/60);
+  const s = timerSeconds%60;
+  document.getElementById('timerClock').textContent = h>0
+    ? `${pad(h)}:${pad(m)}:${pad(s)}`
+    : `${pad(m)}:${pad(s)}`;
+}
+
+function updateTimerUI() {
+  const dot = document.getElementById('timerDot');
+  const label = document.getElementById('timerStatusLabel');
+  const sub = document.getElementById('timerSubLabel');
+  const ctrl = document.getElementById('timerControls');
+
+  if (timerState === 'running') {
+    dot.className = 'status-dot running';
+    label.textContent = '訓練進行中';
+    sub.textContent = '計時中...';
+    ctrl.innerHTML = `
+      <button class="timer-btn timer-btn-pause" onclick="timerPause()">⏸ 暫停</button>
+      <button class="timer-btn timer-btn-stop" onclick="timerStop()">⏹ 結束並儲存</button>`;
+  } else if (timerState === 'paused') {
+    dot.className = 'status-dot paused';
+    label.textContent = '已暫停';
+    sub.textContent = '訓練暫停中';
+    ctrl.innerHTML = `
+      <button class="timer-btn timer-btn-resume" onclick="timerResume()">▶ 繼續</button>
+      <button class="timer-btn timer-btn-stop" onclick="timerStop()">⏹ 結束並儲存</button>`;
+  } else {
+    dot.className = 'status-dot';
+    label.textContent = '尚未開始';
+    sub.textContent = '按開始計時';
+    ctrl.innerHTML = `<button class="timer-btn timer-btn-start" onclick="timerStart()">▶ 開始</button>`;
+  }
+}
+
+function updateCaloriesEstimate() {
+  const type = document.getElementById('workout-type-select').value || 'fullbody';
+  const w = (data.weights[0] && data.weights[0].value) || 70;
+  const cal = calcCalories(type, Math.ceil(timerSeconds/60), w);
+  document.getElementById('timerCalories').textContent = cal;
+}
+
+function updateTimerStats() {
+  let totalSets = 0;
+  workoutExercises.forEach(ex => { totalSets += ex.sets.length; });
+  document.getElementById('timerSets').textContent = totalSets;
+  document.getElementById('timerExCount').textContent = workoutExercises.length;
+}
+
+function renderWorkoutTimer() {
+  updateTimerUI();
+  updateTimerClock();
+  renderWorkoutExercises();
+}
+
+function renderWorkoutExercises() {
+  const el = document.getElementById('workoutExerciseList');
+  if (workoutExercises.length === 0) {
+    el.innerHTML = '<div class="empty-state" style="padding:20px 0;"><div class="empty-icon">🏋️</div>尚未新增動作<br><span style="font-size:12px;">點擊下方按鈕新增，或從動作庫選取</span></div>';
+    return;
+  }
+  el.innerHTML = workoutExercises.map((ex, ei) => `
+    <div class="workout-ex-block">
+      <div class="workout-ex-header">
+        <div class="workout-ex-name">${ex.name}</div>
+        <button class="set-del-btn" onclick="removeWorkoutExercise(${ei})" title="移除此動作">🗑</button>
+      </div>
+      <div class="workout-ex-body">
+        <div class="set-col-labels">
+          <span>動作/組別</span><span>重量(kg)</span><span>次數</span><span class="rpe-col">RPE</span><span></span>
+        </div>
+        ${ex.sets.map((s, si) => `
+          <div class="workout-set-row">
+            <span style="font-size:12px;color:var(--text3);padding:0 4px;">第${si+1}組</span>
+            <input class="set-input" type="number" placeholder="kg" value="${s.weight||''}"
+              onchange="updateSet(${ei},${si},'weight',this.value)">
+            <input class="set-input" type="number" placeholder="次" value="${s.reps||''}"
+              onchange="updateSet(${ei},${si},'reps',this.value)">
+            <input class="set-input rpe-col" type="number" placeholder="1-10" min="1" max="10" value="${s.rpe||''}"
+              onchange="updateSet(${ei},${si},'rpe',this.value)">
+            <button class="set-del-btn" onclick="removeSet(${ei},${si})">✕</button>
+          </div>`).join('')}
+        <button class="add-set-btn" onclick="addSet(${ei})">＋ 新增一組</button>
+      </div>
+    </div>`).join('');
+  updateTimerStats();
+}
+
+function addWorkoutExercise() {
+  const modal = document.getElementById('addExModal');
+  modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
+  if (modal.style.display === 'block') {
+    document.getElementById('addExInput').value = '';
+    filterAddExList();
+    setTimeout(() => document.getElementById('addExInput').focus(), 100);
+  }
+}
+
+function filterAddExList() {
+  const q = document.getElementById('addExInput').value.toLowerCase();
+  const filtered = EXERCISES.filter(e =>
+    e.name.toLowerCase().includes(q) || e.muscle.includes(q)
+  );
+  const el = document.getElementById('addExSuggestions');
+  el.innerHTML = filtered.slice(0,12).map(e => `
+    <div onclick="selectExerciseFromList('${e.name}')" style="padding:9px 12px;cursor:pointer;border-radius:8px;font-size:13px;display:flex;justify-content:space-between;align-items:center;transition:background 0.1s;"
+      onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <span style="font-weight:500;">${e.name}</span>
+      <span style="font-size:11px;color:var(--text3);">${e.muscle} · ${e.equipment}</span>
+    </div>`).join('') || '<div style="padding:12px;color:var(--text3);font-size:13px;">找不到動作，將新增自訂動作</div>';
+}
+
+function selectExerciseFromList(name) {
+  document.getElementById('addExInput').value = name;
+}
+
+function confirmAddExercise() {
+  const name = document.getElementById('addExInput').value.trim();
+  if (!name) return;
+  workoutExercises.push({ name, sets: [{ weight:'', reps:'', rpe:'' }] });
+  document.getElementById('addExModal').style.display = 'none';
+  renderWorkoutExercises();
+  showToast('已新增：' + name);
+}
+
+function removeWorkoutExercise(ei) {
+  workoutExercises.splice(ei, 1);
+  renderWorkoutExercises();
+}
+
+function addSet(ei) {
+  workoutExercises[ei].sets.push({ weight:'', reps:'', rpe:'' });
+  renderWorkoutExercises();
+}
+
+function removeSet(ei, si) {
+  if (workoutExercises[ei].sets.length <= 1) { showToast('至少保留一組'); return; }
+  workoutExercises[ei].sets.splice(si, 1);
+  renderWorkoutExercises();
+}
+
+function updateSet(ei, si, field, val) {
+  workoutExercises[ei].sets[si][field] = val;
+  updateTimerStats();
+}
+
+function autoSaveWorkout() {
+  const date = new Date().toISOString().split('T')[0];
+  const durationMin = Math.max(1, Math.ceil(timerSeconds / 60));
+  const type = document.getElementById('workout-type-select').value || 'fullbody';
+  const w = (data.weights[0] && data.weights[0].value) || 70;
+  const cal = calcCalories(type, durationMin, w);
+
+  // Build exercises summary text
+  const exercisesText = workoutExercises.map(ex => {
+    const setsText = ex.sets
+      .filter(s => s.reps)
+      .map((s,i) => `第${i+1}組${s.weight?` ${s.weight}kg`:''} × ${s.reps}次${s.rpe?` RPE${s.rpe}`:''}`)
+      .join('\n');
+    return `${ex.name}:\n${setsText || '(無資料)'}`;
+  }).join('\n\n');
+
+  const startTime = new Date(Date.now() - timerSeconds * 1000);
+  const hh = pad(startTime.getHours()), mm = pad(startTime.getMinutes());
+  const endTime = new Date();
+  const ehh = pad(endTime.getHours()), emm = pad(endTime.getMinutes());
+
+  data.logs.unshift({
+    id: Date.now(), date, type,
+    weight: data.weights[0] ? data.weights[0].value : null,
+    start: `${hh}:${mm}`,
+    end: `${ehh}:${emm}`,
+    exercises: exercisesText,
+    notes: `實時訓練 · ${durationMin} 分鐘`,
+    calories: cal,
+    duration: durationMin,
+    photos: []
+  });
+
+  saveAndSync();
+
+  // Reset timer
+  timerSeconds = 0;
+  workoutExercises = [];
+  updateTimerClock();
+  updateTimerUI();
+  renderWorkoutExercises();
+  showToast(`✓ 訓練已儲存！共 ${durationMin} 分鐘，消耗約 ${cal} kcal`);
+  navigate('history', null);
+}
+
+// Allow adding from library to workout
+let currentLibraryExercise = null;
+
+function addToWorkoutFromLibrary() {
+  if (!currentLibraryExercise) return;
+  workoutExercises.push({ name: currentLibraryExercise.name, sets: [{ weight:'', reps:'', rpe:'' }] });
+  closeExDetail();
+  navigate('workout', document.querySelector('nav a[onclick*="workout"]'));
+  showToast('已加入訓練：' + currentLibraryExercise.name);
+}
+
+// ══════════════════════════════════════════════════════════
+// EXERCISE LIBRARY
+// ══════════════════════════════════════════════════════════
+function renderLibrary() {
+  const q = (document.getElementById('libSearchInput')?.value || '').toLowerCase();
+  const muscleF = document.getElementById('libMuscleFilter')?.value || '';
+  const typeF = document.getElementById('libTypeFilter')?.value || '';
+
+  let filtered = EXERCISES.filter(e => {
+    const matchQ = !q || e.name.toLowerCase().includes(q) || e.muscle.includes(q);
+    const matchM = !muscleF || e.muscle === muscleF;
+    const matchT = !typeF || e.equipment === typeF;
+    return matchQ && matchM && matchT;
+  });
+
+  const el = document.getElementById('libList');
+  if (!el) return;
+
+  if (filtered.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div>沒有找到符合的動作</div>';
+    return;
+  }
+
+  // Group by muscle
+  const groups = {};
+  filtered.forEach(e => {
+    if (!groups[e.muscle]) groups[e.muscle] = [];
+    groups[e.muscle].push(e);
+  });
+
+  el.innerHTML = Object.entries(groups).map(([muscle, exs]) => `
+    <div style="margin-bottom:20px;">
+      <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;">${muscle}</div>
+      ${exs.map(e => `
+        <div class="ex-card" onclick="openExDetail('${e.id}')">
+          <div class="ex-card-header">
+            <div class="ex-card-name">${e.name}</div>
+            <div class="ex-card-muscle">${e.muscle}</div>
+          </div>
+          <div class="ex-card-desc">${e.desc}</div>
+          <div class="ex-card-tags">
+            <span class="ex-tag">${e.equipment}</span>
+            <span class="ex-tag">${e.difficulty}</span>
+            ${e.muscles.slice(0,2).map(m=>`<span class="ex-tag">${m}</span>`).join('')}
+          </div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+function openExDetail(id) {
+  const ex = EXERCISES.find(e => e.id === id);
+  if (!ex) return;
+  currentLibraryExercise = ex;
+
+  document.getElementById('exDetailName').textContent = ex.name;
+  document.getElementById('exDetailMuscles').innerHTML = ex.muscles.map(m =>
+    `<span class="muscle-chip">${m}</span>`).join('');
+  document.getElementById('exDetailContent').innerHTML = `
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">動作說明</div>
+      <div style="font-size:14px;color:var(--text2);line-height:1.6;">${ex.desc}</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">步驟</div>
+      ${ex.steps.map((s,i) => `
+        <div class="ex-step">
+          <div class="ex-step-num">${i+1}</div>
+          <div class="ex-step-text">${s}</div>
+        </div>`).join('')}
+    </div>
+    ${ex.tips ? `
+    <div>
+      <div style="font-size:13px;font-weight:600;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">技巧提示</div>
+      ${ex.tips.map(t => `<div style="display:flex;gap:8px;padding:6px 0;font-size:13px;color:var(--text2);"><span style="color:var(--accent);">✓</span>${t}</div>`).join('')}
+    </div>` : ''}
+  `;
+
+  document.getElementById('exDetailModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeExDetail() {
+  document.getElementById('exDetailModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+
 // ── MOBILE NAV ──
 function mobileNavigate(page, el) {
   navigate(page, null);
@@ -2891,7 +3802,7 @@ function renderMobileUserList() {
     <div class="modal-user-item ${u.id === currentUserId ? 'selected' : ''}" onclick="requestSwitchUserMobile('${u.id}')">
       <div class="modal-user-avatar ${avatarClass(i)}">${initials(u.name)}</div>
       <span style="flex:1">${u.name}</span>
-      ${u.id === currentUserId ? '<span class="modal-check">✓</span>' : `<button class="modal-del" onclick="event.stopPropagation();requestDeleteUser('${u.id}')">刪除</button>`}
+      ${u.id === currentUserId ? '<span class="modal-check">✓</span>' : '<span style="color:var(--text3);font-size:16px;">›</span>'}
     </div>
   `).join('');
 }
