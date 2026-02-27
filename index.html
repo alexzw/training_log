@@ -776,6 +776,17 @@
 
     /* goal card */
     .goal-card { grid-template-columns: 1fr; gap: 12px; }
+
+    /* BMI + calorie row → stack on mobile */
+    #bmi-calorie-row { grid-template-columns: 1fr !important; }
+    .bmi-card { grid-column: 1 !important; }
+    .bmi-value { font-size: 28px; }
+    .bmi-labels { font-size: 9px; }
+    /* inline height edit — stack on mobile */
+    #bmi-height-inline { flex-wrap: wrap; }
+    #bmi-height-input { max-width: 100% !important; flex: 1; }
+    #bmi-height-saved { width: 100%; margin-top: 2px; }
+
     .goal-circle { margin: 0 auto; }
 
     /* table scroll */
@@ -948,6 +959,30 @@
   }
 
   .chart-wrap { position: relative; }
+
+  /* ─── DELETE CONFIRM MODAL ─── */
+  .delete-modal {
+    position: fixed; inset: 0; z-index: 9500;
+    display: none; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(6px);
+  }
+  .delete-modal.open { display: flex; }
+  .delete-modal-box {
+    background: var(--surface);
+    border-radius: 18px;
+    padding: 28px 28px 24px;
+    width: min(360px, 90vw);
+    box-shadow: var(--shadow-lg);
+    animation: fadeUp 0.22s ease;
+    text-align: center;
+  }
+  .delete-modal-icon { font-size: 36px; margin-bottom: 10px; }
+  .delete-modal-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .delete-modal-desc { font-size: 13px; color: var(--text2); margin-bottom: 20px; line-height: 1.5; }
+  .delete-modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+  .delete-modal-actions .btn { flex: 1; padding: 11px; font-size: 14px; border-radius: 10px; }
+
   /* ─── LOCK SCREEN ─── */
   .lock-screen {
     position: fixed; inset: 0; z-index: 9000;
@@ -1276,7 +1311,7 @@
             <div class="bmi-marker" id="bmi-marker" style="left:50%"></div>
           </div>
           <div class="bmi-labels"><span>偏瘦 &lt;18.5</span><span>正常 18.5–24</span><span>過重 24–27</span><span>肥胖 &gt;27</span></div>
-          <div style="margin-top:14px;display:flex;align-items:center;gap:8px;">
+          <div id="bmi-height-inline" style="margin-top:14px;display:flex;align-items:center;gap:8px;">
             <span style="font-size:12px;color:var(--text3);white-space:nowrap;">身高</span>
             <input type="number" id="bmi-height-input" class="form-input" placeholder="輸入身高 cm"
               min="100" max="250"
@@ -1866,17 +1901,65 @@ function addUser() {
   switchUser(uid);
 }
 
-function deleteUser(uid) {
-  let users = getUsers();
+// requestDeleteUser — shows password confirmation modal then deletes
+function requestDeleteUser(uid) {
+  const users = getUsers();
   if (users.length <= 1) { showToast('至少保留一個用戶'); return; }
+  const user = users.find(u => u.id === uid);
+  if (!user) return;
+  // show delete confirm modal
+  showDeleteConfirmModal(uid, user.name);
+}
+
+async function confirmDeleteUser(uid) {
+  const pwd = document.getElementById('delete-pwd-input').value;
+  const valid = await verifyPassword(uid, pwd);
+  if (!valid) {
+    const inp = document.getElementById('delete-pwd-input');
+    inp.classList.add('error');
+    document.getElementById('delete-pwd-error').textContent = '密碼錯誤';
+    setTimeout(() => inp.classList.remove('error'), 500);
+    inp.value = ''; inp.focus();
+    return;
+  }
+  // delete
+  let users = getUsers();
   users = users.filter(u => u.id !== uid);
   saveUsers(users);
   localStorage.removeItem(userDataKey(uid));
+  localStorage.removeItem(pwdKey(uid));
+  if (window._firestoreReady) {
+    try {
+      await window._fsDeleteDoc(window._fsDoc(window._db, 'users', uid));
+      await window._fsDeleteDoc(window._fsDoc(window._db, 'photos', uid));
+      await window._fsDeleteDoc(window._fsDoc(window._db, 'passwords', uid));
+    } catch(e) { console.warn('delete from firestore:', e); }
+  }
+  closeDeleteConfirmModal();
   if (currentUserId === uid) {
-    switchUser(users[0].id);
+    logoutToLockScreen();
   } else {
     renderUserList();
+    renderMobileUserList();
   }
+  showToast('用戶已刪除');
+}
+
+function deleteUser(uid) { requestDeleteUser(uid); }
+
+function showDeleteConfirmModal(uid, name) {
+  document.getElementById('delete-modal-name').textContent = name;
+  document.getElementById('delete-uid-hidden').value = uid;
+  document.getElementById('delete-pwd-input').value = '';
+  document.getElementById('delete-pwd-error').textContent = '';
+  document.getElementById('deleteConfirmModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('delete-pwd-input').focus(), 200);
+}
+
+function closeDeleteConfirmModal() {
+  document.getElementById('deleteConfirmModal').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 function renderUserList() {
@@ -1893,7 +1976,7 @@ function renderUserList() {
       <div class="user-item-avatar ${avatarClass(i)}">${initials(u.name)}</div>
       <div class="user-item-name">${u.name}</div>
       <span class="user-item-check">✓</span>
-      <button class="user-item-del" onclick="event.stopPropagation();deleteUser('${u.id}')" title="刪除">✕</button>
+      <button class="user-item-del" onclick="event.stopPropagation();requestDeleteUser('${u.id}')" title="刪除">✕</button>
     </div>
   `).join('');
 }
@@ -2808,7 +2891,7 @@ function renderMobileUserList() {
     <div class="modal-user-item ${u.id === currentUserId ? 'selected' : ''}" onclick="requestSwitchUserMobile('${u.id}')">
       <div class="modal-user-avatar ${avatarClass(i)}">${initials(u.name)}</div>
       <span style="flex:1">${u.name}</span>
-      ${u.id === currentUserId ? '<span class="modal-check">✓</span>' : `<button class="modal-del" onclick="event.stopPropagation();deleteUser('${u.id}')">刪除</button>`}
+      ${u.id === currentUserId ? '<span class="modal-check">✓</span>' : `<button class="modal-del" onclick="event.stopPropagation();requestDeleteUser('${u.id}')">刪除</button>`}
     </div>
   `).join('');
 }
@@ -2871,6 +2954,30 @@ function startRealtimeSync(uid) {
 // ── INIT ──
 
 </script>
+
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="delete-modal" id="deleteConfirmModal">
+  <div class="delete-modal-box">
+    <div class="delete-modal-icon">🗑️</div>
+    <div class="delete-modal-title">刪除用戶</div>
+    <div class="delete-modal-desc">
+      輸入 <strong id="delete-modal-name"></strong> 的密碼以確認刪除。<br>
+      此操作不可復原，所有資料將永久刪除。
+    </div>
+    <input type="hidden" id="delete-uid-hidden">
+    <input type="password" class="lock-input" id="delete-pwd-input"
+      placeholder="輸入密碼確認"
+      style="margin-bottom:6px;"
+      onkeydown="if(event.key==='Enter') confirmDeleteUser(document.getElementById('delete-uid-hidden').value)">
+    <div class="lock-error" id="delete-pwd-error" style="margin-bottom:10px;"></div>
+    <div class="delete-modal-actions">
+      <button class="btn btn-secondary" onclick="closeDeleteConfirmModal()">取消</button>
+      <button class="btn" style="background:var(--red);color:#fff;"
+        onclick="confirmDeleteUser(document.getElementById('delete-uid-hidden').value)">確認刪除</button>
+    </div>
+  </div>
+</div>
 
 <!-- LOCK SCREEN -->
 <div class="lock-screen" id="lockScreen">
