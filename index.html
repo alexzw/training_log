@@ -708,29 +708,226 @@
   /* ─── DIVIDER ─── */
   hr.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
 
-  /* ─── RESPONSIVE ─── */
-  @media (max-width: 720px) {
-    :root { --sidebar-w: 64px; }
-    .sidebar-header { padding: 18px 14px; }
-    .logo-text, .nav-section-label, nav a span:not(.nav-icon), .sidebar-footer-text { display: none; }
-    nav a { justify-content: center; padding: 9px; }
-    .logo { justify-content: center; }
-    .stats-grid { grid-template-columns: 1fr 1fr; }
-    .dashboard-grid { grid-template-columns: 1fr; }
-    .log-grid { grid-template-columns: 1fr; }
-    .content { padding: 20px; }
-    .topbar { padding: 0 20px; }
+  /* ─── BOTTOM NAV (mobile only) ─── */
+  .bottom-nav {
+    display: none;
   }
 
-  @media (max-width: 960px) and (min-width: 721px) {
+  /* ─── RESPONSIVE TABLET ─── */
+  @media (max-width: 960px) and (min-width: 601px) {
+    :root { --sidebar-w: 200px; }
     .stats-grid { grid-template-columns: 1fr 1fr; }
     .dashboard-grid { grid-template-columns: 1fr; }
     .log-grid { grid-template-columns: 1fr; }
     .content { padding: 20px 24px; }
   }
 
+  /* ─── RESPONSIVE MOBILE ─── */
   @media (max-width: 600px) {
-    .stats-grid { grid-template-columns: 1fr 1fr; }
+    :root { --sidebar-w: 0px; }
+
+    /* hide sidebar entirely */
+    .sidebar { display: none; }
+
+    /* main takes full width */
+    .main { margin-left: 0; padding-bottom: 72px; }
+
+    /* topbar */
+    .topbar { padding: 0 16px; height: 50px; }
+    .topbar-title { font-size: 16px; }
+    .topbar-date { font-size: 11px; }
+
+    /* content */
+    .content { padding: 14px 14px 16px; }
+
+    /* stats */
+    .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .stat-card { padding: 14px 16px; }
+    .stat-value { font-size: 26px; }
+
+    /* grids → single column */
+    .dashboard-grid { grid-template-columns: 1fr; gap: 12px; }
+    .log-grid { grid-template-columns: 1fr; gap: 12px; }
+    .plan-phases { grid-template-columns: 1fr; }
+
+    /* cards */
+    .card { padding: 16px; border-radius: 12px; }
+    .card-title { margin-bottom: 14px; }
+
+    /* section title */
+    .section-title { font-size: 17px; }
+
+    /* weight chart */
+    .weight-chart { height: 150px; }
+
+    /* workout entry */
+    .workout-entry { padding: 12px 14px; }
+
+    /* photo grid */
+    .photo-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+
+    /* buttons */
+    .btn { padding: 11px 18px; font-size: 14px; width: 100%; justify-content: center; }
+    .btn-danger { width: auto; }
+
+    /* form inputs bigger for touch */
+    .form-input { padding: 12px 13px; font-size: 15px; }
+    .form-label { font-size: 13px; }
+
+    /* goal card */
+    .goal-card { grid-template-columns: 1fr; gap: 12px; }
+    .goal-circle { margin: 0 auto; }
+
+    /* table scroll */
+    .weight-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .weight-table { min-width: 360px; }
+
+    /* user dropdown wider */
+    .user-dropdown { left: 0; right: 0; border-radius: 0 0 12px 12px; }
+
+    /* bottom nav */
+    .bottom-nav {
+      display: flex;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 64px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-top: 1px solid var(--border);
+      z-index: 100;
+      align-items: stretch;
+      padding: 0 4px;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .bottom-nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: background 0.15s;
+      padding: 6px 2px;
+      color: var(--text3);
+      font-size: 10px;
+      font-weight: 500;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .bottom-nav-item:active { background: var(--surface3); }
+    .bottom-nav-item.active { color: var(--accent); }
+
+    .bottom-nav-icon { font-size: 20px; line-height: 1; }
+    .bottom-nav-label { font-size: 9.5px; font-weight: 500; letter-spacing: 0.1px; }
+
+    /* topbar user button on mobile */
+    .topbar-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 20px;
+      background: var(--surface3);
+    }
+
+    .topbar-user-avatar {
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 10px; font-weight: 700;
+    }
+
+    .topbar-user-name { font-size: 13px; font-weight: 600; color: var(--text); max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* mobile user modal */
+    .mobile-user-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+    }
+
+    .mobile-user-modal.open { display: block; }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-sheet {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: var(--surface);
+      border-radius: 20px 20px 0 0;
+      padding: 12px 0 32px;
+      box-shadow: 0 -4px 30px rgba(0,0,0,0.12);
+      animation: slideSheet 0.28s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    @keyframes slideSheet {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-handle {
+      width: 36px; height: 4px;
+      background: var(--surface3);
+      border-radius: 2px;
+      margin: 0 auto 16px;
+    }
+
+    .modal-title {
+      font-size: 13px; font-weight: 600;
+      color: var(--text3); text-transform: uppercase;
+      letter-spacing: 0.5px; padding: 0 20px 8px;
+    }
+
+    .modal-user-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 20px; cursor: pointer;
+      font-size: 15px; font-weight: 500;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .modal-user-item:active { background: var(--surface2); }
+    .modal-user-item.selected { color: var(--accent); }
+
+    .modal-user-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 14px; font-weight: 700;
+    }
+
+    .modal-check { margin-left: auto; color: var(--accent); font-size: 16px; }
+    .modal-del { margin-left: auto; color: var(--red); font-size: 13px; background: var(--red-light); border: none; padding: 4px 10px; border-radius: 8px; font-family: inherit; cursor: pointer; }
+
+    .modal-add-row {
+      display: flex; gap: 10px;
+      padding: 12px 20px 4px;
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+    }
+
+    .modal-add-input {
+      flex: 1; background: var(--surface2); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 10px 14px;
+      font-family: inherit; font-size: 15px; color: var(--text); outline: none;
+    }
+
+    .modal-add-input:focus { border-color: var(--accent); }
+
+    .modal-add-btn {
+      background: var(--accent); color: #fff; border: none;
+      border-radius: 10px; padding: 10px 16px;
+      font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit;
+    }
   }
 
   /* ─── CHART TOOLTIP ─── */
@@ -930,7 +1127,13 @@
 <div class="main">
   <div class="topbar">
     <div class="topbar-title" id="pageTitle">總覽</div>
-    <div class="topbar-date" id="headerDate"></div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="topbar-date" id="headerDate"></div>
+      <div class="topbar-user" id="topbarUser" onclick="openMobileUserModal()" style="display:none;">
+        <div class="topbar-user-avatar av-0" id="topbarAvatar">?</div>
+        <span class="topbar-user-name" id="topbarUserName">用戶</span>
+      </div>
+    </div>
   </div>
 
   <div class="content">
@@ -1107,6 +1310,7 @@
       </div>
       <div class="card">
         <div class="card-title">體重記錄</div>
+        <div class="weight-table-wrap">
         <table class="weight-table">
           <thead>
             <tr>
@@ -1115,6 +1319,7 @@
           </thead>
           <tbody id="weight-tbody"></tbody>
         </table>
+        </div>
       </div>
     </div>
 
@@ -1209,6 +1414,45 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav" id="bottomNav">
+  <div class="bottom-nav-item active" onclick="mobileNavigate('dashboard',this)" data-page="dashboard">
+    <span class="bottom-nav-icon">📊</span>
+    <span class="bottom-nav-label">總覽</span>
+  </div>
+  <div class="bottom-nav-item" onclick="mobileNavigate('log',this)" data-page="log">
+    <span class="bottom-nav-icon">✏️</span>
+    <span class="bottom-nav-label">記錄</span>
+  </div>
+  <div class="bottom-nav-item" onclick="mobileNavigate('weight',this)" data-page="weight">
+    <span class="bottom-nav-icon">⚖️</span>
+    <span class="bottom-nav-label">體重</span>
+  </div>
+  <div class="bottom-nav-item" onclick="mobileNavigate('photos',this)" data-page="photos">
+    <span class="bottom-nav-icon">📷</span>
+    <span class="bottom-nav-label">照片</span>
+  </div>
+  <div class="bottom-nav-item" onclick="mobileNavigate('goals',this)" data-page="goals">
+    <span class="bottom-nav-icon">🎯</span>
+    <span class="bottom-nav-label">目標</span>
+  </div>
+</nav>
+
+<!-- MOBILE USER MODAL -->
+<div class="mobile-user-modal" id="mobileUserModal">
+  <div class="modal-backdrop" onclick="closeMobileUserModal()"></div>
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">切換用戶</div>
+    <div id="mobileUserList"></div>
+    <div class="modal-add-row">
+      <input class="modal-add-input" id="mobileNewUserInput" placeholder="新用戶名稱" maxlength="20"
+        onkeydown="if(event.key==='Enter') addUserMobile()">
+      <button class="modal-add-btn" onclick="addUserMobile()">新增</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── MULTI-USER ──
 const USERS_KEY = 'tl_users';
@@ -1273,6 +1517,7 @@ function switchUser(uid) {
   closeUserDropdown();
   renderUserList();
   renderDashboard();
+  syncTopbarUser();
   showToast('已切換到 ' + (user ? user.name : ''));
 }
 
@@ -1376,6 +1621,7 @@ document.addEventListener('click', e => {
   }
 
   renderUserList();
+  syncTopbarUser();
 })();
 
 function showToast(msg) {
@@ -1828,6 +2074,86 @@ function renderGoals(){
   }
 
   document.getElementById('goals-display').innerHTML = html||'<div class="empty-state">請設定目標</div>';
+}
+
+
+// ── MOBILE NAV ──
+function mobileNavigate(page, el) {
+  navigate(page, null);
+  document.querySelectorAll('.bottom-nav-item').forEach(i => i.classList.remove('active'));
+  if (el) el.classList.add('active');
+  // also sync sidebar
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+}
+
+function isMobile() { return window.innerWidth <= 600; }
+
+// Show topbar user btn on mobile
+function syncTopbarUser() {
+  const users = getUsers();
+  const user = users.find(u => u.id === currentUserId);
+  const idx = users.indexOf(user);
+  const el = document.getElementById('topbarUser');
+  const av = document.getElementById('topbarAvatar');
+  const nm = document.getElementById('topbarUserName');
+  if (el) {
+    el.style.display = isMobile() ? 'flex' : 'none';
+    if (user && av && nm) {
+      av.textContent = initials(user.name);
+      av.className = 'topbar-user-avatar ' + avatarClass(idx);
+      nm.textContent = user.name;
+    }
+  }
+}
+
+window.addEventListener('resize', syncTopbarUser);
+
+// ── MOBILE USER MODAL ──
+function openMobileUserModal() {
+  renderMobileUserList();
+  document.getElementById('mobileUserModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMobileUserModal() {
+  document.getElementById('mobileUserModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function renderMobileUserList() {
+  const users = getUsers();
+  const el = document.getElementById('mobileUserList');
+  if (!el) return;
+  if (users.length === 0) {
+    el.innerHTML = '<div style="padding:10px 20px;font-size:14px;color:var(--text3);">尚無用戶，請新增</div>';
+    return;
+  }
+  el.innerHTML = users.map((u, i) => `
+    <div class="modal-user-item ${u.id === currentUserId ? 'selected' : ''}" onclick="switchUserMobile('${u.id}')">
+      <div class="modal-user-avatar ${avatarClass(i)}">${initials(u.name)}</div>
+      <span style="flex:1">${u.name}</span>
+      ${u.id === currentUserId ? '<span class="modal-check">✓</span>' : `<button class="modal-del" onclick="event.stopPropagation();deleteUser('${u.id}')">刪除</button>`}
+    </div>
+  `).join('');
+}
+
+function switchUserMobile(uid) {
+  switchUser(uid);
+  closeMobileUserModal();
+  syncTopbarUser();
+}
+
+function addUserMobile() {
+  const input = document.getElementById('mobileNewUserInput');
+  const name = input.value.trim();
+  if (!name) { input.focus(); return; }
+  const users = getUsers();
+  if (users.find(u => u.name === name)) { showToast('此名稱已存在'); return; }
+  const uid = 'user_' + Date.now();
+  users.push({ id: uid, name });
+  saveUsers(users);
+  input.value = '';
+  switchUserMobile(uid);
 }
 
 // ── INIT ──
