@@ -1128,6 +1128,7 @@
   <div class="topbar">
     <div class="topbar-title" id="pageTitle">總覽</div>
     <div style="display:flex;align-items:center;gap:10px;">
+      <span id="syncStatus" style="font-size:12px;font-weight:500;transition:color 0.3s;"></span>
       <div class="topbar-date" id="headerDate"></div>
       <div class="topbar-user" id="topbarUser" onclick="openMobileUserModal()" style="display:none;">
         <div class="topbar-user-avatar av-0" id="topbarAvatar">?</div>
@@ -1453,6 +1454,35 @@
   </div>
 </div>
 
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDepVwacpLIrszDsOEkDx83ak0xgH8_TpI",
+  authDomain: "training-log-40f70.firebaseapp.com",
+  projectId: "training-log-40f70",
+  storageBucket: "training-log-40f70.firebasestorage.app",
+  messagingSenderId: "672010716354",
+  appId: "1:672010716354:web:c371ced95080267121a75b"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// expose to global scope for the main script
+window._db = db;
+window._firestoreReady = true;
+window._fsDoc = doc;
+window._fsGetDoc = getDoc;
+window._fsSetDoc = setDoc;
+window._fsOnSnapshot = onSnapshot;
+window._fsCollection = collection;
+window._fsGetDocs = getDocs;
+window._fsDeleteDoc = deleteDoc;
+window.dispatchEvent(new Event('firestore-ready'));
+</script>
+
 <script>
 // ── MULTI-USER ──
 const USERS_KEY = 'tl_users';
@@ -1464,6 +1494,11 @@ function getUsers() {
 
 function saveUsers(users) {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  // sync to Firestore
+  if (window._firestoreReady) {
+    window._fsSetDoc(window._fsDoc(window._db, 'app', 'users'), { list: users })
+      .catch(e => console.warn('Firestore saveUsers:', e));
+  }
 }
 
 function getCurrentUserId() {
@@ -1484,6 +1519,52 @@ function loadUserData(uid) {
 
 function saveUserData(uid, d) {
   localStorage.setItem(userDataKey(uid), JSON.stringify(d));
+  // sync to Firestore (split photos out to avoid 1MB limit — store refs only)
+  if (window._firestoreReady) {
+    const toStore = {
+      logs: d.logs || [],
+      weights: d.weights || [],
+      plans: d.plans || [],
+      goals: d.goals || {},
+      // photos stored separately
+    };
+    window._fsSetDoc(window._fsDoc(window._db, 'users', uid), toStore)
+      .catch(e => console.warn('Firestore saveUserData:', e));
+    // save photos separately (may be large)
+    const photos = (d.photos || []).map(p => ({ src: p.src, date: p.date, name: p.name || '' }));
+    window._fsSetDoc(window._fsDoc(window._db, 'photos', uid), { list: photos })
+      .catch(e => console.warn('Firestore savePhotos:', e));
+  }
+}
+
+async function loadUserDataFromFirestore(uid) {
+  if (!window._firestoreReady) return null;
+  try {
+    const [snap, photoSnap] = await Promise.all([
+      window._fsGetDoc(window._fsDoc(window._db, 'users', uid)),
+      window._fsGetDoc(window._fsDoc(window._db, 'photos', uid))
+    ]);
+    if (!snap.exists()) return null;
+    const d = snap.data();
+    if (photoSnap.exists()) d.photos = photoSnap.data().list || [];
+    else d.photos = [];
+    return d;
+  } catch(e) {
+    console.warn('Firestore load error:', e);
+    return null;
+  }
+}
+
+async function loadUsersFromFirestore() {
+  if (!window._firestoreReady) return null;
+  try {
+    const snap = await window._fsGetDoc(window._fsDoc(window._db, 'app', 'users'));
+    if (!snap.exists()) return null;
+    return snap.data().list || [];
+  } catch(e) {
+    console.warn('Firestore loadUsers error:', e);
+    return null;
+  }
 }
 
 function avatarClass(idx) { return 'av-' + (idx % 6); }
@@ -1500,9 +1581,43 @@ function save() {
   if (currentUserId) saveUserData(currentUserId, data);
 }
 
-function switchUser(uid) {
+// sync indicator
+function showSyncing() {
+  const el = document.getElementById('syncStatus');
+  if (el) { el.textContent = '☁ 同步中…'; el.style.color = 'var(--text3)'; }
+}
+function showSynced() {
+  const el = document.getElementById('syncStatus');
+  if (el) { el.textContent = '☁ 已同步'; el.style.color = 'var(--green)';
+    setTimeout(() => { if(el) el.textContent = ''; }, 2000); }
+}
+function showSyncError() {
+  const el = document.getElementById('syncStatus');
+  if (el) { el.textContent = '⚠ 同步失敗'; el.style.color = 'var(--red)'; }
+}
+
+async function saveAndSync() {
+  if (!currentUserId) return;
+  saveUserData(currentUserId, data);
+  if (!window._firestoreReady) return;
+  showSyncing();
+  try {
+    const toStore = { logs: data.logs||[], weights: data.weights||[], plans: data.plans||[], goals: data.goals||{} };
+    await window._fsSetDoc(window._fsDoc(window._db, 'users', currentUserId), toStore);
+    const photos = (data.photos||[]).map(p=>({src:p.src,date:p.date,name:p.name||''}));
+    await window._fsSetDoc(window._fsDoc(window._db, 'photos', currentUserId), {list:photos});
+    showSynced();
+  } catch(e) {
+    console.warn('sync error', e);
+    showSyncError();
+  }
+}
+
+async function switchUser(uid) {
   currentUserId = uid;
   setCurrentUserId(uid);
+
+  // Load from localStorage immediately (fast)
   data = loadUserData(uid);
 
   const users = getUsers();
@@ -1519,6 +1634,25 @@ function switchUser(uid) {
   renderDashboard();
   syncTopbarUser();
   showToast('已切換到 ' + (user ? user.name : ''));
+
+  // Then fetch fresh data from Firestore
+  if (window._firestoreReady) {
+    showSyncing();
+    const cloudData = await loadUserDataFromFirestore(uid);
+    if (cloudData) {
+      // merge: cloud wins for non-photo fields, merge photos by date
+      data.logs = cloudData.logs || data.logs;
+      data.weights = cloudData.weights || data.weights;
+      data.plans = cloudData.plans || data.plans;
+      data.goals = cloudData.goals || data.goals;
+      data.photos = cloudData.photos || data.photos;
+      saveUserData(uid, data); // update localStorage
+      renderDashboard();
+      showSynced();
+    } else {
+      showSynced();
+    }
+  }
 }
 
 function addUser() {
@@ -1596,8 +1730,9 @@ document.addEventListener('click', e => {
 });
 
 // ── INIT USERS ──
-(function initUsers() {
+async function initUsers() {
   let users = getUsers();
+
   // Migrate old single-user data
   const oldData = localStorage.getItem('tl_data');
   if (oldData && users.length === 0) {
@@ -1609,20 +1744,42 @@ document.addEventListener('click', e => {
     setCurrentUserId(uid);
   }
 
+  // Try to pull users list from Firestore (cross-device sync)
+  if (window._firestoreReady) {
+    const cloudUsers = await loadUsersFromFirestore();
+    if (cloudUsers && cloudUsers.length > 0) {
+      // Merge: add cloud users not in local
+      const localIds = users.map(u => u.id);
+      cloudUsers.forEach(cu => { if (!localIds.includes(cu.id)) users.push(cu); });
+      saveUsers(users);
+    } else if (users.length > 0) {
+      // Push local users up to cloud
+      saveUsers(users);
+    }
+  }
+
   if (users.length === 0) {
-    // First time — show empty state and prompt
     document.getElementById('currentUserName').textContent = '請新增用戶';
     document.getElementById('currentAvatar').textContent = '+';
     toggleUserDropdown();
   } else {
     const savedId = getCurrentUserId();
     const validUser = users.find(u => u.id === savedId) || users[0];
-    switchUser(validUser.id);
+    await switchUser(validUser.id);
   }
 
   renderUserList();
   syncTopbarUser();
-})();
+}
+
+// Run after Firestore is ready (or immediately if already ready)
+if (window._firestoreReady) {
+  initUsers();
+} else {
+  window.addEventListener('firestore-ready', () => initUsers(), { once: true });
+  // Fallback: run anyway after 3s if Firestore never loads
+  setTimeout(() => { if (!window._firestoreReady) initUsers(); }, 3000);
+}
 
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -1713,7 +1870,7 @@ function saveLog() {
   }
 
   pendingLogPhotos.forEach(p => data.photos.push(p));
-  save();
+  saveAndSync();
 
   pendingLogPhotos = [];
   document.getElementById('log-photo-previews').innerHTML = '';
@@ -1867,7 +2024,7 @@ function calcDur(s,e){
 }
 
 function deleteLog(id){
-  data.logs=data.logs.filter(l=>l.id!==id); save(); renderHistory();
+  data.logs=data.logs.filter(l=>l.id!==id); saveAndSync(); renderHistory();
   showToast('已刪除記錄');
 }
 
@@ -1875,7 +2032,7 @@ function deleteLog(id){
 function setTargetWeight(){
   const v=parseFloat(document.getElementById('target-weight-input').value);
   if(!v) return;
-  data.goals.weight=v; save();
+  data.goals.weight=v; saveAndSync();
   showToast('目標體重設定為 '+v+' kg');
   renderWeightPage();
 }
@@ -1888,7 +2045,7 @@ function addWeightRecord(){
   if(idx>=0) data.weights[idx].value=val;
   else data.weights.push({date,value:val});
   data.weights.sort((a,b)=>b.date.localeCompare(a.date));
-  save(); renderWeightPage();
+  saveAndSync(); renderWeightPage();
   showToast('體重記錄已新增');
 }
 
@@ -1923,7 +2080,7 @@ function renderWeightPage(){
 }
 
 function deleteWeight(date){
-  data.weights=data.weights.filter(w=>w.date!==date); save(); renderWeightPage();
+  data.weights=data.weights.filter(w=>w.date!==date); saveAndSync(); renderWeightPage();
 }
 
 // ── PHOTOS ──
@@ -1932,7 +2089,7 @@ function handlePhotoUpload(e){
     const r=new FileReader();
     r.onload=ev=>{
       data.photos.push({src:ev.target.result, date:today, name:f.name});
-      save(); renderPhotos();
+      saveAndSync(); renderPhotos();
     };
     r.readAsDataURL(f);
   });
@@ -1952,7 +2109,7 @@ function renderPhotos(){
     </div>`).join('');
 }
 
-function deletePhoto(idx){ data.photos.splice(idx,1); save(); renderPhotos(); }
+function deletePhoto(idx){ data.photos.splice(idx,1); saveAndSync(); renderPhotos(); }
 
 // ── PLANS ──
 function addPlan(){
@@ -1962,7 +2119,7 @@ function addPlan(){
   const desc=document.getElementById('plan-desc').value;
   if(!name){showToast('請輸入計劃名稱');return;}
   data.plans.unshift({id:Date.now(),name,start,end,desc});
-  save();
+  saveAndSync();
   document.getElementById('plan-name').value='';
   document.getElementById('plan-desc').value='';
   renderPlans(); showToast('訓練計劃已新增');
@@ -1993,7 +2150,7 @@ function renderPlans(){
   }).join('');
 }
 
-function deletePlan(id){ data.plans=data.plans.filter(p=>p.id!==id); save(); renderPlans(); }
+function deletePlan(id){ data.plans=data.plans.filter(p=>p.id!==id); saveAndSync(); renderPlans(); }
 
 // ── GOALS ──
 function saveGoals(){
@@ -2005,7 +2162,7 @@ function saveGoals(){
   if(date) data.goals.date=date;
   if(sessions) data.goals.sessions=sessions;
   if(desc) data.goals.desc=desc;
-  save(); showToast('目標已儲存'); renderGoals();
+  saveAndSync(); showToast('目標已儲存'); renderGoals();
 }
 
 function renderGoals(){
@@ -2154,6 +2311,42 @@ function addUserMobile() {
   saveUsers(users);
   input.value = '';
   switchUserMobile(uid);
+}
+
+
+// ── REALTIME LISTENER ──
+let unsubscribeListener = null;
+
+function startRealtimeSync(uid) {
+  if (unsubscribeListener) unsubscribeListener();
+  if (!window._firestoreReady) return;
+
+  unsubscribeListener = window._fsOnSnapshot(
+    window._fsDoc(window._db, 'users', uid),
+    async (snap) => {
+      if (!snap.exists() || snap.metadata.hasPendingWrites) return;
+      // Another device wrote — pull fresh data
+      const cloudData = snap.data();
+      const photoSnap = await window._fsGetDoc(window._fsDoc(window._db, 'photos', uid));
+      if (photoSnap.exists()) cloudData.photos = photoSnap.data().list || [];
+      else cloudData.photos = data.photos || [];
+
+      data.logs    = cloudData.logs    || data.logs;
+      data.weights = cloudData.weights || data.weights;
+      data.plans   = cloudData.plans   || data.plans;
+      data.goals   = cloudData.goals   || data.goals;
+      data.photos  = cloudData.photos;
+      saveUserData(uid, data);
+
+      // Refresh current visible page quietly
+      const activePage = document.querySelector('.page.active');
+      if (activePage) {
+        const pageId = activePage.id.replace('page-', '');
+        renderPage(pageId);
+      }
+    },
+    (err) => console.warn('Realtime listener error:', err)
+  );
 }
 
 // ── INIT ──
