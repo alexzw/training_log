@@ -948,6 +948,93 @@
   }
 
   .chart-wrap { position: relative; }
+  /* ─── LOCK SCREEN ─── */
+  .lock-screen {
+    position: fixed; inset: 0; z-index: 9000;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .lock-screen.hidden { display: none; }
+  .lock-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 32px 32px;
+    width: 340px;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+    animation: fadeUp 0.3s ease;
+  }
+  .lock-avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 24px; font-weight: 700;
+    margin: 0 auto 14px;
+  }
+  .lock-name { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; margin-bottom: 4px; }
+  .lock-hint { font-size: 13px; color: var(--text3); margin-bottom: 22px; }
+  .lock-input {
+    width: 100%; background: var(--surface2);
+    border: 1.5px solid var(--border2);
+    border-radius: 10px; padding: 12px 14px;
+    font-family: inherit; font-size: 16px;
+    color: var(--text); outline: none; text-align: center;
+    letter-spacing: 4px; margin-bottom: 12px;
+  }
+  .lock-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,113,227,0.15); }
+  .lock-input.error { border-color: var(--red); box-shadow: 0 0 0 3px rgba(255,59,48,0.15); animation: shake 0.3s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .lock-btn {
+    width: 100%; padding: 12px; background: var(--accent);
+    color: #fff; border: none; border-radius: 10px;
+    font-family: inherit; font-size: 15px; font-weight: 600;
+    cursor: pointer; margin-bottom: 10px;
+  }
+  .lock-btn:hover { background: var(--accent-hover); }
+  .lock-error { font-size: 13px; color: var(--red); min-height: 18px; margin-bottom: 4px; }
+  .lock-users { display: flex; flex-direction: column; gap: 4px; }
+  .lock-user-btn {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 10px; cursor: pointer;
+    transition: background 0.15s; text-align: left;
+    background: none; border: 1px solid var(--border);
+    width: 100%; font-family: inherit;
+  }
+  .lock-user-btn:hover { background: var(--surface2); }
+  .lock-user-btn.selected { border-color: var(--accent); background: var(--accent-light); }
+  .lock-user-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .lock-user-info { flex: 1; }
+  .lock-user-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .lock-user-hint { font-size: 11px; color: var(--text3); }
+  .lock-back { font-size: 13px; color: var(--accent); cursor: pointer; margin-top: 8px; background: none; border: none; font-family: inherit; }
+  .lock-back:hover { text-decoration: underline; }
+  .lock-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+  /* ─── BMI CARD ─── */
+  .bmi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s, transform 0.2s;
+    grid-column: span 2;
+  }
+  .bmi-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+  .bmi-bar-wrap { height: 10px; border-radius: 10px; background: linear-gradient(90deg,#34aadc 0%,#30d158 22%,#30d158 44%,#ff9f0a 66%,#ff3b30 100%); position: relative; margin: 10px 0 6px; overflow: visible; }
+  .bmi-marker { position: absolute; top: -4px; width: 18px; height: 18px; background: var(--surface); border: 2.5px solid var(--text); border-radius: 50%; transform: translateX(-50%); box-shadow: 0 1px 4px rgba(0,0,0,0.15); transition: left 0.6s cubic-bezier(0.22,1,0.36,1); }
+  .bmi-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); }
+  .bmi-value-row { display: flex; align-items: baseline; gap: 8px; }
+  .bmi-value { font-size: 32px; font-weight: 700; letter-spacing: -1px; }
+  .bmi-category { font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+
+  /* ─── CALORIE DISPLAY ─── */
+  .calorie-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; background: rgba(255,159,10,0.12); color: var(--orange); padding: 3px 10px; border-radius: 20px; }
+  .calorie-est { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+  /* ─── SET PASSWORD ─── */
+  .pwd-section { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+
 
   /* ─── USER SWITCHER ─── */
   .user-switcher {
@@ -1168,6 +1255,31 @@
         </div>
       </div>
 
+
+      <!-- BMI + Calorie Summary row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;" id="bmi-calorie-row">
+        <div class="bmi-card" style="grid-column:1;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
+            <div class="stat-label">BMI 身體質量指數</div>
+            <div id="bmi-category-badge" class="bmi-category" style="background:#e5e5ea;color:var(--text3);">—</div>
+          </div>
+          <div class="bmi-value-row">
+            <div class="bmi-value" id="bmi-value">—</div>
+            <div id="bmi-sub" style="font-size:13px;color:var(--text3);">請在設定中填寫身高</div>
+          </div>
+          <div class="bmi-bar-wrap" id="bmi-bar-wrap" style="opacity:0.3;">
+            <div class="bmi-marker" id="bmi-marker" style="left:50%"></div>
+          </div>
+          <div class="bmi-labels"><span>偏瘦 &lt;18.5</span><span>正常 18.5–24</span><span>過重 24–27</span><span>肥胖 &gt;27</span></div>
+        </div>
+        <div class="stat-card" style="grid-column:2;">
+          <div class="stat-label">本月消耗熱量</div>
+          <div class="stat-value" id="dash-calories">0</div>
+          <div class="stat-unit">大卡 kcal</div>
+          <div class="stat-change neutral" id="dash-calories-sub">本月累計估算</div>
+        </div>
+      </div>
+
       <div class="dashboard-grid">
         <div class="card">
           <div class="card-title">體重趨勢（近 30 天）</div>
@@ -1200,6 +1312,10 @@
             <div class="form-group">
               <label class="form-label">今日體重（kg）</label>
               <input type="number" step="0.1" class="form-input" id="log-weight" placeholder="例：75.5">
+            </div>
+            <div class="form-group">
+              <label class="form-label">身高（cm）<span style="color:var(--text3);font-weight:400;font-size:11px;"> 用於計算 BMI</span></label>
+              <input type="number" class="form-input" id="log-height" placeholder="例：175" min="100" max="250">
             </div>
             <div class="form-group">
               <label class="form-label">訓練類型</label>
@@ -1235,6 +1351,16 @@
             <div class="form-group">
               <label class="form-label">訓練動作（每行一個）</label>
               <textarea class="form-input" id="log-exercises" placeholder="例：&#10;臥推 4×10 80kg&#10;啞鈴飛鳥 3×12 20kg&#10;繩索夾胸 3×15" style="min-height:110px;"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">運動時長（分鐘）<span style="color:var(--text3);font-weight:400;font-size:11px;"> 用於計算消耗熱量</span></label>
+              <input type="number" class="form-input" id="log-duration" placeholder="例：60" min="1" max="600">
+            </div>
+            <div class="form-group" id="calorie-preview-group" style="display:none;">
+              <div style="background:rgba(255,159,10,0.08);border-radius:10px;padding:12px 14px;">
+                <div style="font-size:12px;color:var(--text3);margin-bottom:4px;">預估消耗熱量</div>
+                <div style="font-size:22px;font-weight:700;color:var(--orange);" id="calorie-preview">— <span style="font-size:13px;font-weight:400;">kcal</span></div>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label">備注 / 今日感受</label>
@@ -1408,6 +1534,25 @@
         <button class="btn btn-primary" onclick="saveGoals()">儲存目標</button>
       </div>
       <div id="goals-display"></div>
+
+      <!-- Password Settings -->
+      <div class="card" style="margin-top:20px;">
+        <div class="card-title">帳號安全設定</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">為你的帳號設定密碼，其他人無法未經授權查看你的資料。</div>
+        <div class="form-group">
+          <label class="form-label">目前密碼（留空表示無密碼）</label>
+          <input type="password" class="form-input" id="pwd-current" placeholder="輸入目前密碼" maxlength="20">
+        </div>
+        <div class="form-group">
+          <label class="form-label">新密碼</label>
+          <input type="password" class="form-input" id="pwd-new" placeholder="輸入新密碼（留空表示移除密碼）" maxlength="20">
+        </div>
+        <div class="form-group">
+          <label class="form-label">確認新密碼</label>
+          <input type="password" class="form-input" id="pwd-confirm" placeholder="再次輸入新密碼" maxlength="20">
+        </div>
+        <button class="btn btn-primary" onclick="changePassword()">更新密碼</button>
+      </div>
     </div>
 
   </div><!-- /content -->
@@ -1758,14 +1903,12 @@ async function initUsers() {
     }
   }
 
+  // Always show lock screen
+  renderLockUserList();
   if (users.length === 0) {
-    document.getElementById('currentUserName').textContent = '請新增用戶';
-    document.getElementById('currentAvatar').textContent = '+';
-    toggleUserDropdown();
+    showNewUserForm();
   } else {
-    const savedId = getCurrentUserId();
-    const validUser = users.find(u => u.id === savedId) || users[0];
-    await switchUser(validUser.id);
+    showLockUserSelect();
   }
 
   renderUserList();
@@ -1805,11 +1948,18 @@ function navigate(page, el) {
 
 function renderPage(p) {
   if (p==='dashboard') renderDashboard();
+  if (p==='log') prefillHeight();
   if (p==='history') renderHistory('all');
   if (p==='weight') renderWeightPage();
   if (p==='photos') renderPhotos();
   if (p==='plan') renderPlans();
   if (p==='goals') renderGoals();
+}
+
+// ── PRE-FILL HEIGHT ──
+function prefillHeight() {
+  const h = data.goals && data.goals.height;
+  if (h) document.getElementById('log-height').value = h;
 }
 
 // ── INIT DATES ──
@@ -1819,6 +1969,24 @@ document.getElementById('weight-date-input').value = today;
 const dateStr = new Date().toLocaleDateString('zh-TW',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
 document.getElementById('headerDate').textContent = dateStr;
 document.getElementById('sidebarDate').textContent = today;
+
+// ── CALORIE PREVIEW ──
+function updateCaloriePreview() {
+  const dur = parseInt(document.getElementById('log-duration').value)||0;
+  const type = document.getElementById('log-type').value;
+  const w = parseFloat(document.getElementById('log-weight').value)||data.goals?.lastWeight||70;
+  const pg = document.getElementById('calorie-preview-group');
+  if (dur > 0 && type && type !== 'rest') {
+    const cal = calcCalories(type, dur, w);
+    document.getElementById('calorie-preview').innerHTML = cal + ' <span style="font-size:13px;font-weight:400;">kcal</span>';
+    pg.style.display = 'block';
+  } else {
+    pg.style.display = 'none';
+  }
+}
+document.getElementById('log-duration').addEventListener('input', updateCaloriePreview);
+document.getElementById('log-type').addEventListener('change', updateCaloriePreview);
+document.getElementById('log-weight').addEventListener('input', updateCaloriePreview);
 
 // ── TYPE MAP ──
 const typeMap = {
@@ -1852,13 +2020,20 @@ function saveLog() {
   const end = document.getElementById('log-end').value;
   const exercises = document.getElementById('log-exercises').value;
   const notes = document.getElementById('log-notes').value;
+  const height = document.getElementById('log-height').value;
+  const duration = document.getElementById('log-duration').value;
 
   if (!date) { showToast('請選擇日期'); return; }
+
+  // save height to user profile
+  if (height) { data.goals.height = parseFloat(height); document.getElementById('log-height').value = height; }
 
   data.logs.unshift({
     id: Date.now(), date,
     weight: weight ? parseFloat(weight) : null,
     type, start, end, exercises, notes,
+    duration: duration ? parseInt(duration) : null,
+    calories: duration && weight ? calcCalories(type, parseInt(duration), parseFloat(weight)||70) : null,
     photos: [...pendingLogPhotos]
   });
 
@@ -1878,7 +2053,171 @@ function saveLog() {
   document.getElementById('log-type').value = '';
   document.getElementById('log-start').value = '';
   document.getElementById('log-end').value = '';
+  document.getElementById('log-duration').value = '';
   showToast('✓ 記錄已儲存');
+}
+
+
+// ── CALORIE CALCULATOR ──
+const MET = {
+  chest: 4.0, back: 4.0, legs: 5.5, shoulders: 3.5,
+  arms: 3.0, core: 3.8, cardio: 7.0, fullbody: 5.0, rest: 0
+};
+
+function calcCalories(type, durationMin, weightKg) {
+  const met = MET[type] || 4.0;
+  // Cal = MET × weight(kg) × time(hours)
+  return Math.round(met * weightKg * (durationMin / 60));
+}
+
+// ── PASSWORD SYSTEM ──
+// Passwords stored as simple hashes in localStorage (per user)
+function pwdKey(uid) { return 'tl_pwd_' + uid; }
+
+async function hashPassword(pwd) {
+  if (!pwd) return '';
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pwd));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function setUserPassword(uid, newPwd) {
+  const hash = await hashPassword(newPwd);
+  localStorage.setItem(pwdKey(uid), hash);
+  // sync to Firestore
+  if (window._firestoreReady) {
+    window._fsSetDoc(window._fsDoc(window._db, 'passwords', uid), { hash })
+      .catch(e => console.warn('pwd sync:', e));
+  }
+}
+
+async function getUserPasswordHash(uid) {
+  // check Firestore first for cross-device sync
+  if (window._firestoreReady) {
+    try {
+      const snap = await window._fsGetDoc(window._fsDoc(window._db, 'passwords', uid));
+      if (snap.exists()) {
+        const hash = snap.data().hash || '';
+        localStorage.setItem(pwdKey(uid), hash);
+        return hash;
+      }
+    } catch(e) {}
+  }
+  return localStorage.getItem(pwdKey(uid)) || '';
+}
+
+async function verifyPassword(uid, inputPwd) {
+  const stored = await getUserPasswordHash(uid);
+  if (!stored) return true; // no password set = always pass
+  const inputHash = await hashPassword(inputPwd);
+  return inputHash === stored;
+}
+
+async function changePassword() {
+  const cur = document.getElementById('pwd-current').value;
+  const nw = document.getElementById('pwd-new').value;
+  const cf = document.getElementById('pwd-confirm').value;
+
+  if (nw !== cf) { showToast('新密碼兩次輸入不一致'); return; }
+  const valid = await verifyPassword(currentUserId, cur);
+  if (!valid) { showToast('目前密碼錯誤'); return; }
+  await setUserPassword(currentUserId, nw);
+  document.getElementById('pwd-current').value = '';
+  document.getElementById('pwd-new').value = '';
+  document.getElementById('pwd-confirm').value = '';
+  showToast(nw ? '✓ 密碼已更新' : '✓ 密碼已移除');
+}
+
+// ── LOCK SCREEN ──
+let lockSelectedUid = null;
+
+function renderLockUserList() {
+  const users = getUsers();
+  const el = document.getElementById('lockUserList');
+  el.innerHTML = users.map((u, i) => `
+    <button class="lock-user-btn ${u.id === lockSelectedUid ? 'selected' : ''}"
+      onclick="selectLockUser('${u.id}')">
+      <div class="lock-user-avatar ${avatarClass(i)}">${initials(u.name)}</div>
+      <div class="lock-user-info">
+        <div class="lock-user-name">${u.name}</div>
+      </div>
+      <span style="color:var(--text3);font-size:18px;">›</span>
+    </button>
+  `).join('');
+}
+
+async function selectLockUser(uid) {
+  lockSelectedUid = uid;
+  const users = getUsers();
+  const user = users.find(u => u.id === uid);
+  const idx = users.indexOf(user);
+  const hash = await getUserPasswordHash(uid);
+
+  document.getElementById('lockAvatar').textContent = initials(user.name);
+  document.getElementById('lockAvatar').className = 'lock-avatar ' + avatarClass(idx);
+  document.getElementById('lockDisplayName').textContent = user.name;
+  document.getElementById('lockError').textContent = '';
+
+  if (!hash) {
+    // No password — unlock immediately
+    unlockApp(uid);
+  } else {
+    document.getElementById('lockPwdHint').textContent = '請輸入密碼';
+    document.getElementById('lockPwdInput').value = '';
+    document.getElementById('lockUserSelect').style.display = 'none';
+    document.getElementById('lockPasswordView').style.display = 'block';
+    document.getElementById('lockNewUserView').style.display = 'none';
+    setTimeout(() => document.getElementById('lockPwdInput').focus(), 100);
+  }
+}
+
+async function submitLockPassword() {
+  const input = document.getElementById('lockPwdInput');
+  const valid = await verifyPassword(lockSelectedUid, input.value);
+  if (valid) {
+    unlockApp(lockSelectedUid);
+  } else {
+    input.classList.add('error');
+    document.getElementById('lockError').textContent = '密碼錯誤，請再試一次';
+    setTimeout(() => input.classList.remove('error'), 500);
+    input.value = '';
+    input.focus();
+  }
+}
+
+function unlockApp(uid) {
+  document.getElementById('lockScreen').classList.add('hidden');
+  switchUser(uid);
+}
+
+function showLockUserSelect() {
+  document.getElementById('lockUserSelect').style.display = 'block';
+  document.getElementById('lockPasswordView').style.display = 'none';
+  document.getElementById('lockNewUserView').style.display = 'none';
+  renderLockUserList();
+}
+
+function showNewUserForm() {
+  document.getElementById('lockUserSelect').style.display = 'none';
+  document.getElementById('lockPasswordView').style.display = 'none';
+  document.getElementById('lockNewUserView').style.display = 'block';
+  document.getElementById('lockNewName').value = '';
+  document.getElementById('lockNewPwd').value = '';
+  document.getElementById('lockNewError').textContent = '';
+  setTimeout(() => document.getElementById('lockNewName').focus(), 100);
+}
+
+async function submitNewUser() {
+  const name = document.getElementById('lockNewName').value.trim();
+  const pwd = document.getElementById('lockNewPwd').value;
+  const errEl = document.getElementById('lockNewError');
+  if (!name) { errEl.textContent = '請輸入名稱'; return; }
+  const users = getUsers();
+  if (users.find(u => u.name === name)) { errEl.textContent = '此名稱已存在'; return; }
+  const uid = 'user_' + Date.now();
+  users.push({ id: uid, name });
+  saveUsers(users);
+  if (pwd) await setUserPassword(uid, pwd);
+  unlockApp(uid);
 }
 
 // ── DASHBOARD ──
@@ -1934,6 +2273,43 @@ function renderDashboard() {
         </div>`).join('');
 
   drawChart('weightChart', ws.slice(0,30).reverse(), 560, 160);
+
+  // BMI
+  const height = data.goals && data.goals.height;
+  const bmiVal = document.getElementById('bmi-value');
+  const bmiCat = document.getElementById('bmi-category-badge');
+  const bmiSub = document.getElementById('bmi-sub');
+  const bmiBar = document.getElementById('bmi-bar-wrap');
+  const bmiMark = document.getElementById('bmi-marker');
+  if (latest && height) {
+    const bmi = latest.value / ((height/100) ** 2);
+    bmiVal.textContent = bmi.toFixed(1);
+    bmiBar.style.opacity = '1';
+    // BMI scale: 15 to 35 = 0% to 100%
+    const pct = Math.min(100, Math.max(0, (bmi - 15) / (35 - 15) * 100));
+    bmiMark.style.left = pct + '%';
+    let cat, color, bg;
+    if (bmi < 18.5)      { cat='偏瘦'; color='#34aadc'; bg='rgba(52,170,220,0.12)'; }
+    else if (bmi < 24)   { cat='正常'; color='var(--green)'; bg='var(--green-light)'; }
+    else if (bmi < 27)   { cat='過重'; color='var(--orange)'; bg='var(--orange-light)'; }
+    else                 { cat='肥胖'; color='var(--red)'; bg='var(--red-light)'; }
+    bmiCat.textContent = cat;
+    bmiCat.style.color = color;
+    bmiCat.style.background = bg;
+    bmiSub.textContent = '身高 ' + height + ' cm · 體重 ' + latest.value.toFixed(1) + ' kg';
+  } else {
+    bmiVal.textContent = '—';
+    bmiSub.textContent = height ? '請記錄體重' : '請在今日記錄填寫身高';
+    bmiCat.textContent = '—';
+    bmiCat.style.background = '#e5e5ea';
+    bmiCat.style.color = 'var(--text3)';
+    bmiBar.style.opacity = '0.3';
+  }
+
+  // Monthly calories
+  const monthCal = monthLogs.reduce((s, l) => s + (l.calories||0), 0);
+  document.getElementById('dash-calories').textContent = monthCal.toLocaleString();
+  document.getElementById('dash-calories-sub').textContent = monthCal > 0 ? '本月消耗估算' : '記錄訓練時長以計算';
 }
 
 // ── CHART ──
@@ -2008,6 +2384,7 @@ function renderHistory(filter) {
           ${dur?`<span class="entry-tag">⏱ ${dur}</span>`:''}
           ${l.weight?`<span class="entry-tag">⚖ ${l.weight} kg</span>`:''}
           ${l.photos&&l.photos.length?`<span class="entry-tag green">📷 ${l.photos.length} 張</span>`:''}
+          ${l.calories?`<span class="calorie-tag">🔥 ${l.calories} kcal</span>`:''}
         </div>
         ${l.exercises?`<div class="entry-exercises">${l.exercises}</div>`:''}
         ${l.notes?`<div class="entry-notes">${l.notes}</div>`:''}
@@ -2352,5 +2729,45 @@ function startRealtimeSync(uid) {
 // ── INIT ──
 
 </script>
+
+<!-- LOCK SCREEN -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-box" id="lockBox">
+    <!-- user select view -->
+    <div id="lockUserSelect">
+      <div style="font-size:28px;margin-bottom:10px;">🏋️</div>
+      <div class="lock-name">Training Log</div>
+      <div class="lock-hint">選擇你的帳號</div>
+      <div class="lock-users" id="lockUserList"></div>
+      <div class="lock-divider"></div>
+      <button class="lock-user-btn" style="justify-content:center;color:var(--accent);border-color:var(--accent-light);background:var(--accent-light);" onclick="showNewUserForm()">＋ 新增用戶</button>
+    </div>
+    <!-- password entry view -->
+    <div id="lockPasswordView" style="display:none;">
+      <div class="lock-avatar" id="lockAvatar">?</div>
+      <div class="lock-name" id="lockDisplayName">用戶</div>
+      <div class="lock-hint" id="lockPwdHint">請輸入密碼</div>
+      <input type="password" class="lock-input" id="lockPwdInput" placeholder="••••••" maxlength="20"
+        onkeydown="if(event.key==='Enter') submitLockPassword()">
+      <div class="lock-error" id="lockError"></div>
+      <button class="lock-btn" onclick="submitLockPassword()">解鎖</button>
+      <button class="lock-back" onclick="showLockUserSelect()">← 返回選擇帳號</button>
+    </div>
+    <!-- new user form -->
+    <div id="lockNewUserView" style="display:none;">
+      <div style="font-size:28px;margin-bottom:10px;">👤</div>
+      <div class="lock-name">建立新帳號</div>
+      <div class="lock-hint" style="margin-bottom:20px;">設定名稱與密碼</div>
+      <input type="text" class="lock-input" id="lockNewName" placeholder="你的名字" maxlength="20"
+        style="letter-spacing:0;margin-bottom:10px;" onkeydown="if(event.key==='Enter')document.getElementById('lockNewPwd').focus()">
+      <input type="password" class="lock-input" id="lockNewPwd" placeholder="設定密碼（可留空）" maxlength="20"
+        onkeydown="if(event.key==='Enter') submitNewUser()">
+      <div class="lock-error" id="lockNewError"></div>
+      <button class="lock-btn" onclick="submitNewUser()">建立帳號</button>
+      <button class="lock-back" onclick="showLockUserSelect()">← 返回</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
