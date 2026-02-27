@@ -2559,16 +2559,22 @@ async function initUsers() {
   }
 
   // Try to pull users list from Firestore (cross-device sync)
+  // Use a timeout so a slow network never blocks the lock screen from showing
   if (window._firestoreReady) {
-    const cloudUsers = await loadUsersFromFirestore();
-    if (cloudUsers && cloudUsers.length > 0) {
-      // Merge: add cloud users not in local
-      const localIds = users.map(u => u.id);
-      cloudUsers.forEach(cu => { if (!localIds.includes(cu.id)) users.push(cu); });
-      saveUsers(users);
-    } else if (users.length > 0) {
-      // Push local users up to cloud
-      saveUsers(users);
+    try {
+      const cloudUsers = await Promise.race([
+        loadUsersFromFirestore(),
+        new Promise(resolve => setTimeout(() => resolve(null), 3000))
+      ]);
+      if (cloudUsers && cloudUsers.length > 0) {
+        const localIds = users.map(u => u.id);
+        cloudUsers.forEach(cu => { if (!localIds.includes(cu.id)) users.push(cu); });
+        saveUsers(users);
+      } else if (users.length > 0) {
+        saveUsers(users);
+      }
+    } catch(e) {
+      console.warn('Firestore sync skipped:', e);
     }
   }
 
@@ -2584,13 +2590,30 @@ async function initUsers() {
   syncTopbarUser();
 }
 
-// Run after Firestore is ready (or immediately if already ready)
-if (window._firestoreReady) {
+// Show lock screen immediately on load (before async init completes)
+document.addEventListener('DOMContentLoaded', () => {
+  const ls = document.getElementById('lockScreen');
+  if (ls) ls.classList.remove('hidden');
+});
+
+// ── INIT GUARD ──
+// type="module" scripts run asynchronously, so timing of 'firestore-ready'
+// relative to this script is unpredictable. We handle all cases:
+let _initCalled = false;
+function safeInitUsers() {
+  if (_initCalled) return;
+  _initCalled = true;
   initUsers();
+}
+
+// Case 1: Firebase module already ran before this script reached here
+if (window._firestoreReady) {
+  safeInitUsers();
 } else {
-  window.addEventListener('firestore-ready', () => initUsers(), { once: true });
-  // Fallback: run anyway after 3s if Firestore never loads
-  setTimeout(() => { if (!window._firestoreReady) initUsers(); }, 3000);
+  // Case 2: Firebase module hasn't run yet — listen for the event
+  window.addEventListener('firestore-ready', safeInitUsers, { once: true });
+  // Case 3: Firebase fails or takes too long — run without it after 2.5s
+  setTimeout(safeInitUsers, 2500);
 }
 
 function showToast(msg) {
@@ -4307,7 +4330,7 @@ renderLogExerciseList();
 </div>
 
 <!-- LOCK SCREEN -->
-<div class="lock-screen" id="lockScreen">
+<div class="lock-screen" id="lockScreen"><!-- always visible until unlocked -->
   <div class="lock-box" id="lockBox">
     <!-- user select view -->
     <div id="lockUserSelect">
