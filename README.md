@@ -2,7 +2,7 @@
 
 > 一個簡潔的個人健身追蹤網站，Apple 風格設計，支援多用戶，所有資料儲存在本地瀏覽器。
 
-🌐 **線上網址：** `https://你的用戶名.github.io/training-log/`
+🌐 **線上網址：** `https://alexzw.github.io/training-log/`
 
 ---
 
