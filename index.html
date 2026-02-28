@@ -2649,8 +2649,23 @@ async function loadUsersFromFirestore() {
   if (!window._firestoreReady) return null;
   try {
     const snap = await window._fsGetDoc(window._fsDoc(window._db, 'app', 'users'));
-    if (!snap.exists()) return null;
-    return snap.data().list || [];
+    if (snap.exists()) {
+      const payload = snap.data() || {};
+      if (Array.isArray(payload.list)) return payload.list;
+      if (Array.isArray(payload.users)) return payload.users; // legacy/fallback schema
+    }
+
+    // Fallback: rebuild user list from /users collection docs
+    const colSnap = await window._fsGetDocs(window._fsCollection(window._db, 'users'));
+    const rebuilt = [];
+    colSnap.forEach(d => {
+      const v = d.data() || {};
+      rebuilt.push({
+        id: d.id,
+        name: (typeof v.name === 'string' && v.name.trim()) ? v.name.trim() : d.id
+      });
+    });
+    return rebuilt;
   } catch(e) {
     console.warn('Firestore loadUsers error:', e);
     return null;
@@ -2908,25 +2923,37 @@ async function _syncUsersFromCloud() {
       });
     }
     if (!window._firestoreReady) return; // Firebase never loaded, skip
-    const cloudUsers = await Promise.race([
-      loadUsersFromFirestore(),
-      new Promise(resolve => setTimeout(() => resolve(null), 4000))
-    ]);
-    if (!cloudUsers || cloudUsers.length === 0) return;
+    // Retry cloud fetch a few times to avoid cold-start/slow-network misses.
+    let cloudUsers = null;
+    for (let i = 0; i < 3; i++) {
+      cloudUsers = await loadUsersFromFirestore();
+      if (cloudUsers && cloudUsers.length > 0) break;
+      await new Promise(r => setTimeout(r, 1500));
+    }
+    if (!cloudUsers || cloudUsers.length === 0) {
+      if (getUsers().length === 0) {
+        const hint = document.getElementById('lockNewError');
+        if (hint) {
+          hint.textContent = '讀不到雲端用戶，請檢查 Firestore 規則是否允許讀取 app/users。';
+        }
+      }
+      return;
+    }
     const localUsers = getUsers();
-    const localIds = localUsers.map(u => u.id);
+    const localIds = new Set(localUsers.map(u => u.id));
     let changed = false;
     cloudUsers.forEach(cu => {
-      if (!localIds.includes(cu.id)) { localUsers.push(cu); changed = true; }
+      if (!cu || !cu.id) return;
+      if (!localIds.has(cu.id)) {
+        localUsers.push({ id: cu.id, name: cu.name || cu.id });
+        changed = true;
+      }
     });
-    if (changed) {
-      saveUsers(localUsers);
-      // Refresh the lock screen to show newly synced users
+    if (changed || localUsers.length > 0) {
+      if (changed) saveUsers(localUsers);
       renderLockUserList();
       renderUserList();
-      // If local was empty at startup, UI may still be on "new user" form.
-      // Switch back to account picker once cloud users are available.
-      if (localUsers.length > 0) showLockUserSelect();
+      showLockUserSelect();
     }
   } catch(e) {
     console.warn('Background Firebase sync failed:', e);
