@@ -5065,7 +5065,7 @@ function setEditPeriodDate(d) {
     }, 50);
   }
 }
-  
+
 function deletePeriodEntry(date) {
   data.period = (data.period||[]).filter(p=>p.date!==date);
   saveAndSync(); renderPeriod();
