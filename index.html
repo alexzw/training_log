@@ -2570,6 +2570,7 @@ window._fsOnSnapshot = onSnapshot;
 window._fsCollection = collection;
 window._fsGetDocs = getDocs;
 window._fsDeleteDoc = deleteDoc;
+window._firebaseProjectId = firebaseConfig.projectId;
 window.dispatchEvent(new Event('firestore-ready'));
 </script>
 
@@ -2668,6 +2669,51 @@ async function loadUsersFromFirestore() {
     return rebuilt;
   } catch(e) {
     console.warn('Firestore loadUsers error:', e);
+    return null;
+  }
+}
+
+function _parseUsersFromFirestoreDoc(docJson) {
+  const fields = docJson?.fields || {};
+  const values = fields.list?.arrayValue?.values || fields.users?.arrayValue?.values || [];
+  return values
+    .map(v => {
+      const f = v?.mapValue?.fields || {};
+      const id = f.id?.stringValue || '';
+      const name = f.name?.stringValue || id;
+      return id ? { id, name } : null;
+    })
+    .filter(Boolean);
+}
+
+async function loadUsersFromFirestoreREST() {
+  const projectId = window._firebaseProjectId;
+  if (!projectId) return null;
+  const base = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents`;
+  try {
+    const docRes = await fetch(`${base}/app/users`, { cache: 'no-store' });
+    if (docRes.ok) {
+      const docJson = await docRes.json();
+      const users = _parseUsersFromFirestoreDoc(docJson);
+      if (users.length > 0) return users;
+    }
+  } catch (e) {
+    console.warn('REST app/users load failed:', e);
+  }
+
+  try {
+    const listRes = await fetch(`${base}/users?pageSize=100`, { cache: 'no-store' });
+    if (!listRes.ok) return null;
+    const listJson = await listRes.json();
+    const docs = listJson.documents || [];
+    const users = docs.map(d => {
+      const id = (d.name || '').split('/').pop();
+      const name = d.fields?.name?.stringValue || id;
+      return id ? { id, name } : null;
+    }).filter(Boolean);
+    return users;
+  } catch (e) {
+    console.warn('REST users collection load failed:', e);
     return null;
   }
 }
@@ -2922,14 +2968,17 @@ async function _syncUsersFromCloud() {
         setTimeout(() => { clearInterval(check); resolve(); }, 5000);
       });
     }
-    if (!window._firestoreReady) return; // Firebase never loaded, skip
     // Retry cloud fetch a few times to avoid cold-start/slow-network misses.
     let cloudUsers = null;
-    for (let i = 0; i < 3; i++) {
-      cloudUsers = await loadUsersFromFirestore();
-      if (cloudUsers && cloudUsers.length > 0) break;
-      await new Promise(r => setTimeout(r, 1500));
+    if (window._firestoreReady) {
+      for (let i = 0; i < 3; i++) {
+        cloudUsers = await loadUsersFromFirestore();
+        if (cloudUsers && cloudUsers.length > 0) break;
+        await new Promise(r => setTimeout(r, 1500));
+      }
     }
+    // Fallback for environments where Firebase SDK is blocked/slow.
+    if (!cloudUsers || cloudUsers.length === 0) cloudUsers = await loadUsersFromFirestoreREST();
     if (!cloudUsers || cloudUsers.length === 0) {
       if (getUsers().length === 0) {
         const hint = document.getElementById('lockNewError');
