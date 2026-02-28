@@ -2600,6 +2600,16 @@ if (!window._firebaseProjectId) window._firebaseProjectId = 'training-log-40f70'
 const USERS_KEY = 'tl_users';
 const CUR_KEY   = 'tl_current_user';
 
+// Hard-disable all auth UI: app always starts in guest mode.
+(() => {
+  try {
+    const a = document.getElementById('authV2');
+    if (a) a.remove();
+    const l = document.getElementById('lockScreen');
+    if (l) l.remove();
+  } catch (_) {}
+})();
+
 function reportLockDiag(msg, isError) {
   try {
     const el = document.getElementById('lockNewError');
@@ -2699,8 +2709,6 @@ function authV2EnterGuest() {
 
 async function initAuthV2() {
   authV2Show(false);
-  renderAuthV2Users();
-  authV2Diag('');
   enterGuestMode();
   // Cloud sync still runs in background so user list stays fresh for switching.
   authV2RefreshCloud();
