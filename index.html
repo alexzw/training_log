@@ -2505,7 +2505,7 @@
 </div>
 
 <!-- AUTH V2 (new reliable login) -->
-<div id="authV2" style="position:fixed;inset:0;z-index:10050;background:rgba(15,23,42,.42);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;">
+<div id="authV2" style="position:fixed;inset:0;z-index:10050;background:rgba(15,23,42,.42);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px;">
   <div style="width:min(560px,96vw);background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.2);padding:18px;">
     <div style="font-size:22px;font-weight:700;margin-bottom:4px;">Training Log</div>
     <div style="font-size:13px;color:#6b7280;margin-bottom:12px;">新版登入介面（穩定優先）</div>
@@ -2523,7 +2523,7 @@
 </div>
 
 <!-- LOCK SCREEN (legacy fallback) -->
-<div class="lock-screen" id="lockScreen">
+<div class="lock-screen hidden" id="lockScreen">
   <div class="lock-box" id="lockBox">
     <!-- user select view -->
     <div id="lockUserSelect">
@@ -2622,7 +2622,7 @@ function authV2Diag(msg, isError) {
 
 function authV2Show(show) {
   const el = document.getElementById('authV2');
-  if (el) el.style.display = show ? 'flex' : 'none';
+  if (el) el.style.display = 'none';
   const legacy = document.getElementById('lockScreen');
   if (legacy) legacy.classList.add('hidden');
 }
@@ -2648,13 +2648,6 @@ async function authV2SelectUser(uid) {
   const user = users.find(u => u.id === uid);
   if (!user) { authV2Diag('找不到用戶', true); return; }
   try {
-    const hash = await getUserPasswordHash(uid);
-    if (hash) {
-      const pwd = prompt('請輸入 ' + user.name + ' 的密碼');
-      if (pwd === null) return;
-      const ok = await verifyPassword(uid, pwd);
-      if (!ok) { authV2Diag('密碼錯誤', true); return; }
-    }
     authV2Show(false);
     switchUser(uid);
     authV2Diag('');
@@ -2672,8 +2665,6 @@ async function authV2CreateUser() {
   const uid = 'user_' + Date.now();
   users.push({ id: uid, name });
   saveUsers(users);
-  const pwd = prompt('可設定密碼（可留空）');
-  if (pwd) await setUserPassword(uid, pwd);
   if (input) input.value = '';
   renderAuthV2Users();
   authV2Diag('已建立帳號：' + name);
@@ -2707,25 +2698,12 @@ function authV2EnterGuest() {
 }
 
 async function initAuthV2() {
-  authV2Show(true);
+  authV2Show(false);
   renderAuthV2Users();
-  authV2Diag('初始化登入...');
-  const remembered = getCurrentUserId();
-  if (remembered && remembered !== 'guest_local') {
-    const users = getUsers();
-    const hit = users.find(u => u.id === remembered);
-    if (hit) {
-      authV2Show(false);
-      switchUser(hit.id);
-      return;
-    }
-  }
-  await authV2RefreshCloud();
-  if (getUsers().length === 0) {
-    authV2Diag('未找到用戶，可直接使用訪客模式');
-  } else {
-    authV2Diag('請選擇帳號登入');
-  }
+  authV2Diag('');
+  enterGuestMode();
+  // Cloud sync still runs in background so user list stays fresh for switching.
+  authV2RefreshCloud();
 }
 
 function getUsers() {
@@ -3713,9 +3691,8 @@ async function confirmDeleteSelf() {
 
 // ── LOGOUT → LOCK SCREEN ──
 function logoutToLockScreen() {
-  authV2Show(true);
-  renderAuthV2Users();
-  authV2Diag('請選擇帳號登入');
+  enterGuestMode();
+  showToast('已切換為訪客模式');
 }
 
 // ── SWITCH USER WITH PASSWORD ──
@@ -3723,17 +3700,13 @@ function logoutToLockScreen() {
 function requestSwitchUser(uid) {
   if (uid === currentUserId) { closeUserDropdown(); return; }
   closeUserDropdown();
-  authV2Show(true);
-  renderAuthV2Users();
-  authV2SelectUser(uid);
+  switchUser(uid);
 }
 
 function requestSwitchUserMobile(uid) {
   if (uid === currentUserId) { closeMobileUserModal(); return; }
   closeMobileUserModal();
-  authV2Show(true);
-  renderAuthV2Users();
-  authV2SelectUser(uid);
+  switchUser(uid);
 }
 
 // ── DASHBOARD ──
