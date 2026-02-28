@@ -2924,6 +2924,9 @@ async function _syncUsersFromCloud() {
       // Refresh the lock screen to show newly synced users
       renderLockUserList();
       renderUserList();
+      // If local was empty at startup, UI may still be on "new user" form.
+      // Switch back to account picker once cloud users are available.
+      if (localUsers.length > 0) showLockUserSelect();
     }
   } catch(e) {
     console.warn('Background Firebase sync failed:', e);
