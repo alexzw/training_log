@@ -2515,6 +2515,7 @@
       <div class="lock-users" id="lockUserList"></div>
       <div class="lock-divider"></div>
       <button class="lock-user-btn" style="justify-content:center;color:var(--accent);border-color:var(--accent-light);background:var(--accent-light);" onclick="showNewUserForm()">＋ 新增用戶</button>
+      <button class="lock-user-btn" style="justify-content:center;margin-top:8px;" onclick="enterGuestMode()">Continue as Guest</button>
     </div>
     <!-- password entry view -->
     <div id="lockPasswordView" style="display:none;">
@@ -2538,6 +2539,7 @@
         onkeydown="if(event.key==='Enter') submitNewUser()">
       <div class="lock-error" id="lockNewError"></div>
       <button class="lock-btn" onclick="submitNewUser()">建立帳號</button>
+      <button class="lock-user-btn" style="justify-content:center;margin-top:8px;" onclick="enterGuestMode()">Continue as Guest</button>
       <button class="lock-back" onclick="showLockUserSelect()">← 返回</button>
     </div>
   </div>
@@ -2766,6 +2768,7 @@ function initials(name) {
 // ── CURRENT USER STATE ──
 let currentUserId = null;
 let data = { logs: [], weights: [], photos: [], plans: [], goals: {} };
+let guestMode = false;
 
 function save() {
   if (currentUserId) saveUserData(currentUserId, data);
@@ -2789,6 +2792,7 @@ function showSyncError() {
 async function saveAndSync() {
   if (!currentUserId) return;
   saveUserData(currentUserId, data);
+  if (guestMode || String(currentUserId).startsWith('guest_')) return;
   if (!window._firestoreReady) return;
   showSyncing();
   try {
@@ -2804,6 +2808,7 @@ async function saveAndSync() {
 }
 
 async function switchUser(uid) {
+  guestMode = false;
   currentUserId = uid;
   setCurrentUserId(uid);
 
@@ -3000,6 +3005,15 @@ function initUsers() {
   // ── STEP 2: Sync with Firebase in BACKGROUND (never blocks UI) ──
   _syncUsersFromCloud();
   setTimeout(() => { _syncUsersFromCloud(); }, 2000);
+  if (users.length === 0) {
+    setTimeout(() => {
+      const lock = document.getElementById('lockScreen');
+      if (lock && !lock.classList.contains('hidden') && getUsers().length === 0) {
+        reportLockDiag('自動降級：進入訪客模式');
+        enterGuestMode();
+      }
+    }, 7000);
+  }
 }
 
 async function _syncUsersFromCloud() {
@@ -3382,6 +3396,26 @@ async function submitLockPassword() {
 function unlockApp(uid) {
   document.getElementById('lockScreen').classList.add('hidden');
   switchUser(uid);
+}
+
+function enterGuestMode() {
+  guestMode = true;
+  const guestId = 'guest_local';
+  currentUserId = guestId;
+  setCurrentUserId(guestId);
+  data = loadUserData(guestId);
+  document.getElementById('lockScreen').classList.add('hidden');
+  const nameEl = document.getElementById('currentUserName');
+  const avEl = document.getElementById('currentAvatar');
+  if (nameEl) nameEl.textContent = '訪客';
+  if (avEl) {
+    avEl.textContent = 'G';
+    avEl.className = 'user-avatar av-0';
+  }
+  renderUserList();
+  renderDashboard();
+  syncTopbarUser();
+  showToast('已進入訪客模式');
 }
 
 function showLockUserSelect() {
@@ -4554,10 +4588,16 @@ function syncTopbarUser() {
   const nm = document.getElementById('topbarUserName');
   if (el) {
     el.style.display = isMobile() ? 'flex' : 'none';
-    if (user && av && nm) {
-      av.textContent = initials(user.name);
-      av.className = 'topbar-user-avatar ' + avatarClass(idx);
-      nm.textContent = user.name;
+    if (av && nm) {
+      if (guestMode || String(currentUserId).startsWith('guest_')) {
+        av.textContent = 'G';
+        av.className = 'topbar-user-avatar av-0';
+        nm.textContent = '訪客';
+      } else if (user) {
+        av.textContent = initials(user.name);
+        av.className = 'topbar-user-avatar ' + avatarClass(idx);
+        nm.textContent = user.name;
+      }
     }
   }
 }
