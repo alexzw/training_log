@@ -957,7 +957,6 @@
 
   .chart-wrap { position: relative; }
 
-
   /* ─── WORKOUT TIMER ─── */
   .timer-display {
     text-align: center;
@@ -1209,7 +1208,6 @@
     .workout-set-row .rpe-col { display: none; }
     .set-col-labels .rpe-col { display: none; }
   }
-
 
   /* ─── DYNAMIC EXERCISE LIST (log page) ─── */
   .ex-list-row {
@@ -1507,7 +1505,6 @@
   /* ─── SET PASSWORD ─── */
   .pwd-section { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
 
-
   /* ─── USER SWITCHER ─── */
   .user-switcher {
     padding: 10px 10px 6px;
@@ -1743,7 +1740,6 @@
           <div class="stat-change neutral">保持節奏 💪</div>
         </div>
       </div>
-
 
       <!-- BMI + Calorie Summary row -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;" id="bmi-calorie-row">
@@ -2039,7 +2035,6 @@
 
     </div>
 
-
     <!-- SETTINGS -->
     <div class="page" id="page-settings">
 
@@ -2122,7 +2117,6 @@
         </div>
       </div>
     </div>
-
 
     <!-- WORKOUT TIMER PAGE -->
     <div class="page" id="page-workout">
@@ -2308,6 +2302,247 @@
     </div>
   </div>
 </div>
+
+    <!-- PERIOD PAGE -->
+    <div class="page" id="page-period">
+      <!-- Tab switcher -->
+      <div class="period-tab-bar">
+        <button class="period-tab active" id="ptab-overview" onclick="switchPeriodTab('overview')">📊 總覽</button>
+        <button class="period-tab" id="ptab-month" onclick="switchPeriodTab('month')">📅 月視圖</button>
+        <button class="period-tab" id="ptab-log" onclick="switchPeriodTab('log')">✏️ 記錄</button>
+      </div>
+
+      <!-- OVERVIEW TAB -->
+      <div id="ptab-overview-content">
+        <!-- Stats -->
+        <div class="period-stat-grid">
+          <div class="period-stat-card">
+            <div class="period-stat-val" id="periodCycleLen" style="color:#ff6b9d;">—</div>
+            <div class="period-stat-lbl">平均週期<br>天數</div>
+          </div>
+          <div class="period-stat-card">
+            <div class="period-stat-val" id="periodNextDays" style="color:var(--accent);">—</div>
+            <div class="period-stat-lbl">距下次<br>預測天數</div>
+          </div>
+          <div class="period-stat-card">
+            <div class="period-stat-val" id="periodDuration" style="color:#ff6b9d;">—</div>
+            <div class="period-stat-lbl">平均持續<br>天數</div>
+          </div>
+          <div class="period-stat-card">
+            <div class="period-stat-val" id="periodTotalLogs" style="color:var(--text2);">—</div>
+            <div class="period-stat-lbl">已記錄<br>週期數</div>
+          </div>
+        </div>
+
+        <!-- 60-day strip calendar -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title">近60天概覽</div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px;">
+            <div class="strip-weekday-label">日</div>
+            <div class="strip-weekday-label">一</div>
+            <div class="strip-weekday-label">二</div>
+            <div class="strip-weekday-label">三</div>
+            <div class="strip-weekday-label">四</div>
+            <div class="strip-weekday-label">五</div>
+            <div class="strip-weekday-label">六</div>
+          </div>
+          <div id="periodCalendar" class="period-strip"></div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--text3);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
+            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ff6b9d;margin-right:4px;vertical-align:middle;"></span>生理期</span>
+            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:4px;vertical-align:middle;"></span>排卵預測</span>
+            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:rgba(52,170,220,0.2);border:1px solid var(--accent);margin-right:4px;vertical-align:middle;"></span>易孕期</span>
+            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:rgba(255,107,157,0.15);border:1px dashed #ff6b9d;margin-right:4px;vertical-align:middle;"></span>下次預測</span>
+          </div>
+        </div>
+
+        <!-- History list -->
+        <div class="card">
+          <div class="card-title">歷史記錄</div>
+          <div id="periodHistoryList"></div>
+        </div>
+      </div>
+
+      <!-- MONTH VIEW TAB -->
+      <div id="ptab-month-content" style="display:none;">
+        <div class="card">
+          <div class="period-month-nav">
+            <button class="period-month-btn" onclick="periodMonthNav(-1)">‹ 上月</button>
+            <div class="period-month-title" id="periodMonthTitle">2025年1月</div>
+            <button class="period-month-btn" onclick="periodMonthNav(1)">下月 ›</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;">
+            <div class="pm-day-header">日</div>
+            <div class="pm-day-header">一</div>
+            <div class="pm-day-header">二</div>
+            <div class="pm-day-header">三</div>
+            <div class="pm-day-header">四</div>
+            <div class="pm-day-header">五</div>
+            <div class="pm-day-header">六</div>
+          </div>
+          <div id="periodMonthGrid" class="period-month-grid"></div>
+        </div>
+        <div class="card" style="margin-top:14px;" id="periodMonthLogCard" style="display:none;">
+          <div class="card-title" id="periodMonthLogTitle"></div>
+          <div id="periodMonthLogContent"></div>
+        </div>
+      </div>
+
+      <!-- LOG TAB -->
+      <div id="ptab-log-content" style="display:none;">
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div class="card-title" style="margin:0;">記錄</div>
+            <div id="periodTodayLabel" style="font-size:12px;color:var(--text3);"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">日期</label>
+            <input type="date" class="form-input" id="period-date">
+          </div>
+          <div class="form-group">
+            <label class="form-label">生理期流量</label>
+            <div class="flow-selector">
+              <button class="flow-btn" id="fb-none" onclick="selectPeriodStatus('none')">無</button>
+              <button class="flow-btn" id="fb-light" onclick="selectPeriodStatus('light')">少量</button>
+              <button class="flow-btn" id="fb-medium" onclick="selectPeriodStatus('medium')">中量</button>
+              <button class="flow-btn" id="fb-heavy" onclick="selectPeriodStatus('heavy')">大量</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">症狀（可多選）</label>
+            <div id="symptomSelector" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">備注</label>
+            <textarea class="form-input" id="period-note" placeholder="情緒、疼痛程度…" style="min-height:60px;"></textarea>
+          </div>
+          <button class="btn btn-primary" style="width:100%;" onclick="savePeriodEntry()">儲存記錄</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDIT LOG MODAL -->
+    <div class="edit-log-modal" id="editLogModal" onclick="if(event.target===this)closeEditLog()">
+      <div class="edit-log-sheet">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+          <div style="font-size:17px;font-weight:700;">✏️ 修改記錄</div>
+          <button onclick="closeEditLog()" style="background:var(--surface2);border:none;border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;">×</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">日期</label>
+          <input type="date" class="form-input" id="edit-log-date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">訓練類型</label>
+          <select class="form-input" id="edit-log-type">
+            <option value="">— 選擇類型 —</option>
+            <option value="chest">胸部訓練</option>
+            <option value="back">背部訓練</option>
+            <option value="legs">腿部訓練</option>
+            <option value="shoulders">肩部訓練</option>
+            <option value="arms">手臂訓練</option>
+            <option value="core">核心訓練</option>
+            <option value="cardio">有氧訓練</option>
+            <option value="glutes">臀部訓練</option>
+            <option value="fullbody">全身訓練</option>
+            <option value="rest">休息日</option>
+          </select>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-group">
+            <label class="form-label">開始時間</label>
+            <input type="time" class="form-input" id="edit-log-start">
+          </div>
+          <div class="form-group">
+            <label class="form-label">結束時間</label>
+            <input type="time" class="form-input" id="edit-log-end">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">體重（kg）</label>
+          <input type="number" step="0.1" class="form-input" id="edit-log-weight" placeholder="例：75.5">
+        </div>
+        <div class="form-group">
+          <label class="form-label">訓練動作</label>
+          <textarea class="form-input" id="edit-log-exercises" style="min-height:100px;" placeholder="每行一個動作"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">運動時長（分鐘）</label>
+          <input type="number" class="form-input" id="edit-log-duration" placeholder="例：60" min="1" max="600">
+        </div>
+        <div class="form-group">
+          <label class="form-label">備注</label>
+          <textarea class="form-input" id="edit-log-notes" style="min-height:60px;"></textarea>
+        </div>
+        <input type="hidden" id="edit-log-id">
+        <div style="display:flex;gap:10px;margin-top:6px;">
+          <button class="btn btn-primary" style="flex:1;" onclick="saveEditLog()">儲存修改</button>
+          <button class="btn" style="flex:1;background:var(--surface2);" onclick="closeEditLog()">取消</button>
+        </div>
+      </div>
+    </div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="delete-modal" id="deleteConfirmModal">
+  <div class="delete-modal-box">
+    <div class="delete-modal-icon">🗑️</div>
+    <div class="delete-modal-title">刪除用戶</div>
+    <div class="delete-modal-desc">
+      輸入 <strong id="delete-modal-name"></strong> 的密碼以確認刪除。<br>
+      此操作不可復原，所有資料將永久刪除。
+    </div>
+    <input type="hidden" id="delete-uid-hidden">
+    <input type="password" class="lock-input" id="delete-pwd-input"
+      placeholder="輸入密碼確認"
+      style="margin-bottom:6px;"
+      onkeydown="if(event.key==='Enter') confirmDeleteUser(document.getElementById('delete-uid-hidden').value)">
+    <div class="lock-error" id="delete-pwd-error" style="margin-bottom:10px;"></div>
+    <div class="delete-modal-actions">
+      <button class="btn btn-secondary" onclick="closeDeleteConfirmModal()">取消</button>
+      <button class="btn" style="background:var(--red);color:#fff;"
+        onclick="confirmDeleteUser(document.getElementById('delete-uid-hidden').value)">確認刪除</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOCK SCREEN -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-box" id="lockBox">
+    <!-- user select view -->
+    <div id="lockUserSelect">
+      <div style="font-size:28px;margin-bottom:10px;">🏋️</div>
+      <div class="lock-name">Training Log</div>
+      <div class="lock-hint">選擇你的帳號</div>
+      <div class="lock-users" id="lockUserList"></div>
+      <div class="lock-divider"></div>
+      <button class="lock-user-btn" style="justify-content:center;color:var(--accent);border-color:var(--accent-light);background:var(--accent-light);" onclick="showNewUserForm()">＋ 新增用戶</button>
+    </div>
+    <!-- password entry view -->
+    <div id="lockPasswordView" style="display:none;">
+      <div class="lock-avatar" id="lockAvatar">?</div>
+      <div class="lock-name" id="lockDisplayName">用戶</div>
+      <div class="lock-hint" id="lockPwdHint">請輸入密碼</div>
+      <input type="password" class="lock-input" id="lockPwdInput" placeholder="••••••" maxlength="20"
+        onkeydown="if(event.key==='Enter') submitLockPassword()">
+      <div class="lock-error" id="lockError"></div>
+      <button class="lock-btn" onclick="submitLockPassword()">解鎖</button>
+      <button class="lock-back" onclick="showLockUserSelect()">← 返回選擇帳號</button>
+    </div>
+    <!-- new user form -->
+    <div id="lockNewUserView" style="display:none;">
+      <div style="font-size:28px;margin-bottom:10px;">👤</div>
+      <div class="lock-name">建立新帳號</div>
+      <div class="lock-hint" style="margin-bottom:20px;">設定名稱與密碼</div>
+      <input type="text" class="lock-input" id="lockNewName" placeholder="你的名字" maxlength="20"
+        style="letter-spacing:0;margin-bottom:10px;" onkeydown="if(event.key==='Enter')document.getElementById('lockNewPwd').focus()">
+      <input type="password" class="lock-input" id="lockNewPwd" placeholder="設定密碼（可留空）" maxlength="20"
+        onkeydown="if(event.key==='Enter') submitNewUser()">
+      <div class="lock-error" id="lockNewError"></div>
+      <button class="lock-btn" onclick="submitNewUser()">建立帳號</button>
+      <button class="lock-back" onclick="showLockUserSelect()">← 返回</button>
+    </div>
+  </div>
+</div>
+
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -2632,7 +2867,8 @@ document.addEventListener('click', e => {
 });
 
 // ── INIT USERS ──
-async function initUsers() {
+function initUsers() {
+  // ── STEP 1: Show lock screen from localStorage IMMEDIATELY (no waiting) ──
   let users = getUsers();
 
   // Migrate old single-user data
@@ -2646,83 +2882,62 @@ async function initUsers() {
     setCurrentUserId(uid);
   }
 
-  // Try to pull users list from Firestore (cross-device sync)
-  if (window._firestoreReady) {
-    const cloudUsers = await Promise.race([
-      loadUsersFromFirestore(),
-      new Promise(resolve => setTimeout(()=>resolve(null), 3000))
-    ]);
-    if (cloudUsers && cloudUsers.length > 0) {
-      // Merge: add cloud users not in local
-      const localIds = users.map(u => u.id);
-      cloudUsers.forEach(cu => { if (!localIds.includes(cu.id)) users.push(cu); });
-      saveUsers(users);
-    } else if (users.length > 0) {
-      // Push local users up to cloud
-      saveUsers(users);
-    }
-  }
-
-  // Always show lock screen
+  // Show lock screen immediately from localStorage — no async, no waiting
   renderLockUserList();
   if (users.length === 0) {
     showNewUserForm();
   } else {
     showLockUserSelect();
   }
-
   renderUserList();
   syncTopbarUser();
+
+  // ── STEP 2: Sync with Firebase in BACKGROUND (never blocks UI) ──
+  _syncUsersFromCloud();
 }
 
-// ── INIT GUARD ──
-// Ensures both DOM and Firebase are ready before initialising.
-// The lock screen HTML comes AFTER this script in the document,
-// so we must wait for DOMContentLoaded before touching the DOM.
-let _initCalled = false;
-let _domReady = false;
-let _firebaseReady = false;
-
-function _tryInit() {
-  if (_initCalled) return;
-  if (!_domReady) return;   // DOM not ready yet — wait
-  _initCalled = true;
-  initUsers();
+async function _syncUsersFromCloud() {
+  try {
+    // Wait for Firebase to be ready (up to 5s), but don't block UI
+    if (!window._firestoreReady) {
+      await new Promise(resolve => {
+        const check = setInterval(() => {
+          if (window._firestoreReady) { clearInterval(check); resolve(); }
+        }, 200);
+        setTimeout(() => { clearInterval(check); resolve(); }, 5000);
+      });
+    }
+    if (!window._firestoreReady) return; // Firebase never loaded, skip
+    const cloudUsers = await Promise.race([
+      loadUsersFromFirestore(),
+      new Promise(resolve => setTimeout(() => resolve(null), 4000))
+    ]);
+    if (!cloudUsers || cloudUsers.length === 0) return;
+    const localUsers = getUsers();
+    const localIds = localUsers.map(u => u.id);
+    let changed = false;
+    cloudUsers.forEach(cu => {
+      if (!localIds.includes(cu.id)) { localUsers.push(cu); changed = true; }
+    });
+    if (changed) {
+      saveUsers(localUsers);
+      // Refresh the lock screen to show newly synced users
+      renderLockUserList();
+      renderUserList();
+    }
+  } catch(e) {
+    console.warn('Background Firebase sync failed:', e);
+  }
 }
 
-function _onFirebaseReady() {
-  _firebaseReady = true;
-  _tryInit();
-}
-
-function _onDomReady() {
-  _domReady = true;
-  _tryInit();
-}
-
-// Listen for DOM ready
+// ── INIT: Run after DOM is ready ──
+// Script is now at end of <body>, so DOM is always ready.
+// Use requestAnimationFrame to ensure browser has painted first.
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', _onDomReady, { once: true });
+  document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(initUsers));
 } else {
-  // DOM already parsed (shouldn't happen here, but be safe)
-  _domReady = true;
+  requestAnimationFrame(initUsers);
 }
-
-// Listen for Firebase ready (module may fire before or after DOMContentLoaded)
-if (window._firestoreReady) {
-  _firebaseReady = true;
-  // Firebase already ready — init as soon as DOM is ready
-  // (handled by _tryInit above checking both flags)
-} else {
-  window.addEventListener('firestore-ready', _onFirebaseReady, { once: true });
-}
-
-// Hard fallback: if Firebase never fires within 3s, init anyway
-// (works offline or when Firebase is blocked)
-setTimeout(() => {
-  _firebaseReady = true; // treat as ready even if it never fired
-  _tryInit();
-}, 3000);
 
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -4866,249 +5081,6 @@ buildExDatalist();
 renderLogExerciseList();
 
 </script>
-
-
-
-    <!-- PERIOD PAGE -->
-    <div class="page" id="page-period">
-      <!-- Tab switcher -->
-      <div class="period-tab-bar">
-        <button class="period-tab active" id="ptab-overview" onclick="switchPeriodTab('overview')">📊 總覽</button>
-        <button class="period-tab" id="ptab-month" onclick="switchPeriodTab('month')">📅 月視圖</button>
-        <button class="period-tab" id="ptab-log" onclick="switchPeriodTab('log')">✏️ 記錄</button>
-      </div>
-
-      <!-- OVERVIEW TAB -->
-      <div id="ptab-overview-content">
-        <!-- Stats -->
-        <div class="period-stat-grid">
-          <div class="period-stat-card">
-            <div class="period-stat-val" id="periodCycleLen" style="color:#ff6b9d;">—</div>
-            <div class="period-stat-lbl">平均週期<br>天數</div>
-          </div>
-          <div class="period-stat-card">
-            <div class="period-stat-val" id="periodNextDays" style="color:var(--accent);">—</div>
-            <div class="period-stat-lbl">距下次<br>預測天數</div>
-          </div>
-          <div class="period-stat-card">
-            <div class="period-stat-val" id="periodDuration" style="color:#ff6b9d;">—</div>
-            <div class="period-stat-lbl">平均持續<br>天數</div>
-          </div>
-          <div class="period-stat-card">
-            <div class="period-stat-val" id="periodTotalLogs" style="color:var(--text2);">—</div>
-            <div class="period-stat-lbl">已記錄<br>週期數</div>
-          </div>
-        </div>
-
-        <!-- 60-day strip calendar -->
-        <div class="card" style="margin-bottom:16px;">
-          <div class="card-title">近60天概覽</div>
-          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px;">
-            <div class="strip-weekday-label">日</div>
-            <div class="strip-weekday-label">一</div>
-            <div class="strip-weekday-label">二</div>
-            <div class="strip-weekday-label">三</div>
-            <div class="strip-weekday-label">四</div>
-            <div class="strip-weekday-label">五</div>
-            <div class="strip-weekday-label">六</div>
-          </div>
-          <div id="periodCalendar" class="period-strip"></div>
-          <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--text3);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
-            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ff6b9d;margin-right:4px;vertical-align:middle;"></span>生理期</span>
-            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:4px;vertical-align:middle;"></span>排卵預測</span>
-            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:rgba(52,170,220,0.2);border:1px solid var(--accent);margin-right:4px;vertical-align:middle;"></span>易孕期</span>
-            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:rgba(255,107,157,0.15);border:1px dashed #ff6b9d;margin-right:4px;vertical-align:middle;"></span>下次預測</span>
-          </div>
-        </div>
-
-        <!-- History list -->
-        <div class="card">
-          <div class="card-title">歷史記錄</div>
-          <div id="periodHistoryList"></div>
-        </div>
-      </div>
-
-      <!-- MONTH VIEW TAB -->
-      <div id="ptab-month-content" style="display:none;">
-        <div class="card">
-          <div class="period-month-nav">
-            <button class="period-month-btn" onclick="periodMonthNav(-1)">‹ 上月</button>
-            <div class="period-month-title" id="periodMonthTitle">2025年1月</div>
-            <button class="period-month-btn" onclick="periodMonthNav(1)">下月 ›</button>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;">
-            <div class="pm-day-header">日</div>
-            <div class="pm-day-header">一</div>
-            <div class="pm-day-header">二</div>
-            <div class="pm-day-header">三</div>
-            <div class="pm-day-header">四</div>
-            <div class="pm-day-header">五</div>
-            <div class="pm-day-header">六</div>
-          </div>
-          <div id="periodMonthGrid" class="period-month-grid"></div>
-        </div>
-        <div class="card" style="margin-top:14px;" id="periodMonthLogCard" style="display:none;">
-          <div class="card-title" id="periodMonthLogTitle"></div>
-          <div id="periodMonthLogContent"></div>
-        </div>
-      </div>
-
-      <!-- LOG TAB -->
-      <div id="ptab-log-content" style="display:none;">
-        <div class="card">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-            <div class="card-title" style="margin:0;">記錄</div>
-            <div id="periodTodayLabel" style="font-size:12px;color:var(--text3);"></div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">日期</label>
-            <input type="date" class="form-input" id="period-date">
-          </div>
-          <div class="form-group">
-            <label class="form-label">生理期流量</label>
-            <div class="flow-selector">
-              <button class="flow-btn" id="fb-none" onclick="selectPeriodStatus('none')">無</button>
-              <button class="flow-btn" id="fb-light" onclick="selectPeriodStatus('light')">少量</button>
-              <button class="flow-btn" id="fb-medium" onclick="selectPeriodStatus('medium')">中量</button>
-              <button class="flow-btn" id="fb-heavy" onclick="selectPeriodStatus('heavy')">大量</button>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">症狀（可多選）</label>
-            <div id="symptomSelector" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;"></div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">備注</label>
-            <textarea class="form-input" id="period-note" placeholder="情緒、疼痛程度…" style="min-height:60px;"></textarea>
-          </div>
-          <button class="btn btn-primary" style="width:100%;" onclick="savePeriodEntry()">儲存記錄</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- EDIT LOG MODAL -->
-    <div class="edit-log-modal" id="editLogModal" onclick="if(event.target===this)closeEditLog()">
-      <div class="edit-log-sheet">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-          <div style="font-size:17px;font-weight:700;">✏️ 修改記錄</div>
-          <button onclick="closeEditLog()" style="background:var(--surface2);border:none;border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;">×</button>
-        </div>
-        <div class="form-group">
-          <label class="form-label">日期</label>
-          <input type="date" class="form-input" id="edit-log-date">
-        </div>
-        <div class="form-group">
-          <label class="form-label">訓練類型</label>
-          <select class="form-input" id="edit-log-type">
-            <option value="">— 選擇類型 —</option>
-            <option value="chest">胸部訓練</option>
-            <option value="back">背部訓練</option>
-            <option value="legs">腿部訓練</option>
-            <option value="shoulders">肩部訓練</option>
-            <option value="arms">手臂訓練</option>
-            <option value="core">核心訓練</option>
-            <option value="cardio">有氧訓練</option>
-            <option value="glutes">臀部訓練</option>
-            <option value="fullbody">全身訓練</option>
-            <option value="rest">休息日</option>
-          </select>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div class="form-group">
-            <label class="form-label">開始時間</label>
-            <input type="time" class="form-input" id="edit-log-start">
-          </div>
-          <div class="form-group">
-            <label class="form-label">結束時間</label>
-            <input type="time" class="form-input" id="edit-log-end">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">體重（kg）</label>
-          <input type="number" step="0.1" class="form-input" id="edit-log-weight" placeholder="例：75.5">
-        </div>
-        <div class="form-group">
-          <label class="form-label">訓練動作</label>
-          <textarea class="form-input" id="edit-log-exercises" style="min-height:100px;" placeholder="每行一個動作"></textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label">運動時長（分鐘）</label>
-          <input type="number" class="form-input" id="edit-log-duration" placeholder="例：60" min="1" max="600">
-        </div>
-        <div class="form-group">
-          <label class="form-label">備注</label>
-          <textarea class="form-input" id="edit-log-notes" style="min-height:60px;"></textarea>
-        </div>
-        <input type="hidden" id="edit-log-id">
-        <div style="display:flex;gap:10px;margin-top:6px;">
-          <button class="btn btn-primary" style="flex:1;" onclick="saveEditLog()">儲存修改</button>
-          <button class="btn" style="flex:1;background:var(--surface2);" onclick="closeEditLog()">取消</button>
-        </div>
-      </div>
-    </div>
-
-
-<!-- DELETE CONFIRM MODAL -->
-<div class="delete-modal" id="deleteConfirmModal">
-  <div class="delete-modal-box">
-    <div class="delete-modal-icon">🗑️</div>
-    <div class="delete-modal-title">刪除用戶</div>
-    <div class="delete-modal-desc">
-      輸入 <strong id="delete-modal-name"></strong> 的密碼以確認刪除。<br>
-      此操作不可復原，所有資料將永久刪除。
-    </div>
-    <input type="hidden" id="delete-uid-hidden">
-    <input type="password" class="lock-input" id="delete-pwd-input"
-      placeholder="輸入密碼確認"
-      style="margin-bottom:6px;"
-      onkeydown="if(event.key==='Enter') confirmDeleteUser(document.getElementById('delete-uid-hidden').value)">
-    <div class="lock-error" id="delete-pwd-error" style="margin-bottom:10px;"></div>
-    <div class="delete-modal-actions">
-      <button class="btn btn-secondary" onclick="closeDeleteConfirmModal()">取消</button>
-      <button class="btn" style="background:var(--red);color:#fff;"
-        onclick="confirmDeleteUser(document.getElementById('delete-uid-hidden').value)">確認刪除</button>
-    </div>
-  </div>
-</div>
-
-<!-- LOCK SCREEN -->
-<div class="lock-screen" id="lockScreen">
-  <div class="lock-box" id="lockBox">
-    <!-- user select view -->
-    <div id="lockUserSelect">
-      <div style="font-size:28px;margin-bottom:10px;">🏋️</div>
-      <div class="lock-name">Training Log</div>
-      <div class="lock-hint">選擇你的帳號</div>
-      <div class="lock-users" id="lockUserList"></div>
-      <div class="lock-divider"></div>
-      <button class="lock-user-btn" style="justify-content:center;color:var(--accent);border-color:var(--accent-light);background:var(--accent-light);" onclick="showNewUserForm()">＋ 新增用戶</button>
-    </div>
-    <!-- password entry view -->
-    <div id="lockPasswordView" style="display:none;">
-      <div class="lock-avatar" id="lockAvatar">?</div>
-      <div class="lock-name" id="lockDisplayName">用戶</div>
-      <div class="lock-hint" id="lockPwdHint">請輸入密碼</div>
-      <input type="password" class="lock-input" id="lockPwdInput" placeholder="••••••" maxlength="20"
-        onkeydown="if(event.key==='Enter') submitLockPassword()">
-      <div class="lock-error" id="lockError"></div>
-      <button class="lock-btn" onclick="submitLockPassword()">解鎖</button>
-      <button class="lock-back" onclick="showLockUserSelect()">← 返回選擇帳號</button>
-    </div>
-    <!-- new user form -->
-    <div id="lockNewUserView" style="display:none;">
-      <div style="font-size:28px;margin-bottom:10px;">👤</div>
-      <div class="lock-name">建立新帳號</div>
-      <div class="lock-hint" style="margin-bottom:20px;">設定名稱與密碼</div>
-      <input type="text" class="lock-input" id="lockNewName" placeholder="你的名字" maxlength="20"
-        style="letter-spacing:0;margin-bottom:10px;" onkeydown="if(event.key==='Enter')document.getElementById('lockNewPwd').focus()">
-      <input type="password" class="lock-input" id="lockNewPwd" placeholder="設定密碼（可留空）" maxlength="20"
-        onkeydown="if(event.key==='Enter') submitNewUser()">
-      <div class="lock-error" id="lockNewError"></div>
-      <button class="lock-btn" onclick="submitNewUser()">建立帳號</button>
-      <button class="lock-back" onclick="showLockUserSelect()">← 返回</button>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
