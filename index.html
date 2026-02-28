@@ -2504,7 +2504,25 @@
   </div>
 </div>
 
-<!-- LOCK SCREEN -->
+<!-- AUTH V2 (new reliable login) -->
+<div id="authV2" style="position:fixed;inset:0;z-index:10050;background:rgba(15,23,42,.42);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;">
+  <div style="width:min(560px,96vw);background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.2);padding:18px;">
+    <div style="font-size:22px;font-weight:700;margin-bottom:4px;">Training Log</div>
+    <div style="font-size:13px;color:#6b7280;margin-bottom:12px;">新版登入介面（穩定優先）</div>
+    <div id="authV2Users" style="display:grid;gap:8px;margin-bottom:10px;"></div>
+    <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;">
+      <input id="authV2Name" class="lock-input" placeholder="新帳號名稱" style="margin:0;" />
+      <button class="lock-btn" style="margin:0;padding:10px 12px;border-radius:10px;" onclick="authV2CreateUser()">建立帳號</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="lock-user-btn" style="margin:0;justify-content:center;" onclick="authV2RefreshCloud()">同步雲端用戶</button>
+      <button class="lock-user-btn" style="margin:0;justify-content:center;" onclick="authV2EnterGuest()">以訪客模式進入</button>
+    </div>
+    <div id="authV2Diag" style="margin-top:10px;font-size:13px;color:#1e3a8a;min-height:20px;"></div>
+  </div>
+</div>
+
+<!-- LOCK SCREEN (legacy fallback) -->
 <div class="lock-screen" id="lockScreen">
   <div class="lock-box" id="lockBox">
     <!-- user select view -->
@@ -2592,6 +2610,122 @@ function reportLockDiag(msg, isError) {
   } catch (_) {}
   if (isError) console.error('[LOCK]', msg);
   else console.log('[LOCK]', msg);
+}
+
+function authV2Diag(msg, isError) {
+  const el = document.getElementById('authV2Diag');
+  if (el) {
+    el.textContent = msg || '';
+    el.style.color = isError ? 'var(--red)' : '#1e3a8a';
+  }
+}
+
+function authV2Show(show) {
+  const el = document.getElementById('authV2');
+  if (el) el.style.display = show ? 'flex' : 'none';
+  const legacy = document.getElementById('lockScreen');
+  if (legacy) legacy.classList.add('hidden');
+}
+
+function renderAuthV2Users() {
+  const wrap = document.getElementById('authV2Users');
+  if (!wrap) return;
+  const users = getUsers();
+  if (!users.length) {
+    wrap.innerHTML = '<div style="font-size:13px;color:var(--text3);padding:6px 2px;">目前無本機帳號，請建立帳號或使用訪客模式</div>';
+    return;
+  }
+  wrap.innerHTML = users.map(u => `
+    <button class="lock-user-btn" style="margin:0;justify-content:space-between;" onclick="authV2SelectUser('${u.id}')">
+      <span>${escapeHtml(u.name)}</span>
+      <span style="color:var(--text3);">›</span>
+    </button>
+  `).join('');
+}
+
+async function authV2SelectUser(uid) {
+  const users = getUsers();
+  const user = users.find(u => u.id === uid);
+  if (!user) { authV2Diag('找不到用戶', true); return; }
+  try {
+    const hash = await getUserPasswordHash(uid);
+    if (hash) {
+      const pwd = prompt('請輸入 ' + user.name + ' 的密碼');
+      if (pwd === null) return;
+      const ok = await verifyPassword(uid, pwd);
+      if (!ok) { authV2Diag('密碼錯誤', true); return; }
+    }
+    authV2Show(false);
+    switchUser(uid);
+    authV2Diag('');
+  } catch (e) {
+    authV2Diag('登入失敗：' + (e && e.message ? e.message : e), true);
+  }
+}
+
+async function authV2CreateUser() {
+  const input = document.getElementById('authV2Name');
+  const name = (input?.value || '').trim();
+  if (!name) { authV2Diag('請輸入帳號名稱', true); return; }
+  const users = getUsers();
+  if (users.find(u => u.name === name)) { authV2Diag('名稱已存在', true); return; }
+  const uid = 'user_' + Date.now();
+  users.push({ id: uid, name });
+  saveUsers(users);
+  const pwd = prompt('可設定密碼（可留空）');
+  if (pwd) await setUserPassword(uid, pwd);
+  if (input) input.value = '';
+  renderAuthV2Users();
+  authV2Diag('已建立帳號：' + name);
+}
+
+async function authV2RefreshCloud() {
+  authV2Diag('正在同步雲端用戶...');
+  try {
+    let cloud = null;
+    if (window._firestoreReady) cloud = await loadUsersFromFirestore();
+    if (!cloud || cloud.length === 0) cloud = await loadUsersFromFirestoreREST();
+    if (!cloud || cloud.length === 0) { authV2Diag('雲端沒有可用用戶', true); return; }
+    const local = getUsers();
+    const idSet = new Set(local.map(u => u.id));
+    let changed = false;
+    cloud.forEach(c => {
+      if (!c?.id) return;
+      if (!idSet.has(c.id)) { local.push({ id: c.id, name: c.name || c.id }); changed = true; }
+    });
+    if (changed) saveUsers(local);
+    renderAuthV2Users();
+    authV2Diag('同步完成：' + cloud.length + ' 位');
+  } catch (e) {
+    authV2Diag('同步失敗：' + (e && e.message ? e.message : e), true);
+  }
+}
+
+function authV2EnterGuest() {
+  authV2Show(false);
+  enterGuestMode();
+}
+
+async function initAuthV2() {
+  authV2Show(true);
+  renderAuthV2Users();
+  authV2Diag('初始化登入...');
+  const remembered = getCurrentUserId();
+  if (remembered && remembered !== 'guest_local') {
+    const users = getUsers();
+    const hit = users.find(u => u.id === remembered);
+    if (hit) {
+      authV2Show(false);
+      switchUser(hit.id);
+      return;
+    }
+  }
+  await authV2RefreshCloud();
+  if (getUsers().length === 0) {
+    authV2Diag('未找到用戶，可直接使用訪客模式');
+  } else {
+    authV2Diag('請選擇帳號登入');
+  }
 }
 
 function getUsers() {
@@ -3078,24 +3212,14 @@ async function _syncUsersFromCloud() {
 // Script is now at end of <body>, so DOM is always ready.
 // Use requestAnimationFrame to ensure browser has painted first.
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(initUsers));
+  document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(initAuthV2));
 } else {
-  requestAnimationFrame(initUsers);
+  requestAnimationFrame(initAuthV2);
 }
 window.addEventListener('load', () => {
   setTimeout(() => {
-    try { initUsers(); } catch (e) { reportLockDiag('load 初始化失敗：' + (e && e.message ? e.message : e), true); }
-  }, 800);
-  try {
-    document.querySelectorAll("button[onclick*='enterGuestMode']").forEach(btn => {
-      btn.addEventListener('click', (ev) => {
-        ev.preventDefault();
-        enterGuestMode();
-      });
-    });
-  } catch (e) {
-    console.warn('bind guest buttons failed:', e);
-  }
+    try { initAuthV2(); } catch (e) { authV2Diag('初始化失敗：' + (e && e.message ? e.message : e), true); }
+  }, 600);
 });
 window.addEventListener('error', (e) => {
   reportLockDiag('JS錯誤：' + (e.message || 'unknown'), true);
@@ -3589,10 +3713,9 @@ async function confirmDeleteSelf() {
 
 // ── LOGOUT → LOCK SCREEN ──
 function logoutToLockScreen() {
-  // hide app, show lock screen
-  document.getElementById('lockScreen').classList.remove('hidden');
-  renderLockUserList();
-  showLockUserSelect();
+  authV2Show(true);
+  renderAuthV2Users();
+  authV2Diag('請選擇帳號登入');
 }
 
 // ── SWITCH USER WITH PASSWORD ──
@@ -3600,16 +3723,17 @@ function logoutToLockScreen() {
 function requestSwitchUser(uid) {
   if (uid === currentUserId) { closeUserDropdown(); return; }
   closeUserDropdown();
-  // Show lock screen targeting that user
-  document.getElementById('lockScreen').classList.remove('hidden');
-  selectLockUser(uid);
+  authV2Show(true);
+  renderAuthV2Users();
+  authV2SelectUser(uid);
 }
 
 function requestSwitchUserMobile(uid) {
   if (uid === currentUserId) { closeMobileUserModal(); return; }
   closeMobileUserModal();
-  document.getElementById('lockScreen').classList.remove('hidden');
-  selectLockUser(uid);
+  authV2Show(true);
+  renderAuthV2Users();
+  authV2SelectUser(uid);
 }
 
 // ── DASHBOARD ──
