@@ -2515,7 +2515,7 @@
       <div class="lock-users" id="lockUserList"></div>
       <div class="lock-divider"></div>
       <button class="lock-user-btn" style="justify-content:center;color:var(--accent);border-color:var(--accent-light);background:var(--accent-light);" onclick="showNewUserForm()">＋ 新增用戶</button>
-      <button class="lock-user-btn" style="justify-content:center;margin-top:8px;" onclick="enterGuestMode()">Continue as Guest</button>
+      <button class="lock-user-btn" style="justify-content:center;margin-top:8px;" onclick="enterGuestMode()">以訪客模式進入</button>
     </div>
     <!-- password entry view -->
     <div id="lockPasswordView" style="display:none;">
@@ -2539,7 +2539,7 @@
         onkeydown="if(event.key==='Enter') submitNewUser()">
       <div class="lock-error" id="lockNewError"></div>
       <button class="lock-btn" onclick="submitNewUser()">建立帳號</button>
-      <button class="lock-user-btn" style="justify-content:center;margin-top:8px;" onclick="enterGuestMode()">Continue as Guest</button>
+      <button class="lock-user-btn" style="justify-content:center;margin-top:8px;" onclick="enterGuestMode()">以訪客模式進入</button>
       <button class="lock-back" onclick="showLockUserSelect()">← 返回</button>
     </div>
   </div>
@@ -3086,6 +3086,16 @@ window.addEventListener('load', () => {
   setTimeout(() => {
     try { initUsers(); } catch (e) { reportLockDiag('load 初始化失敗：' + (e && e.message ? e.message : e), true); }
   }, 800);
+  try {
+    document.querySelectorAll("button[onclick*='enterGuestMode']").forEach(btn => {
+      btn.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        enterGuestMode();
+      });
+    });
+  } catch (e) {
+    console.warn('bind guest buttons failed:', e);
+  }
 });
 window.addEventListener('error', (e) => {
   reportLockDiag('JS錯誤：' + (e.message || 'unknown'), true);
@@ -3399,25 +3409,37 @@ function unlockApp(uid) {
 }
 
 function enterGuestMode() {
-  guestMode = true;
-  const guestId = 'guest_local';
-  currentUserId = guestId;
-  setCurrentUserId(guestId);
-  data = loadUserData(guestId);
-  document.getElementById('lockScreen').classList.add('hidden');
-  const nameEl = document.getElementById('currentUserName');
-  const avEl = document.getElementById('currentAvatar');
-  if (nameEl) nameEl.textContent = '訪客';
-  if (avEl) {
-    avEl.textContent = 'G';
-    avEl.className = 'user-avatar av-0';
+  try {
+    guestMode = true;
+    const guestId = 'guest_local';
+    currentUserId = guestId;
+    setCurrentUserId(guestId);
+    data = loadUserData(guestId);
+    const lock = document.getElementById('lockScreen');
+    if (lock) lock.classList.add('hidden');
+    const nameEl = document.getElementById('currentUserName');
+    const avEl = document.getElementById('currentAvatar');
+    if (nameEl) nameEl.textContent = '訪客';
+    if (avEl) {
+      avEl.textContent = 'G';
+      avEl.className = 'user-avatar av-0';
+    }
+    if (typeof navigate === 'function') navigate('dashboard', null);
+    renderUserList();
+    renderDashboard();
+    syncTopbarUser();
+    showToast('已進入訪客模式');
+  } catch (e) {
+    console.error('enterGuestMode failed:', e);
+    try {
+      const lock = document.getElementById('lockScreen');
+      if (lock) lock.classList.add('hidden');
+      if (typeof navigate === 'function') navigate('dashboard', null);
+      showToast('已進入訪客模式');
+    } catch (_) {}
   }
-  renderUserList();
-  renderDashboard();
-  syncTopbarUser();
-  showToast('已進入訪客模式');
 }
-
+window.enterGuestMode = enterGuestMode;
 function showLockUserSelect() {
   const us = document.getElementById('lockUserSelect');
   const pv = document.getElementById('lockPasswordView');
