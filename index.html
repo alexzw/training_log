@@ -1287,41 +1287,101 @@
   .rest-reset-btn { padding: 9px 18px; border-radius: 980px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; background: var(--surface3); color: var(--text2); }
 
   /* ─── PERIOD PAGE ─── */
-  .period-cycle-vis {
-    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin: 16px 0;
+  .period-tab-bar {
+    display: flex; gap: 0; background: var(--surface3); border-radius: 10px;
+    padding: 3px; margin-bottom: 16px;
   }
-  .period-day-dot {
-    aspect-ratio: 1; border-radius: 50%; background: var(--surface3);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 600; color: var(--text3);
-    cursor: pointer; transition: all 0.15s; position: relative;
+  .period-tab {
+    flex: 1; padding: 8px 12px; border-radius: 8px; border: none; font-size: 13px;
+    font-weight: 600; cursor: pointer; font-family: inherit; color: var(--text3);
+    background: none; transition: all 0.18s; text-align: center;
   }
-  .period-day-dot.menstrual { background: #ff6b9d; color: #fff; }
-  .period-day-dot.fertile   { background: #34aadc26; color: var(--accent); border: 1.5px solid var(--accent); }
-  .period-day-dot.ovulation { background: var(--accent); color: #fff; }
-  .period-day-dot.predicted { background: #ff6b9d40; border: 1.5px dashed #ff6b9d; color: #ff6b9d; }
-  .period-day-dot.today     { box-shadow: 0 0 0 2px var(--accent); }
-  .period-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .period-tab.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+
+  /* Calendar dot grid (60-day strip) */
+  .period-strip {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 3px; margin: 8px 0;
+  }
+  .period-strip-day {
+    width: 100%; aspect-ratio: 1; border-radius: 50%;
+    background: var(--surface3); display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 600; color: var(--text3);
+    cursor: pointer; transition: all 0.12s; position: relative; min-width: 0;
+  }
+  .period-strip-day.menstrual { background: #ff6b9d; color: #fff; }
+  .period-strip-day.fertile   { background: rgba(52,170,220,0.15); color: var(--accent); border: 1px solid var(--accent); }
+  .period-strip-day.ovulation { background: var(--accent); color: #fff; }
+  .period-strip-day.predicted { background: rgba(255,107,157,0.15); border: 1px dashed #ff6b9d; color: #ff6b9d; }
+  .period-strip-day.today     { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .strip-weekday-label { font-size: 9px; font-weight: 700; color: var(--text3); text-align: center; padding: 2px 0; }
+
+  /* Month calendar */
+  .period-month-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 2px; margin-top: 6px;
+  }
+  .period-month-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .period-month-btn {
+    background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px;
+    padding: 6px 14px; font-size: 14px; cursor: pointer; font-family: inherit;
+    color: var(--text2); transition: background 0.12s;
+  }
+  .period-month-btn:hover { background: var(--surface3); }
+  .period-month-title { font-size: 15px; font-weight: 700; color: var(--text); }
+  .pm-day-header { font-size: 10px; font-weight: 700; color: var(--text3); text-align: center; padding: 4px 0; }
+  .pm-day {
+    min-height: 40px; border-radius: 6px; padding: 4px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    transition: background 0.1s; position: relative;
+    display: flex; flex-direction: column; align-items: center;
+    background: none; border: none; font-family: inherit; color: var(--text2);
+  }
+  .pm-day:hover { background: var(--surface3); }
+  .pm-day.today { color: var(--accent); font-weight: 800; }
+  .pm-day.other-month { color: var(--text3); opacity: 0.5; }
+  .pm-day.menstrual { background: #ff6b9d22; }
+  .pm-day.ovulation { background: rgba(0,113,227,0.1); }
+  .pm-day.predicted { background: rgba(255,107,157,0.1); }
+  .pm-day-dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 3px; }
+  .pm-day-dot.men { background: #ff6b9d; }
+  .pm-day-dot.ov  { background: var(--accent); }
+  .pm-day-dot.pred { background: #ff6b9d; opacity: 0.5; }
+
+  /* Stats */
+  .period-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
   .period-stat-card {
     background: var(--surface2); border-radius: var(--radius-sm);
-    padding: 14px 16px; text-align: center;
+    padding: 14px; text-align: center;
   }
-  .period-stat-val { font-size: 28px; font-weight: 700; margin-bottom: 2px; }
-  .period-stat-lbl { font-size: 11px; color: var(--text3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; }
+  .period-stat-val { font-size: 26px; font-weight: 700; margin-bottom: 2px; }
+  .period-stat-lbl { font-size: 10px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; line-height: 1.3; }
+
+  /* Log history */
   .period-log-row {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 0; border-bottom: 1px solid var(--border);
-    font-size: 13px;
+    padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px;
   }
   .period-log-row:last-child { border-bottom: none; }
-  .period-dot-sm { width: 10px; height: 10px; border-radius: 50%; background: #ff6b9d; display: inline-block; margin-right: 6px; }
-  .flow-selector { display: flex; gap: 6px; margin-top: 8px; }
+  .period-dot-sm { width: 8px; height: 8px; border-radius: 50%; background: #ff6b9d; display: inline-block; margin-right: 6px; flex-shrink: 0; }
+
+  /* Entry form */
+  .flow-selector { display: flex; gap: 6px; }
   .flow-btn {
-    flex: 1; padding: 8px 4px; border-radius: 8px; font-size: 12px; font-weight: 600;
+    flex: 1; padding: 9px 4px; border-radius: 8px; font-size: 12px; font-weight: 600;
     border: 1.5px solid var(--border2); background: var(--surface2);
     cursor: pointer; font-family: inherit; color: var(--text2); transition: all 0.12s; text-align: center;
   }
   .flow-btn.selected { border-color: #ff6b9d; background: #ff6b9d18; color: #ff6b9d; }
+  .symptom-chip {
+    padding: 5px 11px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    border: 1.5px solid var(--border2); background: var(--surface2);
+    cursor: pointer; font-family: inherit; color: var(--text2); transition: all 0.12s;
+  }
+  .symptom-chip.selected { border-color: #ff6b9d; background: #ff6b9d18; color: #ff6b9d; }
 
   /* ─── EDIT LOG MODAL ─── */
   .edit-log-modal {
@@ -1993,13 +2053,25 @@
             <div style="font-size:12px;color:var(--text3);">目前登入帳號</div>
           </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">身高（cm）<span style="font-weight:400;color:var(--text3);font-size:11px;"> 用於計算 BMI</span></label>
-          <div style="display:flex;gap:8px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-group">
+            <label class="form-label">身高（cm）</label>
             <input type="number" class="form-input" id="settings-height" placeholder="例：175" min="100" max="250">
-            <button class="btn btn-primary" onclick="saveSettingsHeight()" style="padding:10px 18px;white-space:nowrap;">儲存</button>
+          </div>
+          <div class="form-group">
+            <label class="form-label">年齡</label>
+            <input type="number" class="form-input" id="settings-age" placeholder="例：25" min="10" max="100">
           </div>
         </div>
+        <div class="form-group">
+          <label class="form-label">性別 <span style="font-weight:400;color:var(--text3);font-size:11px;">用於年齡調整 BMI 分析</span></label>
+          <div style="display:flex;gap:8px;">
+            <button class="flow-btn" id="gender-male" onclick="selectGender('male')" style="flex:1;">♂ 男性</button>
+            <button class="flow-btn" id="gender-female" onclick="selectGender('female')" style="flex:1;">♀ 女性</button>
+            <button class="flow-btn" id="gender-other" onclick="selectGender('other')" style="flex:1;">其他</button>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="saveSettingsProfile()" style="width:100%;">儲存個人資料</button>
       </div>
 
       <!-- Password -->
@@ -2936,20 +3008,41 @@ function renderSettingsPage() {
     document.getElementById('settings-avatar').textContent = initials(user.name);
     document.getElementById('settings-avatar').className = 'user-avatar ' + avatarClass(idx);
   }
-  const h = data.goals && data.goals.height;
-  if (h) document.getElementById('settings-height').value = h;
+  const g = data.goals || {};
+  if (g.height) document.getElementById('settings-height').value = g.height;
+  if (g.age) document.getElementById('settings-age').value = g.age;
+  // Render gender buttons
+  ['male','female','other'].forEach(gn => {
+    const btn = document.getElementById('gender-'+gn);
+    if (btn) btn.classList.toggle('selected', g.gender === gn);
+  });
   // clear password fields
   ['settings-pwd-current','settings-pwd-new','settings-pwd-confirm'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
 }
 
-function saveSettingsHeight() {
-  const val = parseFloat(document.getElementById('settings-height').value);
-  if (!val || val < 100 || val > 250) { showToast('請輸入有效身高'); return; }
-  data.goals.height = val;
+function selectGender(g) {
+  ['male','female','other'].forEach(k => {
+    const btn = document.getElementById('gender-'+k);
+    if (btn) btn.classList.remove('selected');
+  });
+  document.getElementById('gender-'+g)?.classList.add('selected');
+  if (!data.goals) data.goals = {};
+  data.goals.gender = g;
+}
+
+function saveSettingsProfile() {
+  const h = parseFloat(document.getElementById('settings-height').value);
+  const age = parseInt(document.getElementById('settings-age').value);
+  if (!data.goals) data.goals = {};
+  if (h && h >= 100 && h <= 250) data.goals.height = h;
+  else if (document.getElementById('settings-height').value) { showToast('請輸入有效身高（100-250cm）'); return; }
+  if (age && age >= 10 && age <= 100) data.goals.age = age;
+  else if (document.getElementById('settings-age').value) { showToast('請輸入有效年齡（10-100）'); return; }
   saveAndSync();
-  showToast('✓ 身高已儲存，BMI 已更新');
+  renderDashboard();
+  showToast('✓ 個人資料已儲存，BMI 已更新');
 }
 
 async function changePasswordFromSettings() {
@@ -3088,12 +3181,14 @@ function renderDashboard() {
 
   drawChart('weightChart', ws.slice(0,30).reverse(), 560, 160);
 
-  // BMI
+  // BMI — with age adjustment
   const height = data.goals && data.goals.height;
-  const bmiVal = document.getElementById('bmi-value');
-  const bmiCat = document.getElementById('bmi-category-badge');
-  const bmiSub = document.getElementById('bmi-sub');
-  const bmiBar = document.getElementById('bmi-bar-wrap');
+  const age    = data.goals && data.goals.age;
+  const gender = data.goals && data.goals.gender;
+  const bmiVal  = document.getElementById('bmi-value');
+  const bmiCat  = document.getElementById('bmi-category-badge');
+  const bmiSub  = document.getElementById('bmi-sub');
+  const bmiBar  = document.getElementById('bmi-bar-wrap');
   const bmiMark = document.getElementById('bmi-marker');
   if (latest && height) {
     const bmi = latest.value / ((height/100) ** 2);
@@ -3101,18 +3196,40 @@ function renderDashboard() {
     bmiBar.style.opacity = '1';
     const pct = Math.min(100, Math.max(0, (bmi - 15) / (35 - 15) * 100));
     bmiMark.style.left = pct + '%';
-    let cat, color, bg;
-    if (bmi < 18.5)      { cat='偏瘦'; color='#34aadc'; bg='rgba(52,170,220,0.12)'; }
-    else if (bmi < 24)   { cat='正常'; color='var(--green)'; bg='var(--green-light)'; }
-    else if (bmi < 27)   { cat='過重'; color='var(--orange)'; bg='var(--orange-light)'; }
-    else                 { cat='肥胖'; color='var(--red)'; bg='var(--red-light)'; }
+
+    // Age-adjusted BMI thresholds
+    // Under 18: use WHO child/teen ranges (simplified)
+    // 18-64: standard (18.5/24/27/30)
+    // 65+: slightly higher thresholds (22/27/30) — muscle loss with age
+    // Note: Asian populations often use 23/27.5 (WHO Asia-Pacific guideline)
+    let tUnder, tNormal, tOver, catName;
+    if (age && age < 18) {
+      // Teens: use standard adult thresholds as approximation
+      tUnder = 18.5; tNormal = 24; tOver = 27;
+    } else if (age && age >= 65) {
+      // Elderly: higher thresholds recommended
+      tUnder = 22; tNormal = 27; tOver = 30;
+    } else {
+      // Standard adult (WHO Asian guideline)
+      tUnder = 18.5; tNormal = 24; tOver = 27;
+    }
+
+    let cat, color, bg, ageNote = '';
+    if (bmi < tUnder)      { cat='偏瘦'; color='#34aadc'; bg='rgba(52,170,220,0.12)'; }
+    else if (bmi < tNormal){ cat='正常'; color='var(--green)'; bg='var(--green-light)'; }
+    else if (bmi < tOver)  { cat='過重'; color='var(--orange)'; bg='var(--orange-light)'; }
+    else                   { cat='肥胖'; color='var(--red)'; bg='var(--red-light)'; }
+
+    if (age && age >= 65) ageNote = ' ·長者標準';
     bmiCat.textContent = cat;
     bmiCat.style.color = color;
     bmiCat.style.background = bg;
-    bmiSub.textContent = '身高 ' + height + ' cm · 體重 ' + latest.value.toFixed(1) + ' kg';
+    let sub = '身高 ' + height + ' cm · 體重 ' + latest.value.toFixed(1) + ' kg';
+    if (age) sub += ' · ' + age + '歲' + ageNote;
+    bmiSub.textContent = sub;
   } else {
     bmiVal.textContent = '—';
-    bmiSub.textContent = height ? '請記錄體重' : '請至用戶設定填寫身高';
+    bmiSub.textContent = height ? '請記錄體重' : '請至用戶設定填寫身高和年齡';
     bmiCat.textContent = '—';
     bmiCat.style.background = '#e5e5ea';
     bmiCat.style.color = 'var(--text3)';
@@ -4321,16 +4438,31 @@ function _playBeep() {
 // 4. EDIT LOG
 // ══════════════════════════════════════════════════════════
 function openEditLog(id) {
-  const log = data.logs.find(l => l.id === id);
-  if (!log) return;
+  // Normalize: id may be number or string depending on JSON parse
+  id = Number(id);
+  const log = data.logs.find(l => Number(l.id) === id);
+  if (!log) { showToast('找不到此記錄'); return; }
   document.getElementById('edit-log-id').value = id;
   document.getElementById('edit-log-date').value = log.date || '';
   document.getElementById('edit-log-type').value = log.type || '';
   document.getElementById('edit-log-start').value = log.start || '';
   document.getElementById('edit-log-end').value = log.end || '';
   document.getElementById('edit-log-weight').value = log.weight || '';
-  document.getElementById('edit-log-exercises').value = log.exercises || '';
+  // Support both structured and text exercises
+  if (log.exercises_structured && log.exercises_structured.length > 0) {
+    document.getElementById('edit-log-exercises').value =
+      log.exercises_structured.map(e => {
+        let s = e.name || '';
+        if (e.sets) s += ' ' + e.sets + '組';
+        if (e.weight) s += ' × ' + e.weight + 'kg';
+        return s;
+      }).join('
+');
+  } else {
+    document.getElementById('edit-log-exercises').value = log.exercises || '';
+  }
   document.getElementById('edit-log-notes').value = log.notes || '';
+  document.getElementById('edit-log-duration').value = log.duration || '';
   document.getElementById('editLogModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -4341,22 +4473,30 @@ function closeEditLog() {
 }
 
 function saveEditLog() {
-  const id = parseInt(document.getElementById('edit-log-id').value);
-  const log = data.logs.find(l => l.id === id);
-  if (!log) return;
+  const id = Number(document.getElementById('edit-log-id').value);
+  const log = data.logs.find(l => Number(l.id) === id);
+  if (!log) { showToast('找不到記錄，請重試'); return; }
   log.date = document.getElementById('edit-log-date').value;
   log.type = document.getElementById('edit-log-type').value;
   log.start = document.getElementById('edit-log-start').value;
   log.end = document.getElementById('edit-log-end').value;
   log.exercises = document.getElementById('edit-log-exercises').value;
+  log.exercises_structured = null; // cleared when manually edited
   log.notes = document.getElementById('edit-log-notes').value;
+  const dur = parseInt(document.getElementById('edit-log-duration').value);
+  if (dur > 0) log.duration = dur;
   const w = parseFloat(document.getElementById('edit-log-weight').value);
   if (w) {
     log.weight = w;
-    const idx = data.weights.findIndex(e => e.date === log.date);
-    if (idx >= 0) data.weights[idx].value = w;
+    // Update weight tracking
+    const wIdx = data.weights.findIndex(e => e.date === log.date);
+    if (wIdx >= 0) data.weights[wIdx].value = w;
     else { data.weights.push({date:log.date,value:w}); data.weights.sort((a,b)=>b.date.localeCompare(a.date)); }
+    // Recalculate calories if duration available
+    if (log.duration) log.calories = calcCalories(log.type, log.duration, w);
   }
+  // Re-sort logs by date descending
+  data.logs.sort((a,b) => b.date.localeCompare(a.date) || Number(b.id) - Number(a.id));
   saveAndSync();
   closeEditLog();
   renderHistory();
@@ -4368,37 +4508,42 @@ function saveEditLog() {
 // ══════════════════════════════════════════════════════════
 const SYMPTOMS = ['腹痛', '腰痛', '頭痛', '噁心', '疲倦', '情緒低落', '水腫', '食欲增加', '胸部脹痛', '痘痘'];
 let _selectedFlow = 'none';
+let _periodTab = 'overview';
+let _periodMonthOffset = 0; // 0 = current month
+
+function switchPeriodTab(tab) {
+  _periodTab = tab;
+  ['overview','month','log'].forEach(t => {
+    const btn = document.getElementById('ptab-'+t);
+    const con = document.getElementById('ptab-'+t+'-content');
+    if (btn) btn.classList.toggle('active', t===tab);
+    if (con) con.style.display = t===tab ? '' : 'none';
+  });
+  if (tab === 'month') renderPeriodMonth();
+  if (tab === 'log') renderSymptomSelector();
+}
 
 function selectPeriodStatus(flow) {
   _selectedFlow = flow;
-  ['no','light','medium','heavy'].forEach(k => {
+  ['none','light','medium','heavy'].forEach(k => {
     const btn = document.getElementById('fb-'+k);
-    if (btn) btn.classList.remove('selected');
+    if (btn) btn.classList.toggle('selected', k===flow);
   });
-  document.getElementById('fb-'+flow)?.classList.add('selected');
-  // Map: none→no
-  const map = {none:'no', light:'light', medium:'medium', heavy:'heavy'};
-  document.getElementById('fb-'+(map[flow]||flow))?.classList.add('selected');
 }
 
 function renderSymptomSelector() {
   const el = document.getElementById('symptomSelector');
   if (!el) return;
-  const today = new Date().toISOString().split('T')[0];
-  const existing = (data.period||[]).find(p=>p.date===document.getElementById('period-date')?.value);
-  const selected = existing?.symptoms || [];
-  el.innerHTML = SYMPTOMS.map(s => `
-    <button onclick="toggleSymptom('${s}',this)"
-      class="flow-btn${selected.includes(s)?' selected':''}"
-      style="flex:none;padding:6px 12px;font-size:12px;">${s}</button>`).join('');
-}
-
-function toggleSymptom(s, btn) {
-  btn.classList.toggle('selected');
+  const date = document.getElementById('period-date')?.value;
+  const existing = date ? (data.period||[]).find(p=>p.date===date) : null;
+  const sel = existing?.symptoms || [];
+  el.innerHTML = SYMPTOMS.map(s =>
+    `<button onclick="this.classList.toggle('selected')" class="symptom-chip${sel.includes(s)?' selected':''}">${s}</button>`
+  ).join('');
 }
 
 function getSelectedSymptoms() {
-  return [...document.querySelectorAll('#symptomSelector .flow-btn.selected')].map(b=>b.textContent);
+  return [...document.querySelectorAll('#symptomSelector .symptom-chip.selected')].map(b=>b.textContent);
 }
 
 function savePeriodEntry() {
@@ -4407,8 +4552,7 @@ function savePeriodEntry() {
   if (!date) { showToast('請選擇日期'); return; }
   const existing = data.period.findIndex(p => p.date === date);
   const entry = {
-    date,
-    flow: _selectedFlow,
+    date, flow: _selectedFlow,
     symptoms: getSelectedSymptoms(),
     note: document.getElementById('period-note').value
   };
@@ -4419,119 +4563,109 @@ function savePeriodEntry() {
   showToast('✓ 生理週期記錄已儲存');
 }
 
+// Compute cycle data (shared)
+function _computePeriodData() {
+  if (!data.period) data.period = [];
+  const menDays = data.period.filter(p=>p.flow&&p.flow!=='none').map(p=>p.date).sort();
+  // Detect cycle starts (gap > 7 days = new cycle)
+  const cycleStarts = [];
+  menDays.forEach((d,i) => {
+    if (i===0) { cycleStarts.push(d); return; }
+    const gap = (new Date(d)-new Date(menDays[i-1]))/86400000;
+    if (gap > 7) cycleStarts.push(d);
+  });
+  const cycleLen = cycleStarts.length >= 2
+    ? Math.round(cycleStarts.slice(1).reduce((sum,d,i)=>(new Date(d)-new Date(cycleStarts[i]))/86400000+sum,0)/(cycleStarts.length-1))
+    : null;
+  const durations = cycleStarts.map(start => {
+    let n=0, d=new Date(start);
+    for(let i=0;i<14;i++){
+      const ds=d.toISOString().split('T')[0];
+      if(data.period.find(p=>p.date===ds&&p.flow&&p.flow!=='none')) n++;
+      else if(n>0) break;
+      d.setDate(d.getDate()+1);
+    }
+    return n;
+  }).filter(d=>d>0);
+  const periodDur = durations.length ? Math.round(durations.reduce((s,d)=>s+d,0)/durations.length) : null;
+  const lastStart = cycleStarts[cycleStarts.length-1];
+  const today = new Date().toISOString().split('T')[0];
+  let nextDays = null;
+  if (lastStart && cycleLen) {
+    const nextDate = new Date(lastStart); nextDate.setDate(nextDate.getDate()+cycleLen);
+    nextDays = Math.round((nextDate-new Date(today))/86400000);
+  }
+  // Ovulation days
+  const ovulationDays = cycleStarts.map(s=>{ const d=new Date(s); d.setDate(d.getDate()+14); return d.toISOString().split('T')[0]; });
+  // Fertile window
+  const fertileDays = new Set();
+  ovulationDays.forEach(ov=>{ for(let i=-2;i<=2;i++){ const d=new Date(ov); d.setDate(d.getDate()+i); fertileDays.add(d.toISOString().split('T')[0]); } });
+  // Predicted next period dates
+  const predictedDays = new Set();
+  if (lastStart && cycleLen) {
+    for(let i=0;i<6;i++){ const d=new Date(lastStart); d.setDate(d.getDate()+cycleLen+i); predictedDays.add(d.toISOString().split('T')[0]); }
+  }
+  return { cycleLen, periodDur, nextDays, cycleStarts, ovulationDays, fertileDays, predictedDays, menDays };
+}
+
 function renderPeriod() {
   if (!data.period) data.period = [];
-
-  // Set today's date
   const today = new Date().toISOString().split('T')[0];
   const dateEl = document.getElementById('period-date');
   if (dateEl && !dateEl.value) dateEl.value = today;
 
-  // Update today label
+  // Today label
   const todayEntry = data.period.find(p=>p.date===today);
   const todayLabel = document.getElementById('periodTodayLabel');
   if (todayLabel) {
-    todayLabel.textContent = todayEntry
-      ? (todayEntry.flow==='none'||!todayEntry.flow ? '今日：無生理期' : `今日：生理期（${{light:'少',medium:'中',heavy:'多'}[todayEntry.flow]||''}量）`)
-      : '今日尚未記錄';
+    const flowMap = {light:'少量',medium:'中量',heavy:'大量'};
+    todayLabel.textContent = todayEntry && todayEntry.flow && todayEntry.flow!=='none'
+      ? `今日：${flowMap[todayEntry.flow]||''}生理期`
+      : todayEntry ? '今日：已記錄（無）' : '今日尚未記錄';
   }
 
-  // Symptom selector
+  // Pre-fill existing entry
+  if (todayEntry) {
+    _selectedFlow = todayEntry.flow || 'none';
+    selectPeriodStatus(_selectedFlow);
+    const noteEl = document.getElementById('period-note');
+    if (noteEl) noteEl.value = todayEntry.note || '';
+  }
   renderSymptomSelector();
 
-  // Find menstrual cycle data
-  const menDays = data.period.filter(p=>p.flow&&p.flow!=='none').map(p=>p.date).sort();
-
-  // Find cycle starts (gaps > 7 days = new cycle)
-  const cycleStarts = [];
-  menDays.forEach((d,i) => {
-    if (i===0) { cycleStarts.push(d); return; }
-    const prev = new Date(menDays[i-1]), cur = new Date(d);
-    if ((cur-prev)/(86400000) > 7) cycleStarts.push(d);
-  });
-
-  // Calculate stats
-  const cycleLen = cycleStarts.length >= 2
-    ? Math.round(cycleStarts.slice(1).reduce((sum,d,i) => {
-        return sum + (new Date(d)-new Date(cycleStarts[i]))/(86400000);
-      }, 0) / (cycleStarts.length-1))
-    : null;
-
-  // Duration of each period
-  let periodDuration = null;
-  if (cycleStarts.length >= 1) {
-    const durations = cycleStarts.map(start => {
-      let count = 0, d = new Date(start);
-      for (let i=0; i<14; i++) {
-        const ds = d.toISOString().split('T')[0];
-        if (data.period.find(p=>p.date===ds&&p.flow&&p.flow!=='none')) count++;
-        else if (count > 0) break;
-        d.setDate(d.getDate()+1);
-      }
-      return count;
-    }).filter(d=>d>0);
-    if (durations.length) periodDuration = Math.round(durations.reduce((s,d)=>s+d,0)/durations.length);
-  }
-
-  // Next period prediction
-  const lastStart = cycleStarts[cycleStarts.length-1];
-  let nextDays = null;
-  if (lastStart && cycleLen) {
-    const nextDate = new Date(lastStart);
-    nextDate.setDate(nextDate.getDate()+cycleLen);
-    const diff = Math.round((nextDate - new Date(today)) / 86400000);
-    nextDays = diff;
-  }
-
-  // Update stats UI
+  const pd = _computePeriodData();
+  // Update stats
   const cl = document.getElementById('periodCycleLen');
   const nd = document.getElementById('periodNextDays');
-  const pd = document.getElementById('periodDuration');
+  const pdEl = document.getElementById('periodDuration');
   const tl = document.getElementById('periodTotalLogs');
-  if (cl) cl.textContent = cycleLen ? cycleLen+'天' : '—';
-  if (nd) nd.textContent = nextDays !== null ? (nextDays<=0 ? '今天或已來' : nextDays+'天') : '—';
-  if (pd) pd.textContent = periodDuration ? periodDuration+'天' : '—';
-  if (tl) tl.textContent = cycleStarts.length+'次';
+  if (cl) cl.textContent = pd.cycleLen ? pd.cycleLen+'天' : '—';
+  if (nd) nd.textContent = pd.nextDays!==null ? (pd.nextDays<=0?'今天!':pd.nextDays+'天') : '—';
+  if (pdEl) pdEl.textContent = pd.periodDur ? pd.periodDur+'天' : '—';
+  if (tl) tl.textContent = pd.cycleStarts.length+'次';
 
-  // Calendar - last 60 days
+  // 60-day strip calendar
   const calEl = document.getElementById('periodCalendar');
   if (calEl) {
+    // Start from a Sunday, going back ~60 days
+    const refDate = new Date(today);
+    // Step back to last Sunday (or today if Sunday)
+    const dow = refDate.getDay();
+    refDate.setDate(refDate.getDate() - dow - 56); // Go back ~8 weeks
     const days = [];
-    for (let i=59; i>=0; i--) {
-      const d = new Date(); d.setDate(d.getDate()-i);
+    for (let i=0; i<63; i++) {
+      const d = new Date(refDate); d.setDate(refDate.getDate()+i);
       days.push(d.toISOString().split('T')[0]);
     }
-    // Predict ovulation day (cycleStart + 14)
-    const ovulationDays = cycleStarts.map(s => {
-      const d = new Date(s); d.setDate(d.getDate()+14);
-      return d.toISOString().split('T')[0];
-    });
-    // Fertile window: ovulation ±2
-    const fertileDays = new Set();
-    ovulationDays.forEach(ov => {
-      for (let i=-2; i<=2; i++) {
-        const d = new Date(ov); d.setDate(d.getDate()+i);
-        fertileDays.add(d.toISOString().split('T')[0]);
-      }
-    });
-    // Predicted next period
-    const predictedDays = new Set();
-    if (lastStart && cycleLen) {
-      for (let i=0; i<6; i++) {
-        const d = new Date(lastStart); d.setDate(d.getDate()+cycleLen+i);
-        predictedDays.add(d.toISOString().split('T')[0]);
-      }
-    }
-
     calEl.innerHTML = days.map(d => {
       const entry = data.period.find(p=>p.date===d);
-      const isMen = entry && entry.flow && entry.flow !== 'none';
-      const isOv = ovulationDays.includes(d);
-      const isFer = fertileDays.has(d) && !isMen && !isOv;
-      const isPred = predictedDays.has(d) && !isMen;
-      const isToday = d === today;
+      const isMen = entry && entry.flow && entry.flow!=='none';
+      const isOv = pd.ovulationDays.includes(d);
+      const isFer = pd.fertileDays.has(d) && !isMen && !isOv;
+      const isPred = pd.predictedDays.has(d) && !isMen;
+      const isToday = d===today;
       const dn = parseInt(d.split('-')[2]);
-      let cls = 'period-day-dot';
+      let cls = 'period-strip-day';
       if (isMen) cls += ' menstrual';
       else if (isOv) cls += ' ovulation';
       else if (isFer) cls += ' fertile';
@@ -4544,32 +4678,126 @@ function renderPeriod() {
   // History list
   const histEl = document.getElementById('periodHistoryList');
   if (histEl) {
-    const menEntries = data.period.filter(p=>p.flow&&p.flow!=='none').slice(0,20);
-    if (menEntries.length === 0) {
-      histEl.innerHTML = '<div class="empty-state"><div class="empty-icon">🌸</div>尚無生理期記錄</div>';
+    const entries = data.period.filter(p=>p.flow&&p.flow!=='none').slice(0,20);
+    if (!entries.length) {
+      histEl.innerHTML = '<div class="empty-state"><div class="empty-icon">🌸</div>尚無生理期記錄<br><span style="font-size:12px;color:var(--text3);">點擊「記錄」標籤開始記錄</span></div>';
     } else {
-      histEl.innerHTML = menEntries.map(p => {
-        const flowLabel = {light:'少量',medium:'中量',heavy:'大量'}[p.flow]||'';
-        return `<div class="period-log-row">
-          <div><span class="period-dot-sm"></span>${p.date} · ${flowLabel}${p.symptoms?.length?' · '+p.symptoms.slice(0,3).join('、'):''}</div>
+      const flowMap = {light:'少量',medium:'中量',heavy:'大量'};
+      histEl.innerHTML = entries.map(p => `
+        <div class="period-log-row">
+          <div style="display:flex;align-items:center;flex:1;min-width:0;">
+            <span class="period-dot-sm"></span>
+            <div>
+              <div style="font-weight:600;">${p.date} · ${flowMap[p.flow]||''}</div>
+              ${p.symptoms?.length?`<div style="font-size:11px;color:var(--text3);margin-top:2px;">${p.symptoms.join('、')}</div>`:''}
+            </div>
+          </div>
+          <button onclick="setEditPeriodDate('${p.date}')" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:12px;padding:4px 8px;border-radius:6px;">修改</button>
           <button onclick="deletePeriodEntry('${p.date}')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;padding:4px;">✕</button>
-        </div>`;
-      }).join('');
+        </div>`).join('');
     }
   }
+
+  // Update month view if visible
+  if (_periodTab === 'month') renderPeriodMonth();
+}
+
+// ── MONTH VIEW ──
+function periodMonthNav(delta) {
+  _periodMonthOffset += delta;
+  renderPeriodMonth();
+}
+
+function renderPeriodMonth() {
+  const pd = _computePeriodData();
+  const now = new Date();
+  now.setMonth(now.getMonth() + _periodMonthOffset);
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const today = new Date().toISOString().split('T')[0];
+  const monthTitle = document.getElementById('periodMonthTitle');
+  if (monthTitle) monthTitle.textContent = year+'年'+(month+1)+'月';
+
+  const gridEl = document.getElementById('periodMonthGrid');
+  if (!gridEl) return;
+
+  // First day of month
+  const firstDay = new Date(year, month, 1);
+  const startDow = firstDay.getDay(); // 0=Sun
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+
+  let html = '';
+  // Empty cells before first day
+  for (let i=0; i<startDow; i++) {
+    const prevD = new Date(year, month, 1-startDow+i);
+    const ds = prevD.toISOString().split('T')[0];
+    html += _pmDayCell(ds, prevD.getDate(), 'other-month', pd, today);
+  }
+  // Days in month
+  for (let d=1; d<=daysInMonth; d++) {
+    const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    html += _pmDayCell(ds, d, '', pd, today);
+  }
+  // Fill remaining cells
+  const totalCells = startDow + daysInMonth;
+  const remaining = (7 - totalCells % 7) % 7;
+  for (let i=1; i<=remaining; i++) {
+    const nextD = new Date(year, month+1, i);
+    const ds = nextD.toISOString().split('T')[0];
+    html += _pmDayCell(ds, i, 'other-month', pd, today);
+  }
+  gridEl.innerHTML = html;
+}
+
+function _pmDayCell(ds, dn, extraCls, pd, today) {
+  const entry = (data.period||[]).find(p=>p.date===ds);
+  const isMen = entry && entry.flow && entry.flow!=='none';
+  const isOv = pd.ovulationDays.includes(ds);
+  const isPred = pd.predictedDays.has(ds) && !isMen;
+  let cls = 'pm-day '+extraCls;
+  if (ds===today) cls += ' today';
+  if (isMen) cls += ' menstrual';
+  else if (isOv) cls += ' ovulation';
+  else if (isPred) cls += ' predicted';
+  let dot = '';
+  if (isMen) dot = '<div class="pm-day-dot men"></div>';
+  else if (isOv) dot = '<div class="pm-day-dot ov"></div>';
+  else if (isPred) dot = '<div class="pm-day-dot pred"></div>';
+  return `<button class="${cls}" onclick="pmDayClick('${ds}')">${dn}${dot}</button>`;
+}
+
+function pmDayClick(ds) {
+  // Switch to log tab with this date pre-filled
+  switchPeriodTab('log');
+  const dateEl = document.getElementById('period-date');
+  if (dateEl) { dateEl.value = ds; }
+  setEditPeriodDate(ds);
 }
 
 function setEditPeriodDate(d) {
-  const el = document.getElementById('period-date');
-  if (el) {
-    el.value = d;
-    const entry = data.period?.find(p=>p.date===d);
-    if (entry) {
-      _selectedFlow = entry.flow || 'none';
-      selectPeriodStatus(_selectedFlow);
-      document.getElementById('period-note').value = entry.note || '';
-    }
-    renderSymptomSelector();
+  const dateEl = document.getElementById('period-date');
+  if (dateEl) dateEl.value = d;
+  if (_periodTab !== 'log') switchPeriodTab('log');
+  const entry = (data.period||[]).find(p=>p.date===d);
+  if (entry) {
+    _selectedFlow = entry.flow || 'none';
+    selectPeriodStatus(_selectedFlow);
+    const noteEl = document.getElementById('period-note');
+    if (noteEl) noteEl.value = entry.note || '';
+  } else {
+    _selectedFlow = 'none';
+    selectPeriodStatus('none');
+    const noteEl = document.getElementById('period-note');
+    if (noteEl) noteEl.value = '';
+  }
+  renderSymptomSelector();
+  const entry2 = (data.period||[]).find(p=>p.date===d);
+  if (entry2?.symptoms?.length) {
+    setTimeout(()=>{
+      document.querySelectorAll('#symptomSelector .symptom-chip').forEach(btn=>{
+        btn.classList.toggle('selected', entry2.symptoms.includes(btn.textContent));
+      });
+    }, 50);
   }
 }
 
@@ -4593,73 +4821,123 @@ renderLogExerciseList();
 
     <!-- PERIOD PAGE -->
     <div class="page" id="page-period">
-      <div class="card" style="margin-bottom:16px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-          <div class="card-title" style="margin:0;">🌸 記錄今日狀態</div>
-          <div id="periodTodayLabel" style="font-size:12px;color:var(--text3);"></div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">日期</label>
-          <input type="date" class="form-input" id="period-date">
-        </div>
-        <div class="form-group">
-          <label class="form-label">是否為生理期</label>
-          <div class="flow-selector">
-            <button class="flow-btn" id="fb-no" onclick="selectPeriodStatus('none')">無</button>
-            <button class="flow-btn" id="fb-light" onclick="selectPeriodStatus('light')">少量</button>
-            <button class="flow-btn" id="fb-medium" onclick="selectPeriodStatus('medium')">中量</button>
-            <button class="flow-btn" id="fb-heavy" onclick="selectPeriodStatus('heavy')">大量</button>
+      <!-- Tab switcher -->
+      <div class="period-tab-bar">
+        <button class="period-tab active" id="ptab-overview" onclick="switchPeriodTab('overview')">📊 總覽</button>
+        <button class="period-tab" id="ptab-month" onclick="switchPeriodTab('month')">📅 月視圖</button>
+        <button class="period-tab" id="ptab-log" onclick="switchPeriodTab('log')">✏️ 記錄</button>
+      </div>
+
+      <!-- OVERVIEW TAB -->
+      <div id="ptab-overview-content">
+        <!-- Stats -->
+        <div class="period-stat-grid">
+          <div class="period-stat-card">
+            <div class="period-stat-val" id="periodCycleLen" style="color:#ff6b9d;">—</div>
+            <div class="period-stat-lbl">平均週期<br>天數</div>
+          </div>
+          <div class="period-stat-card">
+            <div class="period-stat-val" id="periodNextDays" style="color:var(--accent);">—</div>
+            <div class="period-stat-lbl">距下次<br>預測天數</div>
+          </div>
+          <div class="period-stat-card">
+            <div class="period-stat-val" id="periodDuration" style="color:#ff6b9d;">—</div>
+            <div class="period-stat-lbl">平均持續<br>天數</div>
+          </div>
+          <div class="period-stat-card">
+            <div class="period-stat-val" id="periodTotalLogs" style="color:var(--text2);">—</div>
+            <div class="period-stat-lbl">已記錄<br>週期數</div>
           </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">症狀（可多選）</label>
-          <div id="symptomSelector" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;"></div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">備注</label>
-          <textarea class="form-input" id="period-note" placeholder="情緒、疼痛程度…" style="min-height:60px;"></textarea>
-        </div>
-        <button class="btn btn-primary" style="width:100%;" onclick="savePeriodEntry()">儲存記錄</button>
-      </div>
 
-      <div class="card" style="margin-bottom:16px;">
-        <div class="card-title">週期日曆（近60天）</div>
-        <div id="periodCalendar" class="period-cycle-vis"></div>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--text3);margin-top:8px;">
-          <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ff6b9d;margin-right:4px;"></span>生理期</span>
-          <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--accent);margin-right:4px;"></span>排卵日（預測）</span>
-          <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ff6b9d40;border:1px dashed #ff6b9d;margin-right:4px;"></span>下次預測</span>
+        <!-- 60-day strip calendar -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title">近60天概覽</div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px;">
+            <div class="strip-weekday-label">日</div>
+            <div class="strip-weekday-label">一</div>
+            <div class="strip-weekday-label">二</div>
+            <div class="strip-weekday-label">三</div>
+            <div class="strip-weekday-label">四</div>
+            <div class="strip-weekday-label">五</div>
+            <div class="strip-weekday-label">六</div>
+          </div>
+          <div id="periodCalendar" class="period-strip"></div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--text3);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
+            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ff6b9d;margin-right:4px;vertical-align:middle;"></span>生理期</span>
+            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:4px;vertical-align:middle;"></span>排卵預測</span>
+            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:rgba(52,170,220,0.2);border:1px solid var(--accent);margin-right:4px;vertical-align:middle;"></span>易孕期</span>
+            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:rgba(255,107,157,0.15);border:1px dashed #ff6b9d;margin-right:4px;vertical-align:middle;"></span>下次預測</span>
+          </div>
         </div>
-      </div>
 
-      <div class="period-stat-grid">
-        <div class="period-stat-card">
-          <div class="period-stat-val" id="periodCycleLen" style="color:#ff6b9d;">—</div>
-          <div class="period-stat-lbl">平均週期長度</div>
-        </div>
-        <div class="period-stat-card">
-          <div class="period-stat-val" id="periodNextDays" style="color:var(--accent);">—</div>
-          <div class="period-stat-lbl">距下次預測</div>
-        </div>
-        <div class="period-stat-card">
-          <div class="period-stat-val" id="periodDuration" style="color:#ff6b9d;">—</div>
-          <div class="period-stat-lbl">平均持續天數</div>
-        </div>
-        <div class="period-stat-card">
-          <div class="period-stat-val" id="periodTotalLogs" style="color:var(--text2);">—</div>
-          <div class="period-stat-lbl">已記錄週期數</div>
+        <!-- History list -->
+        <div class="card">
+          <div class="card-title">歷史記錄</div>
+          <div id="periodHistoryList"></div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">歷史記錄</div>
-        <div id="periodHistoryList"></div>
+      <!-- MONTH VIEW TAB -->
+      <div id="ptab-month-content" style="display:none;">
+        <div class="card">
+          <div class="period-month-nav">
+            <button class="period-month-btn" onclick="periodMonthNav(-1)">‹ 上月</button>
+            <div class="period-month-title" id="periodMonthTitle">2025年1月</div>
+            <button class="period-month-btn" onclick="periodMonthNav(1)">下月 ›</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;">
+            <div class="pm-day-header">日</div>
+            <div class="pm-day-header">一</div>
+            <div class="pm-day-header">二</div>
+            <div class="pm-day-header">三</div>
+            <div class="pm-day-header">四</div>
+            <div class="pm-day-header">五</div>
+            <div class="pm-day-header">六</div>
+          </div>
+          <div id="periodMonthGrid" class="period-month-grid"></div>
+        </div>
+        <div class="card" style="margin-top:14px;" id="periodMonthLogCard" style="display:none;">
+          <div class="card-title" id="periodMonthLogTitle"></div>
+          <div id="periodMonthLogContent"></div>
+        </div>
+      </div>
+
+      <!-- LOG TAB -->
+      <div id="ptab-log-content" style="display:none;">
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div class="card-title" style="margin:0;">記錄</div>
+            <div id="periodTodayLabel" style="font-size:12px;color:var(--text3);"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">日期</label>
+            <input type="date" class="form-input" id="period-date">
+          </div>
+          <div class="form-group">
+            <label class="form-label">生理期流量</label>
+            <div class="flow-selector">
+              <button class="flow-btn" id="fb-none" onclick="selectPeriodStatus('none')">無</button>
+              <button class="flow-btn" id="fb-light" onclick="selectPeriodStatus('light')">少量</button>
+              <button class="flow-btn" id="fb-medium" onclick="selectPeriodStatus('medium')">中量</button>
+              <button class="flow-btn" id="fb-heavy" onclick="selectPeriodStatus('heavy')">大量</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">症狀（可多選）</label>
+            <div id="symptomSelector" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">備注</label>
+            <textarea class="form-input" id="period-note" placeholder="情緒、疼痛程度…" style="min-height:60px;"></textarea>
+          </div>
+          <button class="btn btn-primary" style="width:100%;" onclick="savePeriodEntry()">儲存記錄</button>
+        </div>
       </div>
     </div>
 
     <!-- EDIT LOG MODAL -->
-    <div class="edit-log-modal" id="editLogModal">
-      <div style="position:absolute;inset:0;" onclick="closeEditLog()"></div>
+    <div class="edit-log-modal" id="editLogModal" onclick="if(event.target===this)closeEditLog()">
       <div class="edit-log-sheet">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
           <div style="font-size:17px;font-weight:700;">✏️ 修改記錄</div>
@@ -4702,6 +4980,10 @@ renderLogExerciseList();
         <div class="form-group">
           <label class="form-label">訓練動作</label>
           <textarea class="form-input" id="edit-log-exercises" style="min-height:100px;" placeholder="每行一個動作"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">運動時長（分鐘）</label>
+          <input type="number" class="form-input" id="edit-log-duration" placeholder="例：60" min="1" max="600">
         </div>
         <div class="form-group">
           <label class="form-label">備注</label>
