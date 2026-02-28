@@ -2696,6 +2696,10 @@ async function authV2RefreshCloud() {
     });
     if (changed) saveUsers(local);
     renderAuthV2Users();
+    // Refresh in-app switcher lists immediately (auth UI may already be removed).
+    if (typeof renderUserList === 'function') renderUserList();
+    if (typeof renderMobileUserList === 'function') renderMobileUserList();
+    if (typeof syncTopbarUser === 'function') syncTopbarUser();
     authV2Diag('同步完成：' + cloud.length + ' 位');
   } catch (e) {
     authV2Diag('同步失敗：' + (e && e.message ? e.message : e), true);
@@ -2711,7 +2715,10 @@ async function initAuthV2() {
   authV2Show(false);
   enterGuestMode();
   // Cloud sync still runs in background so user list stays fresh for switching.
-  authV2RefreshCloud();
+  await authV2RefreshCloud();
+  if (typeof renderUserList === 'function') renderUserList();
+  if (typeof renderMobileUserList === 'function') renderMobileUserList();
+  if (typeof syncTopbarUser === 'function') syncTopbarUser();
 }
 
 function getUsers() {
