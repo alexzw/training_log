@@ -2946,6 +2946,25 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+function escapeHtml(v) {
+  return String(v ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function calcDurationMinutes(start, end) {
+  if (!start || !end) return null;
+  const [sh, sm] = start.split(':').map(Number);
+  const [eh, em] = end.split(':').map(Number);
+  if ([sh, sm, eh, em].some(Number.isNaN)) return null;
+  let mins = (eh * 60 + em) - (sh * 60 + sm);
+  if (mins <= 0) mins += 24 * 60;
+  return mins;
+}
+
 // ── NAV ──
 const pageTitles = {
   dashboard:'總覽', log:'今日記錄', history:'訓練歷史',
@@ -3043,9 +3062,15 @@ function saveLog() {
   const duration = document.getElementById('log-duration').value;
 
   if (!date) { showToast('請選擇日期'); return; }
+  if (!type) { showToast('請選擇訓練類型'); return; }
+  if ((start && !end) || (!start && end)) { showToast('開始與結束時間請同時填寫'); return; }
   if (height) { data.goals.height = parseFloat(height); }
 
   const exercisesText = getExercisesText();
+  let durationMin = Number.parseInt(duration, 10);
+  if (!Number.isFinite(durationMin) || durationMin <= 0) durationMin = null;
+  const autoDuration = calcDurationMinutes(start, end);
+  if (autoDuration) durationMin = autoDuration;
 
   data.logs.unshift({
     id: Date.now(), date,
@@ -3054,8 +3079,8 @@ function saveLog() {
     exercises: exercisesText,
     exercises_structured: [...logExercises],
     notes,
-    duration: duration ? parseInt(duration) : null,
-    calories: duration && weight ? calcCalories(type, parseInt(duration), parseFloat(weight)||70) : null,
+    duration: durationMin,
+    calories: durationMin && weight ? calcCalories(type, durationMin, parseFloat(weight)||70) : null,
     photos: [...pendingLogPhotos]
   });
 
@@ -3082,9 +3107,6 @@ function saveLog() {
   document.getElementById('log-duration').value = '';
   showToast('✓ 記錄已儲存');
 }
-
-
-// ── CALORIE CALCULATOR ──
 const MET = {
   chest: 4.0, back: 4.0, legs: 5.5, shoulders: 3.5,
   arms: 3.0, core: 3.8, cardio: 7.0, glutes: 4.5, fullbody: 5.0, rest: 0
@@ -3564,7 +3586,7 @@ function drawChart(id, weights, W, H) {
 function renderHistory(filter) {
   filter = filter || document.getElementById('history-filter').value;
   let logs = data.logs.slice();
-  if(filter!=='all') logs=logs.filter(l=>l.type===filter);
+  if(filter!=="all") logs=logs.filter(l=>l.type===filter);
   const el = document.getElementById('history-list');
   if(logs.length===0){
     el.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div>尚無訓練記錄</div>';
@@ -3572,18 +3594,21 @@ function renderHistory(filter) {
   }
   el.innerHTML = logs.map(l=>{
     const dur = l.start&&l.end ? calcDur(l.start,l.end) : null;
+    const dateText = `${l.date || ''}${l.start ? ' · ' + l.start + (l.end ? ' — ' + l.end : '') : ''}`;
+    const safeExercises = escapeHtml(l.exercises || '').replace(/\n/g, '<br>');
+    const safeNotes = escapeHtml(l.notes || '').replace(/\n/g, '<br>');
     return `<div class="workout-entry ${l.type==='rest'?'rest':''}">
       <div>
-        <div class="entry-date">${l.date}${l.start?' · '+l.start+(l.end?' — '+l.end:''):''}</div>
-        <div class="entry-title">${typeMap[l.type]||'未知'}</div>
+        <div class="entry-date">${escapeHtml(dateText)}</div>
+        <div class="entry-title">${escapeHtml(typeMap[l.type]||'未知')}</div>
         <div class="entry-meta">
           ${dur?`<span class="entry-tag">⏱ ${dur}</span>`:''}
           ${l.weight?`<span class="entry-tag">⚖ ${l.weight} kg</span>`:''}
           ${l.photos&&l.photos.length?`<span class="entry-tag green">📷 ${l.photos.length} 張</span>`:''}
           ${l.calories?`<span class="calorie-tag">🔥 ${l.calories} kcal</span>`:''}
         </div>
-        ${l.exercises?`<div class="entry-exercises">${l.exercises}</div>`:''}
-        ${l.notes?`<div class="entry-notes">${l.notes}</div>`:''}
+        ${l.exercises?`<div class="entry-exercises">${safeExercises}</div>`:''}
+        ${l.notes?`<div class="entry-notes">${safeNotes}</div>`:''}
       </div>
       <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
         <button class="btn" style="padding:6px 12px;font-size:12px;background:var(--accent-light);color:var(--accent);border-radius:8px;" onclick="openEditLog(${l.id})">✏️ 修改</button>
@@ -3592,7 +3617,6 @@ function renderHistory(filter) {
     </div>`;
   }).join('');
 }
-
 function calcDur(s,e){
   const [sh,sm]=s.split(':').map(Number), [eh,em]=e.split(':').map(Number);
   let m=(eh*60+em)-(sh*60+sm); if(m<=0) m+=24*60;
@@ -3712,11 +3736,17 @@ function renderPlans(){
     const total=p.start&&p.end?Math.ceil((new Date(p.end)-new Date(p.start))/86400000):0;
     const elapsed=p.start?Math.max(0,Math.ceil((new Date(today)-new Date(p.start))/86400000)):0;
     const pct=total>0?Math.min(100,Math.round(elapsed/total*100)):0;
+    const safeName = escapeHtml(p.name || '');
+    const safeStart = escapeHtml(p.start || '?');
+    const safeEnd = escapeHtml(p.end || '?');
+    const safeDesc = p.desc
+      ? `<ul class="phase-exercises">${p.desc.split('\n').filter(Boolean).map(l=>`<li>${escapeHtml(l)}</li>`).join('')}</ul>`
+      : '';
     return `<div class="phase-card ${isActive?'active-phase':''}">
       ${isActive?'<div class="active-badge">進行中</div>':''}
-      <div class="phase-name">${p.name}</div>
-      <div class="phase-duration">${p.start||'?'} → ${p.end||'?'}</div>
-      ${p.desc?`<ul class="phase-exercises">${p.desc.split('\n').filter(Boolean).map(l=>`<li>${l}</li>`).join('')}</ul>`:''}
+      <div class="phase-name">${safeName}</div>
+      <div class="phase-duration">${safeStart} → ${safeEnd}</div>
+      ${safeDesc}
       ${total>0?`<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
       <div style="font-size:11px;color:var(--text3);margin-top:6px;">${pct}% 完成 · 共 ${total} 天</div>`:''}
       <div style="margin-top:14px;">
@@ -3725,7 +3755,6 @@ function renderPlans(){
     </div>`;
   }).join('');
 }
-
 function deletePlan(id){ data.plans=data.plans.filter(p=>p.id!==id); saveAndSync(); renderPlans(); }
 
 // ── GOALS ──
