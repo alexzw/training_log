@@ -2580,6 +2580,18 @@ if (!window._firebaseProjectId) window._firebaseProjectId = 'training-log-40f70'
 const USERS_KEY = 'tl_users';
 const CUR_KEY   = 'tl_current_user';
 
+function reportLockDiag(msg, isError) {
+  try {
+    const el = document.getElementById('lockNewError');
+    if (el) {
+      el.textContent = msg;
+      el.style.color = isError ? 'var(--red)' : 'var(--text2)';
+    }
+  } catch (_) {}
+  if (isError) console.error('[LOCK]', msg);
+  else console.log('[LOCK]', msg);
+}
+
 function getUsers() {
   try {
     const raw = localStorage.getItem(USERS_KEY);
@@ -2956,6 +2968,7 @@ document.addEventListener('click', e => {
 
 // ── INIT USERS ──
 function initUsers() {
+  reportLockDiag('初始化中...');
   // ── STEP 1: Show lock screen from localStorage IMMEDIATELY (no waiting) ──
   let users = getUsers();
 
@@ -2974,10 +2987,12 @@ function initUsers() {
   renderLockUserList();
   if (users.length === 0) {
     showNewUserForm();
+    reportLockDiag('本機無用戶，改讀雲端...');
     const hint = document.getElementById('lockNewError');
     if (hint) hint.textContent = '正在從雲端讀取用戶...';
   } else {
     showLockUserSelect();
+    reportLockDiag('本機已有用戶，已顯示清單');
   }
   renderUserList();
   syncTopbarUser();
@@ -2989,6 +3004,7 @@ function initUsers() {
 
 async function _syncUsersFromCloud() {
   try {
+    reportLockDiag('雲端同步中...');
     // Wait for Firebase to be ready (up to 5s), but don't block UI
     if (!window._firestoreReady) {
       await new Promise(resolve => {
@@ -3016,8 +3032,10 @@ async function _syncUsersFromCloud() {
           hint.textContent = '讀不到雲端用戶，請檢查 Firestore 規則是否允許讀取 app/users。';
         }
       }
+      reportLockDiag('雲端同步失敗：拿不到任何用戶', true);
       return;
     }
+    reportLockDiag('雲端同步成功：' + cloudUsers.length + ' 位用戶');
     const localUsers = getUsers();
     const localIds = new Set(localUsers.map(u => u.id));
     let changed = false;
@@ -3034,9 +3052,11 @@ async function _syncUsersFromCloud() {
       renderLockUserList();
       renderUserList();
       showLockUserSelect();
+      reportLockDiag('已渲染用戶清單：' + localUsers.length + ' 位');
     }
   } catch(e) {
     console.warn('Background Firebase sync failed:', e);
+    reportLockDiag('同步例外：' + (e && e.message ? e.message : e), true);
   }
 }
 
@@ -3048,6 +3068,18 @@ if (document.readyState === 'loading') {
 } else {
   requestAnimationFrame(initUsers);
 }
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    try { initUsers(); } catch (e) { reportLockDiag('load 初始化失敗：' + (e && e.message ? e.message : e), true); }
+  }, 800);
+});
+window.addEventListener('error', (e) => {
+  reportLockDiag('JS錯誤：' + (e.message || 'unknown'), true);
+});
+window.addEventListener('unhandledrejection', (e) => {
+  const reason = e && e.reason ? (e.reason.message || String(e.reason)) : 'unknown';
+  reportLockDiag('Promise錯誤：' + reason, true);
+});
 
 function showToast(msg) {
   const t = document.getElementById('toast');
