@@ -2580,11 +2580,24 @@ const USERS_KEY = 'tl_users';
 const CUR_KEY   = 'tl_current_user';
 
 function getUsers() {
-  return JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+  try {
+    const raw = localStorage.getItem(USERS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    console.warn('Invalid local users cache, resetting:', e);
+    try { localStorage.removeItem(USERS_KEY); } catch (_) {}
+    return [];
+  }
 }
 
 function saveUsers(users) {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  try {
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  } catch (e) {
+    console.warn('localStorage saveUsers failed:', e);
+  }
   // sync to Firestore
   if (window._firestoreReady) {
     window._fsSetDoc(window._fsDoc(window._db, 'app', 'users'), { list: users })
@@ -2603,13 +2616,23 @@ function setCurrentUserId(id) {
 function userDataKey(uid) { return 'tl_data_' + uid; }
 
 function loadUserData(uid) {
-  return JSON.parse(localStorage.getItem(userDataKey(uid)) || 'null') || {
-    logs: [], weights: [], photos: [], plans: [], goals: {}
-  };
+  try {
+    return JSON.parse(localStorage.getItem(userDataKey(uid)) || 'null') || {
+      logs: [], weights: [], photos: [], plans: [], goals: {}
+    };
+  } catch (e) {
+    console.warn('Invalid local user data cache, resetting:', e);
+    try { localStorage.removeItem(userDataKey(uid)); } catch (_) {}
+    return { logs: [], weights: [], photos: [], plans: [], goals: {} };
+  }
 }
 
 function saveUserData(uid, d) {
-  localStorage.setItem(userDataKey(uid), JSON.stringify(d));
+  try {
+    localStorage.setItem(userDataKey(uid), JSON.stringify(d));
+  } catch (e) {
+    console.warn('localStorage saveUserData failed:', e);
+  }
   // sync to Firestore (split photos out to avoid 1MB limit — store refs only)
   if (window._firestoreReady) {
     const toStore = {
@@ -2947,6 +2970,8 @@ function initUsers() {
   renderLockUserList();
   if (users.length === 0) {
     showNewUserForm();
+    const hint = document.getElementById('lockNewError');
+    if (hint) hint.textContent = '正在從雲端讀取用戶...';
   } else {
     showLockUserSelect();
   }
@@ -2955,6 +2980,7 @@ function initUsers() {
 
   // ── STEP 2: Sync with Firebase in BACKGROUND (never blocks UI) ──
   _syncUsersFromCloud();
+  setTimeout(() => { _syncUsersFromCloud(); }, 2000);
 }
 
 async function _syncUsersFromCloud() {
