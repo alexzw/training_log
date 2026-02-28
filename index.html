@@ -2675,19 +2675,54 @@ async function initUsers() {
   syncTopbarUser();
 }
 
-// ── INIT GUARD (handles async module timing) ──
+// ── INIT GUARD ──
+// Ensures both DOM and Firebase are ready before initialising.
+// The lock screen HTML comes AFTER this script in the document,
+// so we must wait for DOMContentLoaded before touching the DOM.
 let _initCalled = false;
-function safeInitUsers() {
+let _domReady = false;
+let _firebaseReady = false;
+
+function _tryInit() {
   if (_initCalled) return;
+  if (!_domReady) return;   // DOM not ready yet — wait
   _initCalled = true;
   initUsers();
 }
-if (window._firestoreReady) {
-  safeInitUsers();
-} else {
-  window.addEventListener('firestore-ready', safeInitUsers, { once: true });
-  setTimeout(safeInitUsers, 2500);
+
+function _onFirebaseReady() {
+  _firebaseReady = true;
+  _tryInit();
 }
+
+function _onDomReady() {
+  _domReady = true;
+  _tryInit();
+}
+
+// Listen for DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', _onDomReady, { once: true });
+} else {
+  // DOM already parsed (shouldn't happen here, but be safe)
+  _domReady = true;
+}
+
+// Listen for Firebase ready (module may fire before or after DOMContentLoaded)
+if (window._firestoreReady) {
+  _firebaseReady = true;
+  // Firebase already ready — init as soon as DOM is ready
+  // (handled by _tryInit above checking both flags)
+} else {
+  window.addEventListener('firestore-ready', _onFirebaseReady, { once: true });
+}
+
+// Hard fallback: if Firebase never fires within 3s, init anyway
+// (works offline or when Firebase is blocked)
+setTimeout(() => {
+  _firebaseReady = true; // treat as ready even if it never fired
+  _tryInit();
+}, 3000);
 
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -2724,7 +2759,6 @@ function renderPage(p) {
   if (p==='workout') renderWorkoutTimer();
   if (p==='library') renderLibrary();
   if (p==='period') renderPeriod();
-  if (p==='settings') renderSettingsPage();
 }
 
 // ── PRE-FILL HEIGHT ──
@@ -2910,6 +2944,11 @@ let lockSelectedUid = null;
 function renderLockUserList() {
   const users = getUsers();
   const el = document.getElementById('lockUserList');
+  if (!el) { console.warn('lockUserList not in DOM yet'); return; }
+  if (users.length === 0) {
+    el.innerHTML = '';
+    return;
+  }
   el.innerHTML = users.map((u, i) => `
     <button class="lock-user-btn ${u.id === lockSelectedUid ? 'selected' : ''}"
       onclick="selectLockUser('${u.id}')">
@@ -2967,20 +3006,31 @@ function unlockApp(uid) {
 }
 
 function showLockUserSelect() {
-  document.getElementById('lockUserSelect').style.display = 'block';
-  document.getElementById('lockPasswordView').style.display = 'none';
-  document.getElementById('lockNewUserView').style.display = 'none';
+  const us = document.getElementById('lockUserSelect');
+  const pv = document.getElementById('lockPasswordView');
+  const nv = document.getElementById('lockNewUserView');
+  if (!us || !pv || !nv) { console.warn('Lock screen DOM not ready'); return; }
+  us.style.display = 'block';
+  pv.style.display = 'none';
+  nv.style.display = 'none';
   renderLockUserList();
 }
 
 function showNewUserForm() {
-  document.getElementById('lockUserSelect').style.display = 'none';
-  document.getElementById('lockPasswordView').style.display = 'none';
-  document.getElementById('lockNewUserView').style.display = 'block';
-  document.getElementById('lockNewName').value = '';
-  document.getElementById('lockNewPwd').value = '';
-  document.getElementById('lockNewError').textContent = '';
-  setTimeout(() => document.getElementById('lockNewName').focus(), 100);
+  const us = document.getElementById('lockUserSelect');
+  const pv = document.getElementById('lockPasswordView');
+  const nv = document.getElementById('lockNewUserView');
+  if (!us || !pv || !nv) { console.warn('Lock screen DOM not ready'); return; }
+  us.style.display = 'none';
+  pv.style.display = 'none';
+  nv.style.display = 'block';
+  const nameEl = document.getElementById('lockNewName');
+  const pwdEl = document.getElementById('lockNewPwd');
+  const errEl = document.getElementById('lockNewError');
+  if (nameEl) nameEl.value = '';
+  if (pwdEl) pwdEl.value = '';
+  if (errEl) errEl.textContent = '';
+  setTimeout(() => nameEl && nameEl.focus(), 100);
 }
 
 async function submitNewUser() {
