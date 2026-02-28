@@ -2576,19 +2576,23 @@ window.dispatchEvent(new Event('firestore-ready'));
 
 <script>
 // ── MULTI-USER ──
+if (!window._firebaseProjectId) window._firebaseProjectId = 'training-log-40f70';
 const USERS_KEY = 'tl_users';
 const CUR_KEY   = 'tl_current_user';
 
 function getUsers() {
   try {
     const raw = localStorage.getItem(USERS_KEY);
-    if (!raw) return [];
+    if (!raw) {
+      return Array.isArray(window.__cloudUsersCache) ? window.__cloudUsersCache : [];
+    }
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    return Array.isArray(window.__cloudUsersCache) ? window.__cloudUsersCache : parsed;
   } catch (e) {
     console.warn('Invalid local users cache, resetting:', e);
     try { localStorage.removeItem(USERS_KEY); } catch (_) {}
-    return [];
+    return Array.isArray(window.__cloudUsersCache) ? window.__cloudUsersCache : [];
   }
 }
 
@@ -3025,6 +3029,7 @@ async function _syncUsersFromCloud() {
       }
     });
     if (changed || localUsers.length > 0) {
+      window.__cloudUsersCache = localUsers;
       if (changed) saveUsers(localUsers);
       renderLockUserList();
       renderUserList();
