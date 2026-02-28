@@ -957,6 +957,7 @@
 
   .chart-wrap { position: relative; }
 
+
   /* ─── WORKOUT TIMER ─── */
   .timer-display {
     text-align: center;
@@ -1209,276 +1210,8 @@
     .set-col-labels .rpe-col { display: none; }
   }
 
-  /* ─── DYNAMIC EXERCISE LIST (log page) ─── */
-  .ex-list-row {
-    display: grid;
-    grid-template-columns: 1fr 58px 68px 30px;
-    gap: 6px;
-    align-items: center;
-    margin-bottom: 6px;
-  }
-  .ex-list-col-label {
-    display: grid;
-    grid-template-columns: 1fr 58px 68px 30px;
-    gap: 6px;
-    font-size: 10px; font-weight: 600; color: var(--text3);
-    text-transform: uppercase; letter-spacing: 0.4px;
-    margin-bottom: 4px;
-  }
-  .ex-list-input {
-    background: var(--surface2); border: 1px solid var(--border2);
-    border-radius: 8px; padding: 9px 8px; font-size: 13px;
-    font-family: inherit; color: var(--text); width: 100%; outline: none;
-  }
-  .ex-list-input:focus { border-color: var(--accent); background: var(--surface); }
-  .ex-add-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-  .ex-add-btn-outline {
-    flex: 1; padding: 10px; border-radius: 8px; font-size: 13px;
-    font-weight: 600; cursor: pointer; font-family: inherit; border: 1.5px dashed var(--border2);
-    background: none; color: var(--text2); transition: all 0.12s;
-  }
-  .ex-add-btn-outline:hover { background: var(--surface2); border-color: var(--accent); color: var(--accent); }
-  .ex-add-btn-lib {
-    flex: 1; padding: 10px; border-radius: 8px; font-size: 13px;
-    font-weight: 600; cursor: pointer; font-family: inherit; border: none;
-    background: var(--accent-light); color: var(--accent); transition: background 0.12s;
-  }
-  .ex-add-btn-lib:hover { background: rgba(0,113,227,0.14); }
-  .copy-btn {
-    padding: 7px 12px; font-size: 12px; font-weight: 600;
-    background: var(--surface2); border: 1px solid var(--border2);
-    border-radius: 8px; cursor: pointer; font-family: inherit; color: var(--text2);
-    transition: all 0.12s; white-space: nowrap;
-  }
-  .copy-btn:hover { background: var(--surface3); color: var(--text); }
-
-  /* ─── WEIGHT DIFF BADGE ─── */
-  .weight-diff-badge {
-    display: inline-flex; align-items: center; gap: 3px;
-    font-size: 12px; font-weight: 700;
-    padding: 2px 9px; border-radius: 20px; margin-left: 8px;
-    vertical-align: middle; transition: all 0.25s;
-  }
-  .wdb-down { background: var(--green-light); color: var(--green); }
-  .wdb-up   { background: var(--red-light); color: var(--red); }
-  .wdb-flat { background: var(--surface3); color: var(--text3); }
-
-  /* ─── REST TIMER ─── */
-  .rest-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 18px; margin-bottom: 14px; }
-  .rest-progress { height: 5px; background: var(--surface3); border-radius: 3px; margin-bottom: 10px; overflow: hidden; }
-  .rest-bar { height: 100%; background: var(--accent); border-radius: 3px; transition: width 1s linear, background 0.4s; }
-  .rest-bar.urgent { background: var(--red); }
-  .rest-clock-display { font-size: 48px; font-weight: 700; letter-spacing: -2px; font-variant-numeric: tabular-nums; text-align: center; line-height: 1; margin: 4px 0 10px; }
-  .rest-clock-display.urgent { color: var(--red); animation: blink 0.8s infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
-  .rest-presets { display: flex; gap: 7px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
-  .rest-pre-btn {
-    padding: 7px 14px; border-radius: 980px; border: 1.5px solid var(--border2);
-    background: var(--surface2); color: var(--text2); font-size: 13px; font-weight: 600;
-    cursor: pointer; font-family: inherit; transition: all 0.12s;
-  }
-  .rest-pre-btn.on, .rest-pre-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .rest-btns { display: flex; gap: 8px; justify-content: center; }
-  .rest-go-btn { padding: 9px 24px; border-radius: 980px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; background: var(--green); color: #fff; transition: background 0.12s; }
-  .rest-go-btn:hover { background: #27b84a; }
-  .rest-go-btn.paused { background: var(--accent); }
-  .rest-reset-btn { padding: 9px 18px; border-radius: 980px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; background: var(--surface3); color: var(--text2); }
-
-  /* ─── PERIOD PAGE ─── */
-  .period-tab-bar {
-    display: flex; gap: 0; background: var(--surface3); border-radius: 10px;
-    padding: 3px; margin-bottom: 16px;
-  }
-  .period-tab {
-    flex: 1; padding: 8px 12px; border-radius: 8px; border: none; font-size: 13px;
-    font-weight: 600; cursor: pointer; font-family: inherit; color: var(--text3);
-    background: none; transition: all 0.18s; text-align: center;
-  }
-  .period-tab.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
-
-  /* Calendar dot grid (60-day strip) */
-  .period-strip {
-    display: grid; grid-template-columns: repeat(7, 1fr);
-    gap: 3px; margin: 8px 0;
-  }
-  .period-strip-day {
-    width: 100%; aspect-ratio: 1; border-radius: 50%;
-    background: var(--surface3); display: flex; align-items: center; justify-content: center;
-    font-size: 9px; font-weight: 600; color: var(--text3);
-    cursor: pointer; transition: all 0.12s; position: relative; min-width: 0;
-  }
-  .period-strip-day.menstrual { background: #ff6b9d; color: #fff; }
-  .period-strip-day.fertile   { background: rgba(52,170,220,0.15); color: var(--accent); border: 1px solid var(--accent); }
-  .period-strip-day.ovulation { background: var(--accent); color: #fff; }
-  .period-strip-day.predicted { background: rgba(255,107,157,0.15); border: 1px dashed #ff6b9d; color: #ff6b9d; }
-  .period-strip-day.today     { outline: 2px solid var(--accent); outline-offset: 1px; }
-  .strip-weekday-label { font-size: 9px; font-weight: 700; color: var(--text3); text-align: center; padding: 2px 0; }
-
-  /* Month calendar */
-  .period-month-grid {
-    display: grid; grid-template-columns: repeat(7, 1fr);
-    gap: 2px; margin-top: 6px;
-  }
-  .period-month-nav {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  .period-month-btn {
-    background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px;
-    padding: 6px 14px; font-size: 14px; cursor: pointer; font-family: inherit;
-    color: var(--text2); transition: background 0.12s;
-  }
-  .period-month-btn:hover { background: var(--surface3); }
-  .period-month-title { font-size: 15px; font-weight: 700; color: var(--text); }
-  .pm-day-header { font-size: 10px; font-weight: 700; color: var(--text3); text-align: center; padding: 4px 0; }
-  .pm-day {
-    min-height: 40px; border-radius: 6px; padding: 4px;
-    font-size: 12px; font-weight: 600; cursor: pointer;
-    transition: background 0.1s; position: relative;
-    display: flex; flex-direction: column; align-items: center;
-    background: none; border: none; font-family: inherit; color: var(--text2);
-  }
-  .pm-day:hover { background: var(--surface3); }
-  .pm-day.today { color: var(--accent); font-weight: 800; }
-  .pm-day.other-month { color: var(--text3); opacity: 0.5; }
-  .pm-day.menstrual { background: #ff6b9d22; }
-  .pm-day.ovulation { background: rgba(0,113,227,0.1); }
-  .pm-day.predicted { background: rgba(255,107,157,0.1); }
-  .pm-day-dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 3px; }
-  .pm-day-dot.men { background: #ff6b9d; }
-  .pm-day-dot.ov  { background: var(--accent); }
-  .pm-day-dot.pred { background: #ff6b9d; opacity: 0.5; }
-
-  /* Stats */
-  .period-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
-  .period-stat-card {
-    background: var(--surface2); border-radius: var(--radius-sm);
-    padding: 14px; text-align: center;
-  }
-  .period-stat-val { font-size: 26px; font-weight: 700; margin-bottom: 2px; }
-  .period-stat-lbl { font-size: 10px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; line-height: 1.3; }
-
-  /* Log history */
-  .period-log-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px;
-  }
-  .period-log-row:last-child { border-bottom: none; }
-  .period-dot-sm { width: 8px; height: 8px; border-radius: 50%; background: #ff6b9d; display: inline-block; margin-right: 6px; flex-shrink: 0; }
-
-  /* Entry form */
-  .flow-selector { display: flex; gap: 6px; }
-  .flow-btn {
-    flex: 1; padding: 9px 4px; border-radius: 8px; font-size: 12px; font-weight: 600;
-    border: 1.5px solid var(--border2); background: var(--surface2);
-    cursor: pointer; font-family: inherit; color: var(--text2); transition: all 0.12s; text-align: center;
-  }
-  .flow-btn.selected { border-color: #ff6b9d; background: #ff6b9d18; color: #ff6b9d; }
-  .symptom-chip {
-    padding: 5px 11px; border-radius: 20px; font-size: 12px; font-weight: 500;
-    border: 1.5px solid var(--border2); background: var(--surface2);
-    cursor: pointer; font-family: inherit; color: var(--text2); transition: all 0.12s;
-  }
-  .symptom-chip.selected { border-color: #ff6b9d; background: #ff6b9d18; color: #ff6b9d; }
-
-  /* ─── EDIT LOG MODAL ─── */
-  .edit-log-modal {
-    position: fixed; inset: 0; z-index: 700;
-    background: rgba(0,0,0,0.35); backdrop-filter: blur(6px);
-    display: none; align-items: flex-end; justify-content: center;
-  }
-  .edit-log-modal.open { display: flex; }
-  .edit-log-sheet {
-    background: var(--surface); border-radius: 20px 20px 0 0;
-    width: 100%; max-width: 600px; max-height: 88vh; overflow-y: auto;
-    padding: 20px 22px 40px; animation: slideSheet 0.28s cubic-bezier(0.22,1,0.36,1);
-  }
-  @keyframes slideSheet { from{ transform:translateY(60px);opacity:0 } to{ transform:none;opacity:1 } }
-
   /* ─── DELETE CONFIRM MODAL ─── */
-  .delete-modal {
-    position: fixed; inset: 0; z-index: 9500;
-    display: none; align-items: center; justify-content: center;
-    background: rgba(0,0,0,0.3);
-    backdrop-filter: blur(6px);
-  }
-  .delete-modal.open { display: flex; }
-  .delete-modal-box {
-    background: var(--surface);
-    border-radius: 18px;
-    padding: 28px 28px 24px;
-    width: min(360px, 90vw);
-    box-shadow: var(--shadow-lg);
-    animation: fadeUp 0.22s ease;
-    text-align: center;
-  }
-  .delete-modal-icon { font-size: 36px; margin-bottom: 10px; }
-  .delete-modal-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
-  .delete-modal-desc { font-size: 13px; color: var(--text2); margin-bottom: 20px; line-height: 1.5; }
-  .delete-modal-actions { display: flex; gap: 10px; margin-top: 16px; }
-  .delete-modal-actions .btn { flex: 1; padding: 11px; font-size: 14px; border-radius: 10px; }
 
-  /* ─── LOCK SCREEN ─── */
-  .lock-screen {
-    position: fixed; inset: 0; z-index: 9000;
-    background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .lock-screen.hidden { display: none; }
-  .lock-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 36px 32px 32px;
-    width: 340px;
-    box-shadow: var(--shadow-lg);
-    text-align: center;
-    animation: fadeUp 0.3s ease;
-  }
-  .lock-avatar {
-    width: 64px; height: 64px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 24px; font-weight: 700;
-    margin: 0 auto 14px;
-  }
-  .lock-name { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; margin-bottom: 4px; }
-  .lock-hint { font-size: 13px; color: var(--text3); margin-bottom: 22px; }
-  .lock-input {
-    width: 100%; background: var(--surface2);
-    border: 1.5px solid var(--border2);
-    border-radius: 10px; padding: 12px 14px;
-    font-family: inherit; font-size: 16px;
-    color: var(--text); outline: none; text-align: center;
-    letter-spacing: 4px; margin-bottom: 12px;
-  }
-  .lock-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,113,227,0.15); }
-  .lock-input.error { border-color: var(--red); box-shadow: 0 0 0 3px rgba(255,59,48,0.15); animation: shake 0.3s; }
-  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
-  .lock-btn {
-    width: 100%; padding: 12px; background: var(--accent);
-    color: #fff; border: none; border-radius: 10px;
-    font-family: inherit; font-size: 15px; font-weight: 600;
-    cursor: pointer; margin-bottom: 10px;
-  }
-  .lock-btn:hover { background: var(--accent-hover); }
-  .lock-error { font-size: 13px; color: var(--red); min-height: 18px; margin-bottom: 4px; }
-  .lock-users { display: flex; flex-direction: column; gap: 4px; }
-  .lock-user-btn {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 14px; border-radius: 10px; cursor: pointer;
-    transition: background 0.15s; text-align: left;
-    background: none; border: 1px solid var(--border);
-    width: 100%; font-family: inherit;
-  }
-  .lock-user-btn:hover { background: var(--surface2); }
-  .lock-user-btn.selected { border-color: var(--accent); background: var(--accent-light); }
-  .lock-user-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 700; flex-shrink: 0; }
-  .lock-user-info { flex: 1; }
-  .lock-user-name { font-size: 14px; font-weight: 600; color: var(--text); }
-  .lock-user-hint { font-size: 11px; color: var(--text3); }
-  .lock-back { font-size: 13px; color: var(--accent); cursor: pointer; margin-top: 8px; background: none; border: none; font-family: inherit; }
-  .lock-back:hover { text-decoration: underline; }
-  .lock-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
 
   /* ─── BMI CARD ─── */
   .bmi-card {
@@ -1504,6 +1237,7 @@
 
   /* ─── SET PASSWORD ─── */
   .pwd-section { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+
 
   /* ─── USER SWITCHER ─── */
   .user-switcher {
@@ -1603,7 +1337,7 @@
 <!-- SIDEBAR -->
 <div class="sidebar">
   <div class="sidebar-header">
-    <div class="logo" onclick="logoutToLockScreen()" style="cursor:pointer;" title="返回登入畫面">
+    <div class="logo">
       <div class="logo-icon">
         <svg viewBox="0 0 20 20" fill="none">
           <path d="M10 2.5C10 2.5 6 5 6 9.5C6 11.5 7.5 13 10 13C12.5 13 14 11.5 14 9.5C14 5 10 2.5 10 2.5Z" fill="white" opacity="0.9"/>
@@ -1680,10 +1414,6 @@
       <span class="nav-icon"><span>🎯</span></span>
       <span>目標追蹤</span>
     </a>
-    <a onclick="navigate('period', this)">
-      <span class="nav-icon"><span>🌸</span></span>
-      <span>生理週期</span>
-    </a>
     <div class="nav-section-label">帳號</div>
     <a onclick="navigate('settings', this)">
       <span class="nav-icon"><span>⚙️</span></span>
@@ -1741,6 +1471,7 @@
         </div>
       </div>
 
+
       <!-- BMI + Calorie Summary row -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;" id="bmi-calorie-row">
         <div class="bmi-card" style="grid-column:1;">
@@ -1795,11 +1526,8 @@
               <input type="hidden" id="log-height">
             </div>
             <div class="form-group">
-              <div style="display:flex;align-items:center;margin-bottom:6px;">
-                <label class="form-label" style="margin:0;">今日體重（kg）</label>
-                <span id="weightDiffBadge" class="weight-diff-badge" style="display:none;"></span>
-              </div>
-              <input type="number" step="0.1" class="form-input" id="log-weight" placeholder="例：75.5" oninput="updateWeightDiff()">
+              <label class="form-label">今日體重（kg）</label>
+              <input type="number" step="0.1" class="form-input" id="log-weight" placeholder="例：75.5">
             </div>
 <div class="form-group">
               <label class="form-label">訓練類型</label>
@@ -1812,7 +1540,6 @@
                 <option value="arms">手臂訓練</option>
                 <option value="core">核心訓練</option>
                 <option value="cardio">有氧訓練</option>
-                <option value="glutes">臀部訓練</option>
                 <option value="fullbody">全身訓練</option>
                 <option value="rest">休息日</option>
               </select>
@@ -1832,24 +1559,11 @@
         </div>
         <div>
           <div class="card" style="margin-bottom:16px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-              <div class="card-title" style="margin:0;">訓練動作</div>
-              <button class="copy-btn" onclick="copyYesterdayExercises()">📋 複製昨日訓練</button>
+            <div class="card-title">訓練內容</div>
+            <div class="form-group">
+              <label class="form-label">訓練動作（每行一個）</label>
+              <textarea class="form-input" id="log-exercises" placeholder="例：&#10;臥推 4×10 80kg&#10;啞鈴飛鳥 3×12 20kg&#10;繩索夾胸 3×15" style="min-height:110px;"></textarea>
             </div>
-            <div class="ex-list-col-label">
-              <span>動作名稱</span><span style="text-align:center;">組數</span><span style="text-align:center;">重量kg</span><span></span>
-            </div>
-            <div id="logExerciseList"></div>
-            <div class="ex-add-row">
-              <button class="ex-add-btn-outline" onclick="addLogExRow()">＋ 新增動作</button>
-              <button class="ex-add-btn-lib" onclick="toggleLogExPicker()">📚 動作庫</button>
-            </div>
-            <div id="logExPickerWrap" style="display:none;margin-top:10px;">
-              <input type="text" class="form-input" id="logExPickerQ" placeholder="搜尋動作..." oninput="renderLogExPicker()" style="margin-bottom:8px;">
-              <div id="logExPickerList" style="max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;"></div>
-            </div>
-            <!-- hidden textarea for compatibility -->
-            <textarea id="log-exercises" style="display:none;"></textarea>
             <div class="form-group">
               <label class="form-label">運動時長（分鐘）<span style="color:var(--text3);font-weight:400;font-size:11px;"> 用於計算消耗熱量</span></label>
               <input type="number" class="form-input" id="log-duration" placeholder="例：60" min="1" max="600">
@@ -2035,6 +1749,7 @@
 
     </div>
 
+
     <!-- SETTINGS -->
     <div class="page" id="page-settings">
 
@@ -2048,75 +1763,28 @@
             <div style="font-size:12px;color:var(--text3);">目前登入帳號</div>
           </div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div class="form-group">
-            <label class="form-label">身高（cm）</label>
-            <input type="number" class="form-input" id="settings-height" placeholder="例：175" min="100" max="250">
-          </div>
-          <div class="form-group">
-            <label class="form-label">年齡</label>
-            <input type="number" class="form-input" id="settings-age" placeholder="例：25" min="10" max="100">
-          </div>
-        </div>
         <div class="form-group">
-          <label class="form-label">性別 <span style="font-weight:400;color:var(--text3);font-size:11px;">用於年齡調整 BMI 分析</span></label>
+          <label class="form-label">身高（cm）<span style="font-weight:400;color:var(--text3);font-size:11px;"> 用於計算 BMI</span></label>
           <div style="display:flex;gap:8px;">
-            <button class="flow-btn" id="gender-male" onclick="selectGender('male')" style="flex:1;">♂ 男性</button>
-            <button class="flow-btn" id="gender-female" onclick="selectGender('female')" style="flex:1;">♀ 女性</button>
-            <button class="flow-btn" id="gender-other" onclick="selectGender('other')" style="flex:1;">其他</button>
+            <input type="number" class="form-input" id="settings-height" placeholder="例：175" min="100" max="250">
+            <button class="btn btn-primary" onclick="saveSettingsHeight()" style="padding:10px 18px;white-space:nowrap;">儲存</button>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="saveSettingsProfile()" style="width:100%;">儲存個人資料</button>
       </div>
 
-      <!-- Password -->
-      <div class="card" style="margin-bottom:16px;">
-        <div class="card-title">密碼安全</div>
-        <div style="font-size:13px;color:var(--text2);margin-bottom:16px;">設定密碼後，每次登入需要輸入密碼才能進入你的帳號。</div>
-        <div class="form-group">
-          <label class="form-label">目前密碼</label>
-          <input type="password" class="form-input" id="settings-pwd-current" placeholder="無密碼請留空" maxlength="20">
-        </div>
-        <div class="form-group">
-          <label class="form-label">新密碼</label>
-          <input type="password" class="form-input" id="settings-pwd-new" placeholder="新密碼（留空表示移除密碼）" maxlength="20">
-        </div>
-        <div class="form-group">
-          <label class="form-label">確認新密碼</label>
-          <input type="password" class="form-input" id="settings-pwd-confirm" placeholder="再次輸入新密碼" maxlength="20">
-        </div>
-        <button class="btn btn-primary" onclick="changePasswordFromSettings()">更新密碼</button>
-      </div>
-
-      <!-- Danger zone -->
+      <!-- User Management -->
       <div class="card">
-        <div class="card-title" style="color:var(--red);">危險區域</div>
-
-        <!-- Logout -->
-        <div style="padding:14px 0;border-bottom:1px solid var(--border);">
-          <div style="font-size:14px;font-weight:600;margin-bottom:4px;">登出帳號</div>
-          <div style="font-size:13px;color:var(--text2);margin-bottom:12px;">返回登入畫面，資料不會遺失。</div>
-          <button class="btn" style="background:var(--surface2);color:var(--text);border:1px solid var(--border2);border-radius:10px;" onclick="logoutToLockScreen()">登出此帳號</button>
-        </div>
-
-        <!-- Delete account -->
-        <div style="padding-top:14px;">
-          <div style="font-size:14px;font-weight:600;margin-bottom:4px;color:var(--red);">刪除帳號</div>
-          <div style="font-size:13px;color:var(--text2);margin-bottom:12px;">永久刪除此帳號及所有資料，此操作不可復原。</div>
-          <div id="delete-self-section">
-            <button class="btn" style="background:var(--red-light);color:var(--red);border-radius:10px;" onclick="showDeleteSelfConfirm()">刪除此帳號</button>
-          </div>
-          <div id="delete-self-confirm" style="display:none;">
-            <input type="password" class="form-input" id="delete-self-pwd" placeholder="輸入密碼確認（無密碼留空）" maxlength="20" style="margin-bottom:8px;">
-            <div id="delete-self-error" style="font-size:12px;color:var(--red);min-height:16px;margin-bottom:8px;"></div>
-            <div style="display:flex;gap:8px;">
-              <button class="btn" style="flex:1;background:var(--surface2);color:var(--text);border:1px solid var(--border2);border-radius:10px;" onclick="cancelDeleteSelf()">取消</button>
-              <button class="btn" style="flex:1;background:var(--red);color:#fff;border-radius:10px;" onclick="confirmDeleteSelf()">確認刪除</button>
-            </div>
-          </div>
+        <div class="card-title">用戶管理</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">所有用戶共用此裝置，資料各自獨立儲存。</div>
+        <div id="settings-user-list" style="margin-bottom:14px;"></div>
+        <div style="display:flex;gap:8px;">
+          <input class="form-input" id="settings-new-user" placeholder="新用戶名稱" maxlength="20" style="flex:1;"
+            onkeydown="if(event.key==='Enter') settingsAddUser()">
+          <button class="btn btn-primary" onclick="settingsAddUser()" style="white-space:nowrap;">＋ 新增</button>
         </div>
       </div>
     </div>
+
 
     <!-- WORKOUT TIMER PAGE -->
     <div class="page" id="page-workout">
@@ -2148,27 +1816,6 @@
             <div style="font-size:11px;color:var(--text3);margin-bottom:2px;">預估熱量</div>
             <div style="font-size:22px;font-weight:700;" id="timerCalories">0</div>
           </div>
-        </div>
-      </div>
-
-      <!-- REST TIMER -->
-      <div class="rest-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-          <div style="font-size:13px;font-weight:600;">⏱ 組間休息</div>
-          <span id="restStatusTxt" style="font-size:11px;color:var(--text3);">選擇時長後開始</span>
-        </div>
-        <div class="rest-progress"><div class="rest-bar" id="restBar" style="width:100%"></div></div>
-        <div class="rest-clock-display" id="restClock">01:00</div>
-        <div class="rest-presets">
-          <button class="rest-pre-btn on" onclick="setRestPreset(30,this)">30s</button>
-          <button class="rest-pre-btn" onclick="setRestPreset(60,this)">60s</button>
-          <button class="rest-pre-btn" onclick="setRestPreset(90,this)">90s</button>
-          <button class="rest-pre-btn" onclick="setRestPreset(120,this)">2分</button>
-          <button class="rest-pre-btn" onclick="setRestPreset(180,this)">3分</button>
-        </div>
-        <div class="rest-btns">
-          <button class="rest-go-btn" id="restGoBtn" onclick="toggleRest()">▶ 開始休息</button>
-          <button class="rest-reset-btn" onclick="resetRest()">↺ 重置</button>
         </div>
       </div>
 
@@ -2220,7 +1867,6 @@
           <option value="肩部">肩部</option>
           <option value="手臂">手臂</option>
           <option value="核心">核心</option>
-          <option value="臀部">臀部</option>
           <option value="有氧">有氧</option>
         </select>
         <select class="lib-filter-select" id="libTypeFilter" onchange="renderLibrary()">
@@ -2303,267 +1949,6 @@
   </div>
 </div>
 
-    <!-- PERIOD PAGE -->
-    <div class="page" id="page-period">
-      <!-- Tab switcher -->
-      <div class="period-tab-bar">
-        <button class="period-tab active" id="ptab-overview" onclick="switchPeriodTab('overview')">📊 總覽</button>
-        <button class="period-tab" id="ptab-month" onclick="switchPeriodTab('month')">📅 月視圖</button>
-        <button class="period-tab" id="ptab-log" onclick="switchPeriodTab('log')">✏️ 記錄</button>
-      </div>
-
-      <!-- OVERVIEW TAB -->
-      <div id="ptab-overview-content">
-        <!-- Stats -->
-        <div class="period-stat-grid">
-          <div class="period-stat-card">
-            <div class="period-stat-val" id="periodCycleLen" style="color:#ff6b9d;">—</div>
-            <div class="period-stat-lbl">平均週期<br>天數</div>
-          </div>
-          <div class="period-stat-card">
-            <div class="period-stat-val" id="periodNextDays" style="color:var(--accent);">—</div>
-            <div class="period-stat-lbl">距下次<br>預測天數</div>
-          </div>
-          <div class="period-stat-card">
-            <div class="period-stat-val" id="periodDuration" style="color:#ff6b9d;">—</div>
-            <div class="period-stat-lbl">平均持續<br>天數</div>
-          </div>
-          <div class="period-stat-card">
-            <div class="period-stat-val" id="periodTotalLogs" style="color:var(--text2);">—</div>
-            <div class="period-stat-lbl">已記錄<br>週期數</div>
-          </div>
-        </div>
-
-        <!-- 60-day strip calendar -->
-        <div class="card" style="margin-bottom:16px;">
-          <div class="card-title">近60天概覽</div>
-          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px;">
-            <div class="strip-weekday-label">日</div>
-            <div class="strip-weekday-label">一</div>
-            <div class="strip-weekday-label">二</div>
-            <div class="strip-weekday-label">三</div>
-            <div class="strip-weekday-label">四</div>
-            <div class="strip-weekday-label">五</div>
-            <div class="strip-weekday-label">六</div>
-          </div>
-          <div id="periodCalendar" class="period-strip"></div>
-          <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--text3);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
-            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ff6b9d;margin-right:4px;vertical-align:middle;"></span>生理期</span>
-            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:4px;vertical-align:middle;"></span>排卵預測</span>
-            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:rgba(52,170,220,0.2);border:1px solid var(--accent);margin-right:4px;vertical-align:middle;"></span>易孕期</span>
-            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:rgba(255,107,157,0.15);border:1px dashed #ff6b9d;margin-right:4px;vertical-align:middle;"></span>下次預測</span>
-          </div>
-        </div>
-
-        <!-- History list -->
-        <div class="card">
-          <div class="card-title">歷史記錄</div>
-          <div id="periodHistoryList"></div>
-        </div>
-      </div>
-
-      <!-- MONTH VIEW TAB -->
-      <div id="ptab-month-content" style="display:none;">
-        <div class="card">
-          <div class="period-month-nav">
-            <button class="period-month-btn" onclick="periodMonthNav(-1)">‹ 上月</button>
-            <div class="period-month-title" id="periodMonthTitle">2025年1月</div>
-            <button class="period-month-btn" onclick="periodMonthNav(1)">下月 ›</button>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;">
-            <div class="pm-day-header">日</div>
-            <div class="pm-day-header">一</div>
-            <div class="pm-day-header">二</div>
-            <div class="pm-day-header">三</div>
-            <div class="pm-day-header">四</div>
-            <div class="pm-day-header">五</div>
-            <div class="pm-day-header">六</div>
-          </div>
-          <div id="periodMonthGrid" class="period-month-grid"></div>
-        </div>
-        <div class="card" style="margin-top:14px;" id="periodMonthLogCard" style="display:none;">
-          <div class="card-title" id="periodMonthLogTitle"></div>
-          <div id="periodMonthLogContent"></div>
-        </div>
-      </div>
-
-      <!-- LOG TAB -->
-      <div id="ptab-log-content" style="display:none;">
-        <div class="card">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-            <div class="card-title" style="margin:0;">記錄</div>
-            <div id="periodTodayLabel" style="font-size:12px;color:var(--text3);"></div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">日期</label>
-            <input type="date" class="form-input" id="period-date">
-          </div>
-          <div class="form-group">
-            <label class="form-label">生理期流量</label>
-            <div class="flow-selector">
-              <button class="flow-btn" id="fb-none" onclick="selectPeriodStatus('none')">無</button>
-              <button class="flow-btn" id="fb-light" onclick="selectPeriodStatus('light')">少量</button>
-              <button class="flow-btn" id="fb-medium" onclick="selectPeriodStatus('medium')">中量</button>
-              <button class="flow-btn" id="fb-heavy" onclick="selectPeriodStatus('heavy')">大量</button>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">症狀（可多選）</label>
-            <div id="symptomSelector" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;"></div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">備注</label>
-            <textarea class="form-input" id="period-note" placeholder="情緒、疼痛程度…" style="min-height:60px;"></textarea>
-          </div>
-          <button class="btn btn-primary" style="width:100%;" onclick="savePeriodEntry()">儲存記錄</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- EDIT LOG MODAL -->
-    <div class="edit-log-modal" id="editLogModal" onclick="if(event.target===this)closeEditLog()">
-      <div class="edit-log-sheet">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-          <div style="font-size:17px;font-weight:700;">✏️ 修改記錄</div>
-          <button onclick="closeEditLog()" style="background:var(--surface2);border:none;border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;">×</button>
-        </div>
-        <div class="form-group">
-          <label class="form-label">日期</label>
-          <input type="date" class="form-input" id="edit-log-date">
-        </div>
-        <div class="form-group">
-          <label class="form-label">訓練類型</label>
-          <select class="form-input" id="edit-log-type">
-            <option value="">— 選擇類型 —</option>
-            <option value="chest">胸部訓練</option>
-            <option value="back">背部訓練</option>
-            <option value="legs">腿部訓練</option>
-            <option value="shoulders">肩部訓練</option>
-            <option value="arms">手臂訓練</option>
-            <option value="core">核心訓練</option>
-            <option value="cardio">有氧訓練</option>
-            <option value="glutes">臀部訓練</option>
-            <option value="fullbody">全身訓練</option>
-            <option value="rest">休息日</option>
-          </select>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div class="form-group">
-            <label class="form-label">開始時間</label>
-            <input type="time" class="form-input" id="edit-log-start">
-          </div>
-          <div class="form-group">
-            <label class="form-label">結束時間</label>
-            <input type="time" class="form-input" id="edit-log-end">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">體重（kg）</label>
-          <input type="number" step="0.1" class="form-input" id="edit-log-weight" placeholder="例：75.5">
-        </div>
-        <div class="form-group">
-          <label class="form-label">訓練動作</label>
-          <textarea class="form-input" id="edit-log-exercises" style="min-height:100px;" placeholder="每行一個動作"></textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label">運動時長（分鐘）</label>
-          <input type="number" class="form-input" id="edit-log-duration" placeholder="例：60" min="1" max="600">
-        </div>
-        <div class="form-group">
-          <label class="form-label">備注</label>
-          <textarea class="form-input" id="edit-log-notes" style="min-height:60px;"></textarea>
-        </div>
-        <input type="hidden" id="edit-log-id">
-        <div style="display:flex;gap:10px;margin-top:6px;">
-          <button class="btn btn-primary" style="flex:1;" onclick="saveEditLog()">儲存修改</button>
-          <button class="btn" style="flex:1;background:var(--surface2);" onclick="closeEditLog()">取消</button>
-        </div>
-      </div>
-    </div>
-
-<!-- DELETE CONFIRM MODAL -->
-<div class="delete-modal" id="deleteConfirmModal">
-  <div class="delete-modal-box">
-    <div class="delete-modal-icon">🗑️</div>
-    <div class="delete-modal-title">刪除用戶</div>
-    <div class="delete-modal-desc">
-      輸入 <strong id="delete-modal-name"></strong> 的密碼以確認刪除。<br>
-      此操作不可復原，所有資料將永久刪除。
-    </div>
-    <input type="hidden" id="delete-uid-hidden">
-    <input type="password" class="lock-input" id="delete-pwd-input"
-      placeholder="輸入密碼確認"
-      style="margin-bottom:6px;"
-      onkeydown="if(event.key==='Enter') confirmDeleteUser(document.getElementById('delete-uid-hidden').value)">
-    <div class="lock-error" id="delete-pwd-error" style="margin-bottom:10px;"></div>
-    <div class="delete-modal-actions">
-      <button class="btn btn-secondary" onclick="closeDeleteConfirmModal()">取消</button>
-      <button class="btn" style="background:var(--red);color:#fff;"
-        onclick="confirmDeleteUser(document.getElementById('delete-uid-hidden').value)">確認刪除</button>
-    </div>
-  </div>
-</div>
-
-<!-- AUTH V2 (new reliable login) -->
-<div id="authV2" style="position:fixed;inset:0;z-index:10050;background:rgba(15,23,42,.42);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px;">
-  <div style="width:min(560px,96vw);background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.2);padding:18px;">
-    <div style="font-size:22px;font-weight:700;margin-bottom:4px;">Training Log</div>
-    <div style="font-size:13px;color:#6b7280;margin-bottom:12px;">新版登入介面（穩定優先）</div>
-    <div id="authV2Users" style="display:grid;gap:8px;margin-bottom:10px;"></div>
-    <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;">
-      <input id="authV2Name" class="lock-input" placeholder="新帳號名稱" style="margin:0;" />
-      <button class="lock-btn" style="margin:0;padding:10px 12px;border-radius:10px;" onclick="authV2CreateUser()">建立帳號</button>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="lock-user-btn" style="margin:0;justify-content:center;" onclick="authV2RefreshCloud()">同步雲端用戶</button>
-      <button class="lock-user-btn" style="margin:0;justify-content:center;" onclick="authV2EnterGuest()">以訪客模式進入</button>
-    </div>
-    <div id="authV2Diag" style="margin-top:10px;font-size:13px;color:#1e3a8a;min-height:20px;"></div>
-  </div>
-</div>
-
-<!-- LOCK SCREEN (legacy fallback) -->
-<div class="lock-screen hidden" id="lockScreen">
-  <div class="lock-box" id="lockBox">
-    <!-- user select view -->
-    <div id="lockUserSelect">
-      <div style="font-size:28px;margin-bottom:10px;">🏋️</div>
-      <div class="lock-name">Training Log</div>
-      <div class="lock-hint">選擇你的帳號</div>
-      <div class="lock-users" id="lockUserList"></div>
-      <div class="lock-divider"></div>
-      <button class="lock-user-btn" style="justify-content:center;color:var(--accent);border-color:var(--accent-light);background:var(--accent-light);" onclick="showNewUserForm()">＋ 新增用戶</button>
-      <button class="lock-user-btn" style="justify-content:center;margin-top:8px;" onclick="enterGuestMode()">以訪客模式進入</button>
-    </div>
-    <!-- password entry view -->
-    <div id="lockPasswordView" style="display:none;">
-      <div class="lock-avatar" id="lockAvatar">?</div>
-      <div class="lock-name" id="lockDisplayName">用戶</div>
-      <div class="lock-hint" id="lockPwdHint">請輸入密碼</div>
-      <input type="password" class="lock-input" id="lockPwdInput" placeholder="••••••" maxlength="20"
-        onkeydown="if(event.key==='Enter') submitLockPassword()">
-      <div class="lock-error" id="lockError"></div>
-      <button class="lock-btn" onclick="submitLockPassword()">解鎖</button>
-      <button class="lock-back" onclick="showLockUserSelect()">← 返回選擇帳號</button>
-    </div>
-    <!-- new user form -->
-    <div id="lockNewUserView" style="display:none;">
-      <div style="font-size:28px;margin-bottom:10px;">👤</div>
-      <div class="lock-name">建立新帳號</div>
-      <div class="lock-hint" style="margin-bottom:20px;">設定名稱與密碼</div>
-      <input type="text" class="lock-input" id="lockNewName" placeholder="你的名字" maxlength="20"
-        style="letter-spacing:0;margin-bottom:10px;" onkeydown="if(event.key==='Enter')document.getElementById('lockNewPwd').focus()">
-      <input type="password" class="lock-input" id="lockNewPwd" placeholder="設定密碼（可留空）" maxlength="20"
-        onkeydown="if(event.key==='Enter') submitNewUser()">
-      <div class="lock-error" id="lockNewError"></div>
-      <button class="lock-btn" onclick="submitNewUser()">建立帳號</button>
-      <button class="lock-user-btn" style="justify-content:center;margin-top:8px;" onclick="enterGuestMode()">以訪客模式進入</button>
-      <button class="lock-back" onclick="showLockUserSelect()">← 返回</button>
-    </div>
-  </div>
-</div>
-
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -2590,298 +1975,274 @@ window._fsOnSnapshot = onSnapshot;
 window._fsCollection = collection;
 window._fsGetDocs = getDocs;
 window._fsDeleteDoc = deleteDoc;
-window._firebaseProjectId = firebaseConfig.projectId;
 window.dispatchEvent(new Event('firestore-ready'));
 </script>
-
 <script>
-// ── MULTI-USER ──
-if (!window._firebaseProjectId) window._firebaseProjectId = 'training-log-40f70';
+
+// ══════════════════════════════════════════════════════════
+// MULTI-USER — no lock screen, no passwords
+// ══════════════════════════════════════════════════════════
 const USERS_KEY = 'tl_users';
 const CUR_KEY   = 'tl_current_user';
-
-// Hard-disable all auth UI: app always starts in guest mode.
-(() => {
-  try {
-    const a = document.getElementById('authV2');
-    if (a) a.remove();
-    const l = document.getElementById('lockScreen');
-    if (l) l.remove();
-  } catch (_) {}
-})();
-
-function reportLockDiag(msg, isError) {
-  try {
-    const el = document.getElementById('lockNewError');
-    if (el) {
-      el.textContent = msg;
-      el.style.color = isError ? 'var(--red)' : 'var(--text2)';
-    }
-  } catch (_) {}
-  if (isError) console.error('[LOCK]', msg);
-  else console.log('[LOCK]', msg);
-}
-
-function authV2Diag(msg, isError) {
-  const el = document.getElementById('authV2Diag');
-  if (el) {
-    el.textContent = msg || '';
-    el.style.color = isError ? 'var(--red)' : '#1e3a8a';
-  }
-}
-
-function authV2Show(show) {
-  const el = document.getElementById('authV2');
-  if (el) el.style.display = 'none';
-  const legacy = document.getElementById('lockScreen');
-  if (legacy) legacy.classList.add('hidden');
-}
-
-function renderAuthV2Users() {
-  const wrap = document.getElementById('authV2Users');
-  if (!wrap) return;
-  const users = getUsers();
-  if (!users.length) {
-    wrap.innerHTML = '<div style="font-size:13px;color:var(--text3);padding:6px 2px;">目前無本機帳號，請建立帳號或使用訪客模式</div>';
-    return;
-  }
-  wrap.innerHTML = users.map(u => `
-    <button class="lock-user-btn" style="margin:0;justify-content:space-between;" onclick="authV2SelectUser('${u.id}')">
-      <span>${escapeHtml(u.name)}</span>
-      <span style="color:var(--text3);">›</span>
-    </button>
-  `).join('');
-}
-
-async function authV2SelectUser(uid) {
-  const users = getUsers();
-  const user = users.find(u => u.id === uid);
-  if (!user) { authV2Diag('找不到用戶', true); return; }
-  try {
-    authV2Show(false);
-    switchUser(uid);
-    authV2Diag('');
-  } catch (e) {
-    authV2Diag('登入失敗：' + (e && e.message ? e.message : e), true);
-  }
-}
-
-async function authV2CreateUser() {
-  const input = document.getElementById('authV2Name');
-  const name = (input?.value || '').trim();
-  if (!name) { authV2Diag('請輸入帳號名稱', true); return; }
-  const users = getUsers();
-  if (users.find(u => u.name === name)) { authV2Diag('名稱已存在', true); return; }
-  const uid = 'user_' + Date.now();
-  users.push({ id: uid, name });
-  saveUsers(users);
-  if (input) input.value = '';
-  renderAuthV2Users();
-  authV2Diag('已建立帳號：' + name);
-}
-
-async function authV2RefreshCloud() {
-  authV2Diag('正在同步雲端用戶...');
-  try {
-    let cloud = null;
-    if (window._firestoreReady) cloud = await loadUsersFromFirestore();
-    if (!cloud || cloud.length === 0) cloud = await loadUsersFromFirestoreREST();
-    if (!cloud || cloud.length === 0) { authV2Diag('雲端沒有可用用戶', true); return; }
-    const local = getUsers();
-    const idSet = new Set(local.map(u => u.id));
-    let changed = false;
-    cloud.forEach(c => {
-      if (!c?.id) return;
-      if (!idSet.has(c.id)) { local.push({ id: c.id, name: c.name || c.id }); changed = true; }
-    });
-    if (changed) saveUsers(local);
-    renderAuthV2Users();
-    // Refresh in-app switcher lists immediately (auth UI may already be removed).
-    if (typeof renderUserList === 'function') renderUserList();
-    if (typeof renderMobileUserList === 'function') renderMobileUserList();
-    if (typeof syncTopbarUser === 'function') syncTopbarUser();
-    authV2Diag('同步完成：' + cloud.length + ' 位');
-  } catch (e) {
-    authV2Diag('同步失敗：' + (e && e.message ? e.message : e), true);
-  }
-}
-
-function authV2EnterGuest() {
-  authV2Show(false);
-  enterGuestMode();
-}
-
-async function initAuthV2() {
-  authV2Show(false);
-  enterGuestMode();
-  // Cloud sync still runs in background so user list stays fresh for switching.
-  await authV2RefreshCloud();
-  if (typeof renderUserList === 'function') renderUserList();
-  if (typeof renderMobileUserList === 'function') renderMobileUserList();
-  if (typeof syncTopbarUser === 'function') syncTopbarUser();
-}
+const GUEST_ID  = 'guest';
 
 function getUsers() {
-  try {
-    const raw = localStorage.getItem(USERS_KEY);
-    if (!raw) {
-      return Array.isArray(window.__cloudUsersCache) ? window.__cloudUsersCache : [];
-    }
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    return Array.isArray(window.__cloudUsersCache) ? window.__cloudUsersCache : parsed;
-  } catch (e) {
-    console.warn('Invalid local users cache, resetting:', e);
-    try { localStorage.removeItem(USERS_KEY); } catch (_) {}
-    return Array.isArray(window.__cloudUsersCache) ? window.__cloudUsersCache : [];
+  let users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+  if (!users.find(u => u.id === GUEST_ID)) {
+    users.unshift({ id: GUEST_ID, name: '訪客' });
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
   }
+  return users;
 }
 
 function saveUsers(users) {
-  try {
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-  } catch (e) {
-    console.warn('localStorage saveUsers failed:', e);
-  }
-  // sync to Firestore
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
   if (window._firestoreReady) {
     window._fsSetDoc(window._fsDoc(window._db, 'app', 'users'), { list: users })
-      .catch(e => console.warn('Firestore saveUsers:', e));
+      .catch(e => console.warn('saveUsers:', e));
   }
 }
 
-function getCurrentUserId() {
-  return localStorage.getItem(CUR_KEY) || null;
-}
-
-function setCurrentUserId(id) {
-  localStorage.setItem(CUR_KEY, id);
-}
-
+function getCurrentUserId() { return localStorage.getItem(CUR_KEY) || GUEST_ID; }
+function setCurrentUserId(uid) { localStorage.setItem(CUR_KEY, uid); }
 function userDataKey(uid) { return 'tl_data_' + uid; }
 
 function loadUserData(uid) {
   try {
-    return JSON.parse(localStorage.getItem(userDataKey(uid)) || 'null') || {
-      logs: [], weights: [], photos: [], plans: [], goals: {}
-    };
-  } catch (e) {
-    console.warn('Invalid local user data cache, resetting:', e);
-    try { localStorage.removeItem(userDataKey(uid)); } catch (_) {}
-    return { logs: [], weights: [], photos: [], plans: [], goals: {} };
-  }
+    const d = JSON.parse(localStorage.getItem(userDataKey(uid)) || '{}');
+    return ensureData(d);
+  } catch(e) { return ensureData({}); }
+}
+
+function ensureData(d) {
+  d.logs    = d.logs    || [];
+  d.weights = d.weights || [];
+  d.photos  = d.photos  || [];
+  d.plans   = d.plans   || [];
+  d.goals   = d.goals   || {};
+  return d;
 }
 
 function saveUserData(uid, d) {
-  try {
-    localStorage.setItem(userDataKey(uid), JSON.stringify(d));
-  } catch (e) {
-    console.warn('localStorage saveUserData failed:', e);
-  }
-  // sync to Firestore (split photos out to avoid 1MB limit — store refs only)
+  const s = { logs: d.logs, weights: d.weights, plans: d.plans, goals: d.goals };
+  localStorage.setItem(userDataKey(uid), JSON.stringify(s));
+}
+
+let currentUserId = getCurrentUserId();
+let data = loadUserData(currentUserId);
+
+function saveAndSync() {
+  if (!currentUserId) return;
+  saveUserData(currentUserId, data);
+  if (!window._firestoreReady) return;
+  showSyncing();
+  const toStore = { logs: data.logs||[], weights: data.weights||[], plans: data.plans||[], goals: data.goals||{} };
+  Promise.all([
+    window._fsSetDoc(window._fsDoc(window._db, 'users', currentUserId), toStore),
+    window._fsSetDoc(window._fsDoc(window._db, 'photos', currentUserId),
+      { list: (data.photos||[]).map(p => ({src:p.src, date:p.date, name:p.name||''})) })
+  ]).then(() => showSynced()).catch(e => { console.warn('sync:', e); showSyncError(); });
+}
+
+function avatarClass(idx) { return 'av-' + (idx % 6); }
+function initials(name) { return (name||'?').trim().slice(0, 2).toUpperCase() || '?'; }
+
+function _updateTopbar() {
+  const users = getUsers();
+  const user  = users.find(u => u.id === currentUserId) || { name: '訪客', id: GUEST_ID };
+  const idx   = users.indexOf(user);
+  const av = document.getElementById('currentAvatar');
+  const nm = document.getElementById('currentUserName');
+  if (av) { av.textContent = initials(user.name); av.className = 'user-avatar ' + avatarClass(Math.max(0,idx)); }
+  if (nm) nm.textContent = user.name;
+}
+
+function switchUser(uid) {
+  currentUserId = uid;
+  setCurrentUserId(uid);
+  data = loadUserData(uid);
+  _updateTopbar();
+  renderUserList();
+  renderDashboard();
+  _updateTopbar();
+  closeUserDropdown();
+  const userName = (getUsers().find(u => u.id === uid) || {name: uid}).name;
+  showToast('已切換至 ' + userName);
   if (window._firestoreReady) {
-    const toStore = {
-      logs: d.logs || [],
-      weights: d.weights || [],
-      plans: d.plans || [],
-      goals: d.goals || {},
-      // photos stored separately
-    };
-    window._fsSetDoc(window._fsDoc(window._db, 'users', uid), toStore)
-      .catch(e => console.warn('Firestore saveUserData:', e));
-    // save photos separately (may be large)
-    const photos = (d.photos || []).map(p => ({ src: p.src, date: p.date, name: p.name || '' }));
-    window._fsSetDoc(window._fsDoc(window._db, 'photos', uid), { list: photos })
-      .catch(e => console.warn('Firestore savePhotos:', e));
+    showSyncing();
+    loadUserDataFromFirestore(uid).then(cd => {
+      if (cd) {
+        data.logs    = cd.logs    || data.logs;
+        data.weights = cd.weights || data.weights;
+        data.plans   = cd.plans   || data.plans;
+        data.goals   = cd.goals   || data.goals;
+        saveUserData(uid, data);
+        renderDashboard();
+      }
+      showSynced();
+    }).catch(() => showSynced());
   }
 }
 
-async function loadUserDataFromFirestore(uid) {
-  if (!window._firestoreReady) return null;
-  try {
-    const [snap, photoSnap] = await Promise.all([
-      window._fsGetDoc(window._fsDoc(window._db, 'users', uid)),
-      window._fsGetDoc(window._fsDoc(window._db, 'photos', uid))
-    ]);
-    if (!snap.exists()) return null;
-    const d = snap.data();
-    if (photoSnap.exists()) d.photos = photoSnap.data().list || [];
-    else d.photos = [];
-    return d;
-  } catch(e) {
-    console.warn('Firestore load error:', e);
-    return null;
-  }
+function renderUserList() {
+  const el = document.getElementById('userList');
+  if (!el) return;
+  const users = getUsers();
+  el.innerHTML = users.map((u, i) => `
+    <div class="user-item ${u.id===currentUserId?'selected':''}" onclick="switchUser('${u.id}')">
+      <div class="user-item-avatar ${avatarClass(i)}">${initials(u.name)}</div>
+      <div class="user-item-name">${u.name}${u.id===GUEST_ID?' <span style="font-size:10px;opacity:.55">訪客</span>':''}</div>
+      <span class="user-item-check">${u.id===currentUserId?'✓':''}</span>
+    </div>`).join('');
 }
+
+function addUser() {
+  const inp = document.getElementById('newUserInput');
+  const name = (inp.value||'').trim();
+  if (!name) { inp.focus(); return; }
+  const users = getUsers();
+  if (users.find(u => u.name === name)) { showToast('此名稱已存在'); return; }
+  const uid = 'user_' + Date.now();
+  users.push({ id: uid, name });
+  saveUsers(users);
+  inp.value = '';
+  renderUserList();
+  switchUser(uid);
+}
+
+function renderSettingsUserList() {
+  const el = document.getElementById('settings-user-list');
+  if (!el) return;
+  const users = getUsers();
+  el.innerHTML = users.map((u, i) => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);">
+      <div class="user-avatar ${avatarClass(i)}" style="width:36px;height:36px;font-size:13px;flex-shrink:0;">${initials(u.name)}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:14px;font-weight:600;">${u.name}${u.id===GUEST_ID?' <span style="font-size:11px;color:var(--text3);font-weight:400;">（訪客）</span>':''}</div>
+        ${u.id===currentUserId?'<div style="font-size:11px;color:var(--accent);margin-top:1px;">▶ 目前使用中</div>':''}
+      </div>
+      ${u.id!==currentUserId?`<button onclick="switchUser('${u.id}')" style="padding:5px 12px;border-radius:8px;background:var(--accent-light);color:var(--accent);border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">切換</button>`:''}
+      ${u.id!==GUEST_ID?`<button onclick="deleteUser('${u.id}')" style="padding:5px 10px;border-radius:8px;background:var(--red-light);color:var(--red);border:none;font-size:12px;cursor:pointer;font-family:inherit;">刪除</button>`:''}
+    </div>`).join('');
+}
+
+function settingsAddUser() {
+  const inp = document.getElementById('settings-new-user');
+  const name = (inp.value||'').trim();
+  if (!name) { inp.focus(); return; }
+  const users = getUsers();
+  if (users.find(u => u.name === name)) { showToast('此名稱已存在'); return; }
+  const uid = 'user_' + Date.now();
+  users.push({ id: uid, name });
+  saveUsers(users);
+  inp.value = '';
+  renderSettingsUserList();
+  renderUserList();
+  showToast('✓ 已新增：' + name);
+}
+
+function deleteUser(uid) {
+  if (uid === GUEST_ID) { showToast('訪客帳號無法刪除'); return; }
+  if (!confirm('確定刪除此用戶及全部資料？')) return;
+  const users = getUsers().filter(u => u.id !== uid);
+  saveUsers(users);
+  localStorage.removeItem(userDataKey(uid));
+  if (window._firestoreReady) window._fsDeleteDoc(window._fsDoc(window._db, 'users', uid)).catch(()=>{});
+  if (uid === currentUserId) switchUser(GUEST_ID);
+  else { renderSettingsUserList(); renderUserList(); }
+  showToast('已刪除用戶');
+}
+
+function toggleUserDropdown() {
+  const dd = document.getElementById('userDropdown');
+  const sw = document.getElementById('userSwitcher');
+  if (!dd) return;
+  if (dd.classList.contains('open')) { closeUserDropdown(); }
+  else { dd.classList.add('open'); sw&&sw.classList.add('open'); }
+}
+
+function closeUserDropdown() {
+  document.getElementById('userDropdown')?.classList.remove('open');
+  document.getElementById('userSwitcher')?.classList.remove('open');
+}
+
+document.addEventListener('click', e => {
+  const sw = document.getElementById('userSwitcher');
+  if (sw && !sw.contains(e.target)) closeUserDropdown();
+});
+
+function renderSettingsPage() {
+  const users = getUsers();
+  const user  = users.find(u => u.id === currentUserId) || { name: '訪客', id: GUEST_ID };
+  const idx   = users.indexOf(user);
+  const av = document.getElementById('settings-avatar');
+  const nm = document.getElementById('settings-username');
+  if (av) { av.textContent = initials(user.name); av.className = 'user-avatar ' + avatarClass(Math.max(0,idx)); }
+  if (nm) nm.textContent = user.name;
+  const g = data.goals || {};
+  const hEl = document.getElementById('settings-height');
+  if (hEl && g.height) hEl.value = g.height;
+  renderSettingsUserList();
+}
+
+function saveSettingsHeight() {
+  const v = parseFloat(document.getElementById('settings-height').value);
+  if (!v || v < 100 || v > 250) { showToast('請輸入有效身高'); return; }
+  data.goals.height = v;
+  saveAndSync();
+  showToast('✓ 身高已儲存，BMI 已更新');
+}
+
+// stubs
+function logoutToLockScreen() { switchUser(GUEST_ID); }
+function requestSwitchUser(uid) { switchUser(uid); }
+function requestSwitchUserMobile(uid) { switchUser(uid); closeMobileUserModal(); }
+
+// ── INIT ──
+function initUsers() {
+  getUsers(); // ensure guest exists
+  currentUserId = getCurrentUserId();
+  data = loadUserData(currentUserId);
+  _updateTopbar();
+  renderUserList();
+  renderDashboard();
+  _updateTopbar();
+  _bgCloudSync();
+}
+
+async function _bgCloudSync() {
+  try {
+    if (!window._firestoreReady) {
+      await new Promise(r => {
+        const t = setTimeout(r, 5000);
+        window.addEventListener('firestore-ready', () => { clearTimeout(t); r(); }, { once: true });
+      });
+    }
+    if (!window._firestoreReady) return;
+    const cloudUsers = await Promise.race([
+      loadUsersFromFirestore(),
+      new Promise(r => setTimeout(() => r(null), 4000))
+    ]);
+    if (!cloudUsers?.length) return;
+    const local = getUsers();
+    const ids   = local.map(u => u.id);
+    let changed = false;
+    cloudUsers.forEach(cu => { if (!ids.includes(cu.id)) { local.push(cu); changed = true; } });
+    if (changed) { saveUsers(local); renderUserList(); }
+  } catch(e) { console.warn('bgSync:', e); }
+}
+
+initUsers();
+
 
 async function loadUsersFromFirestore() {
   if (!window._firestoreReady) return null;
   try {
     const snap = await window._fsGetDoc(window._fsDoc(window._db, 'app', 'users'));
-    if (snap.exists()) {
-      const payload = snap.data() || {};
-      if (Array.isArray(payload.list)) return payload.list;
-      if (Array.isArray(payload.users)) return payload.users; // legacy/fallback schema
-    }
-
-    // Fallback: rebuild user list from /users collection docs
-    const colSnap = await window._fsGetDocs(window._fsCollection(window._db, 'users'));
-    const rebuilt = [];
-    colSnap.forEach(d => {
-      const v = d.data() || {};
-      rebuilt.push({
-        id: d.id,
-        name: (typeof v.name === 'string' && v.name.trim()) ? v.name.trim() : d.id
-      });
-    });
-    return rebuilt;
+    if (!snap.exists()) return null;
+    return snap.data().list || [];
   } catch(e) {
     console.warn('Firestore loadUsers error:', e);
-    return null;
-  }
-}
-
-function _parseUsersFromFirestoreDoc(docJson) {
-  const fields = docJson?.fields || {};
-  const values = fields.list?.arrayValue?.values || fields.users?.arrayValue?.values || [];
-  return values
-    .map(v => {
-      const f = v?.mapValue?.fields || {};
-      const id = f.id?.stringValue || '';
-      const name = f.name?.stringValue || id;
-      return id ? { id, name } : null;
-    })
-    .filter(Boolean);
-}
-
-async function loadUsersFromFirestoreREST() {
-  const projectId = window._firebaseProjectId;
-  if (!projectId) return null;
-  const base = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents`;
-  try {
-    const docRes = await fetch(`${base}/app/users`, { cache: 'no-store' });
-    if (docRes.ok) {
-      const docJson = await docRes.json();
-      const users = _parseUsersFromFirestoreDoc(docJson);
-      if (users.length > 0) return users;
-    }
-  } catch (e) {
-    console.warn('REST app/users load failed:', e);
-  }
-
-  try {
-    const listRes = await fetch(`${base}/users?pageSize=100`, { cache: 'no-store' });
-    if (!listRes.ok) return null;
-    const listJson = await listRes.json();
-    const docs = listJson.documents || [];
-    const users = docs.map(d => {
-      const id = (d.name || '').split('/').pop();
-      const name = d.fields?.name?.stringValue || id;
-      return id ? { id, name } : null;
-    }).filter(Boolean);
-    return users;
-  } catch (e) {
-    console.warn('REST users collection load failed:', e);
     return null;
   }
 }
@@ -2891,11 +2252,6 @@ function avatarClass(idx) { return 'av-' + (idx % 6); }
 function initials(name) {
   return name.trim().slice(0, 2).toUpperCase() || '?';
 }
-
-// ── CURRENT USER STATE ──
-let currentUserId = null;
-let data = { logs: [], weights: [], photos: [], plans: [], goals: {} };
-let guestMode = false;
 
 function save() {
   if (currentUserId) saveUserData(currentUserId, data);
@@ -2919,7 +2275,6 @@ function showSyncError() {
 async function saveAndSync() {
   if (!currentUserId) return;
   saveUserData(currentUserId, data);
-  if (guestMode || String(currentUserId).startsWith('guest_')) return;
   if (!window._firestoreReady) return;
   showSyncing();
   try {
@@ -2935,7 +2290,6 @@ async function saveAndSync() {
 }
 
 async function switchUser(uid) {
-  guestMode = false;
   currentUserId = uid;
   setCurrentUserId(uid);
 
@@ -2954,7 +2308,7 @@ async function switchUser(uid) {
   closeUserDropdown();
   renderUserList();
   renderDashboard();
-  syncTopbarUser();
+  _updateTopbar();
   showToast('已切換到 ' + (user ? user.name : ''));
 
   // Then fetch fresh data from Firestore
@@ -2995,65 +2349,22 @@ function addUser() {
   switchUser(uid);
 }
 
-// requestDeleteUser — shows password confirmation modal then deletes
-function requestDeleteUser(uid) {
+function deleteUser(uid) {
+  if (uid === GUEST_ID) { showToast('訪客帳號無法刪除'); return; }
   const users = getUsers();
-  if (users.length <= 1) { showToast('至少保留一個用戶'); return; }
   const user = users.find(u => u.id === uid);
   if (!user) return;
-  // show delete confirm modal
-  showDeleteConfirmModal(uid, user.name);
-}
-
-async function confirmDeleteUser(uid) {
-  const pwd = document.getElementById('delete-pwd-input').value;
-  const valid = await verifyPassword(uid, pwd);
-  if (!valid) {
-    const inp = document.getElementById('delete-pwd-input');
-    inp.classList.add('error');
-    document.getElementById('delete-pwd-error').textContent = '密碼錯誤';
-    setTimeout(() => inp.classList.remove('error'), 500);
-    inp.value = ''; inp.focus();
-    return;
-  }
-  // delete
-  let users = getUsers();
-  users = users.filter(u => u.id !== uid);
-  saveUsers(users);
+  if (!confirm('確定刪除「' + user.name + '」及其所有資料？此操作不可復原。')) return;
+  const newUsers = users.filter(u => u.id !== uid);
+  saveUsers(newUsers);
   localStorage.removeItem(userDataKey(uid));
-  localStorage.removeItem(pwdKey(uid));
   if (window._firestoreReady) {
-    try {
-      await window._fsDeleteDoc(window._fsDoc(window._db, 'users', uid));
-      await window._fsDeleteDoc(window._fsDoc(window._db, 'photos', uid));
-      await window._fsDeleteDoc(window._fsDoc(window._db, 'passwords', uid));
-    } catch(e) { console.warn('delete from firestore:', e); }
+    window._fsDeleteDoc(window._fsDoc(window._db, 'users', uid)).catch(()=>{});
+    window._fsDeleteDoc(window._fsDoc(window._db, 'photos', uid)).catch(()=>{});
   }
-  closeDeleteConfirmModal();
-  if (currentUserId === uid) {
-    logoutToLockScreen();
-  } else {
-    renderUserList();
-    renderMobileUserList();
-  }
-  showToast('用戶已刪除');
-}
-
-function deleteUser(uid) { requestDeleteUser(uid); }
-
-function showDeleteConfirmModal(uid, name) {
-  document.getElementById('delete-modal-name').textContent = name;
-  document.getElementById('delete-uid-hidden').value = uid;
-  document.getElementById('delete-pwd-input').value = '';
-  document.getElementById('delete-pwd-error').textContent = '';
-  document.getElementById('deleteConfirmModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  setTimeout(() => document.getElementById('delete-pwd-input').focus(), 200);
-}
-
-function closeDeleteConfirmModal() {
-  document.getElementById('deleteConfirmModal').classList.remove('open');
-  document.body.style.overflow = '';
+  if (currentUserId === uid) switchUser(GUEST_ID);
+  else { renderUserList(); renderSettingsUserList && renderSettingsUserList(); }
+  showToast('已刪除用戶：' + user.name);
 }
 
 function renderUserList() {
@@ -3066,10 +2377,10 @@ function renderUserList() {
   }
 
   el.innerHTML = users.map((u, i) => `
-    <div class="user-item ${u.id === currentUserId ? 'selected' : ''}" onclick="requestSwitchUser('${u.id}')">
+    <div class="user-item ${u.id===currentUserId?'selected':''}" onclick="switchUser('${u.id}')">
       <div class="user-item-avatar ${avatarClass(i)}">${initials(u.name)}</div>
       <div class="user-item-name">${u.name}</div>
-      <span class="user-item-check">✓</span>
+      <span class="user-item-check">${u.id===currentUserId?'✓':''}</span>
     </div>
   `).join('');
 }
@@ -3100,127 +2411,53 @@ document.addEventListener('click', e => {
 
 // ── INIT USERS ──
 function initUsers() {
-  reportLockDiag('初始化中...');
-  // ── STEP 1: Show lock screen from localStorage IMMEDIATELY (no waiting) ──
-  let users = getUsers();
-
   // Migrate old single-user data
   const oldData = localStorage.getItem('tl_data');
-  if (oldData && users.length === 0) {
-    const uid = 'user_' + Date.now();
-    users = [{ id: uid, name: '我' }];
-    saveUsers(users);
-    localStorage.setItem(userDataKey(uid), oldData);
-    localStorage.removeItem('tl_data');
-    setCurrentUserId(uid);
+  if (oldData) {
+    const users = getUsers();
+    if (users.filter(u => u.id !== GUEST_ID).length === 0) {
+      const uid = 'user_' + Date.now();
+      users.push({ id: uid, name: '我' });
+      saveUsers(users);
+      localStorage.setItem(userDataKey(uid), oldData);
+      localStorage.removeItem('tl_data');
+      setCurrentUserId(uid);
+    }
   }
-
-  // Show lock screen immediately from localStorage — no async, no waiting
-  renderLockUserList();
-  if (users.length === 0) {
-    showNewUserForm();
-    reportLockDiag('本機無用戶，改讀雲端...');
-    const hint = document.getElementById('lockNewError');
-    if (hint) hint.textContent = '正在從雲端讀取用戶...';
-  } else {
-    showLockUserSelect();
-    reportLockDiag('本機已有用戶，已顯示清單');
-  }
+  // Load current user immediately from localStorage
+  currentUserId = getCurrentUserId();
+  data = loadUserData(currentUserId);
+  _updateTopbar();
   renderUserList();
-  syncTopbarUser();
-
-  // ── STEP 2: Sync with Firebase in BACKGROUND (never blocks UI) ──
-  _syncUsersFromCloud();
-  setTimeout(() => { _syncUsersFromCloud(); }, 2000);
-  if (users.length === 0) {
-    setTimeout(() => {
-      const lock = document.getElementById('lockScreen');
-      if (lock && !lock.classList.contains('hidden') && getUsers().length === 0) {
-        reportLockDiag('自動降級：進入訪客模式');
-        enterGuestMode();
-      }
-    }, 7000);
-  }
+  renderDashboard();
+  // Sync Firebase in background
+  _bgSync();
 }
 
-async function _syncUsersFromCloud() {
+async function _bgSync() {
   try {
-    reportLockDiag('雲端同步中...');
-    // Wait for Firebase to be ready (up to 5s), but don't block UI
     if (!window._firestoreReady) {
-      await new Promise(resolve => {
-        const check = setInterval(() => {
-          if (window._firestoreReady) { clearInterval(check); resolve(); }
-        }, 200);
-        setTimeout(() => { clearInterval(check); resolve(); }, 5000);
+      await new Promise(r => {
+        const t = setTimeout(r, 5000);
+        window.addEventListener('firestore-ready', () => { clearTimeout(t); r(); }, {once:true});
       });
     }
-    // Retry cloud fetch a few times to avoid cold-start/slow-network misses.
-    let cloudUsers = null;
-    if (window._firestoreReady) {
-      for (let i = 0; i < 3; i++) {
-        cloudUsers = await loadUsersFromFirestore();
-        if (cloudUsers && cloudUsers.length > 0) break;
-        await new Promise(r => setTimeout(r, 1500));
-      }
+    if (!window._firestoreReady) return;
+    const cloudUsers = await Promise.race([
+      loadUsersFromFirestore(),
+      new Promise(r => setTimeout(() => r(null), 3000))
+    ]);
+    if (cloudUsers && cloudUsers.length > 0) {
+      const local = getUsers();
+      const ids = local.map(u => u.id);
+      let changed = false;
+      cloudUsers.forEach(cu => { if (!ids.includes(cu.id)) { local.push(cu); changed = true; } });
+      if (changed) { saveUsers(local); renderUserList(); }
     }
-    // Fallback for environments where Firebase SDK is blocked/slow.
-    if (!cloudUsers || cloudUsers.length === 0) cloudUsers = await loadUsersFromFirestoreREST();
-    if (!cloudUsers || cloudUsers.length === 0) {
-      if (getUsers().length === 0) {
-        const hint = document.getElementById('lockNewError');
-        if (hint) {
-          hint.textContent = '讀不到雲端用戶，請檢查 Firestore 規則是否允許讀取 app/users。';
-        }
-      }
-      reportLockDiag('雲端同步失敗：拿不到任何用戶', true);
-      return;
-    }
-    reportLockDiag('雲端同步成功：' + cloudUsers.length + ' 位用戶');
-    const localUsers = getUsers();
-    const localIds = new Set(localUsers.map(u => u.id));
-    let changed = false;
-    cloudUsers.forEach(cu => {
-      if (!cu || !cu.id) return;
-      if (!localIds.has(cu.id)) {
-        localUsers.push({ id: cu.id, name: cu.name || cu.id });
-        changed = true;
-      }
-    });
-    if (changed || localUsers.length > 0) {
-      window.__cloudUsersCache = localUsers;
-      if (changed) saveUsers(localUsers);
-      renderLockUserList();
-      renderUserList();
-      showLockUserSelect();
-      reportLockDiag('已渲染用戶清單：' + localUsers.length + ' 位');
-    }
-  } catch(e) {
-    console.warn('Background Firebase sync failed:', e);
-    reportLockDiag('同步例外：' + (e && e.message ? e.message : e), true);
-  }
+  } catch(e) { console.warn('bgSync:', e); }
 }
 
-// ── INIT: Run after DOM is ready ──
-// Script is now at end of <body>, so DOM is always ready.
-// Use requestAnimationFrame to ensure browser has painted first.
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(initAuthV2));
-} else {
-  requestAnimationFrame(initAuthV2);
-}
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    try { initAuthV2(); } catch (e) { authV2Diag('初始化失敗：' + (e && e.message ? e.message : e), true); }
-  }, 600);
-});
-window.addEventListener('error', (e) => {
-  reportLockDiag('JS錯誤：' + (e.message || 'unknown'), true);
-});
-window.addEventListener('unhandledrejection', (e) => {
-  const reason = e && e.reason ? (e.reason.message || String(e.reason)) : 'unknown';
-  reportLockDiag('Promise錯誤：' + reason, true);
-});
+// Run immediately — scripts are at end of body so DOM is ready
 
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -3229,30 +2466,10 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-function escapeHtml(v) {
-  return String(v ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function calcDurationMinutes(start, end) {
-  if (!start || !end) return null;
-  const [sh, sm] = start.split(':').map(Number);
-  const [eh, em] = end.split(':').map(Number);
-  if ([sh, sm, eh, em].some(Number.isNaN)) return null;
-  let mins = (eh * 60 + em) - (sh * 60 + sm);
-  if (mins <= 0) mins += 24 * 60;
-  return mins;
-}
-
 // ── NAV ──
 const pageTitles = {
   dashboard:'總覽', log:'今日記錄', history:'訓練歷史',
-  weight:'體重追蹤', photos:'身材照片', plan:'訓練計劃', goals:'目標追蹤',
-  workout:'實時訓練', library:'動作庫', period:'生理週期', settings:'用戶設定'
+  weight:'體重追蹤', photos:'身材照片', plan:'訓練計劃', goals:'目標追蹤'
 };
 
 function navigate(page, el) {
@@ -3266,7 +2483,7 @@ function navigate(page, el) {
 
 function renderPage(p) {
   if (p==='dashboard') renderDashboard();
-  if (p==='log') { prefillHeight(); renderLogExerciseList(); updateWeightDiff(); }
+  if (p==='log') prefillHeight();
   if (p==='history') renderHistory('all');
   if (p==='weight') renderWeightPage();
   if (p==='photos') renderPhotos();
@@ -3275,7 +2492,6 @@ function renderPage(p) {
   if (p==='settings') renderSettingsPage();
   if (p==='workout') renderWorkoutTimer();
   if (p==='library') renderLibrary();
-  if (p==='period') renderPeriod();
 }
 
 // ── PRE-FILL HEIGHT ──
@@ -3314,7 +2530,7 @@ document.getElementById('log-weight').addEventListener('input', updateCaloriePre
 const typeMap = {
   chest:'胸部訓練', back:'背部訓練', legs:'腿部訓練',
   shoulders:'肩部訓練', arms:'手臂訓練', core:'核心訓練',
-  cardio:'有氧訓練', glutes:'臀部訓練', fullbody:'全身訓練', rest:'休息日'
+  cardio:'有氧訓練', fullbody:'全身訓練', rest:'休息日'
 };
 
 // ── LOG TODAY ──
@@ -3340,30 +2556,22 @@ function saveLog() {
   const type = document.getElementById('log-type').value;
   const start = document.getElementById('log-start').value;
   const end = document.getElementById('log-end').value;
+  const exercises = document.getElementById('log-exercises').value;
   const notes = document.getElementById('log-notes').value;
   const height = document.getElementById('log-height').value;
   const duration = document.getElementById('log-duration').value;
 
   if (!date) { showToast('請選擇日期'); return; }
-  if (!type) { showToast('請選擇訓練類型'); return; }
-  if ((start && !end) || (!start && end)) { showToast('開始與結束時間請同時填寫'); return; }
-  if (height) { data.goals.height = parseFloat(height); }
 
-  const exercisesText = getExercisesText();
-  let durationMin = Number.parseInt(duration, 10);
-  if (!Number.isFinite(durationMin) || durationMin <= 0) durationMin = null;
-  const autoDuration = calcDurationMinutes(start, end);
-  if (autoDuration) durationMin = autoDuration;
+  // save height to user profile
+  if (height) { data.goals.height = parseFloat(height); document.getElementById('log-height').value = height; }
 
   data.logs.unshift({
     id: Date.now(), date,
     weight: weight ? parseFloat(weight) : null,
-    type, start, end,
-    exercises: exercisesText,
-    exercises_structured: [...logExercises],
-    notes,
-    duration: durationMin,
-    calories: durationMin && weight ? calcCalories(type, durationMin, parseFloat(weight)||70) : null,
+    type, start, end, exercises, notes,
+    duration: duration ? parseInt(duration) : null,
+    calories: duration && weight ? calcCalories(type, parseInt(duration), parseFloat(weight)||70) : null,
     photos: [...pendingLogPhotos]
   });
 
@@ -3378,21 +2586,20 @@ function saveLog() {
   saveAndSync();
 
   pendingLogPhotos = [];
-  logExercises = [];
   document.getElementById('log-photo-previews').innerHTML = '';
-  renderLogExerciseList();
-  ['log-notes','log-weight'].forEach(id => document.getElementById(id).value = '');
-  const wb = document.getElementById('weightDiffBadge');
-  if (wb) wb.style.display = 'none';
+  ['log-exercises','log-notes','log-weight'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('log-type').value = '';
   document.getElementById('log-start').value = '';
   document.getElementById('log-end').value = '';
   document.getElementById('log-duration').value = '';
   showToast('✓ 記錄已儲存');
 }
+
+
+// ── CALORIE CALCULATOR ──
 const MET = {
   chest: 4.0, back: 4.0, legs: 5.5, shoulders: 3.5,
-  arms: 3.0, core: 3.8, cardio: 7.0, glutes: 4.5, fullbody: 5.0, rest: 0
+  arms: 3.0, core: 3.8, cardio: 7.0, fullbody: 5.0, rest: 0
 };
 
 function calcCalories(type, durationMin, weightKg) {
@@ -3401,203 +2608,9 @@ function calcCalories(type, durationMin, weightKg) {
   return Math.round(met * weightKg * (durationMin / 60));
 }
 
-// ── PASSWORD SYSTEM ──
-// Passwords stored as simple hashes in localStorage (per user)
-function pwdKey(uid) { return 'tl_pwd_' + uid; }
+// (password system removed — no login required)
 
-async function hashPassword(pwd) {
-  if (!pwd) return '';
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pwd));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-
-async function setUserPassword(uid, newPwd) {
-  const hash = await hashPassword(newPwd);
-  localStorage.setItem(pwdKey(uid), hash);
-  // sync to Firestore
-  if (window._firestoreReady) {
-    window._fsSetDoc(window._fsDoc(window._db, 'passwords', uid), { hash })
-      .catch(e => console.warn('pwd sync:', e));
-  }
-}
-
-async function getUserPasswordHash(uid) {
-  // check Firestore first for cross-device sync
-  if (window._firestoreReady) {
-    try {
-      const snap = await window._fsGetDoc(window._fsDoc(window._db, 'passwords', uid));
-      if (snap.exists()) {
-        const hash = snap.data().hash || '';
-        localStorage.setItem(pwdKey(uid), hash);
-        return hash;
-      }
-    } catch(e) {}
-  }
-  return localStorage.getItem(pwdKey(uid)) || '';
-}
-
-async function verifyPassword(uid, inputPwd) {
-  const stored = await getUserPasswordHash(uid);
-  if (!stored) return true; // no password set = always pass
-  const inputHash = await hashPassword(inputPwd);
-  return inputHash === stored;
-}
-
-async function changePassword() {
-  const cur = document.getElementById('pwd-current').value;
-  const nw = document.getElementById('pwd-new').value;
-  const cf = document.getElementById('pwd-confirm').value;
-
-  if (nw !== cf) { showToast('新密碼兩次輸入不一致'); return; }
-  const valid = await verifyPassword(currentUserId, cur);
-  if (!valid) { showToast('目前密碼錯誤'); return; }
-  await setUserPassword(currentUserId, nw);
-  document.getElementById('pwd-current').value = '';
-  document.getElementById('pwd-new').value = '';
-  document.getElementById('pwd-confirm').value = '';
-  showToast(nw ? '✓ 密碼已更新' : '✓ 密碼已移除');
-}
-
-// ── LOCK SCREEN ──
-let lockSelectedUid = null;
-
-function renderLockUserList() {
-  const users = getUsers();
-  const el = document.getElementById('lockUserList');
-  if (!el) { console.warn('lockUserList not in DOM yet'); return; }
-  if (users.length === 0) {
-    el.innerHTML = '';
-    return;
-  }
-  el.innerHTML = users.map((u, i) => `
-    <button class="lock-user-btn ${u.id === lockSelectedUid ? 'selected' : ''}"
-      onclick="selectLockUser('${u.id}')">
-      <div class="lock-user-avatar ${avatarClass(i)}">${initials(u.name)}</div>
-      <div class="lock-user-info">
-        <div class="lock-user-name">${u.name}</div>
-      </div>
-      <span style="color:var(--text3);font-size:18px;">›</span>
-    </button>
-  `).join('');
-}
-
-async function selectLockUser(uid) {
-  lockSelectedUid = uid;
-  const users = getUsers();
-  const user = users.find(u => u.id === uid);
-  const idx = users.indexOf(user);
-  const hash = await getUserPasswordHash(uid);
-
-  document.getElementById('lockAvatar').textContent = initials(user.name);
-  document.getElementById('lockAvatar').className = 'lock-avatar ' + avatarClass(idx);
-  document.getElementById('lockDisplayName').textContent = user.name;
-  document.getElementById('lockError').textContent = '';
-
-  if (!hash) {
-    // No password — unlock immediately
-    unlockApp(uid);
-  } else {
-    document.getElementById('lockPwdHint').textContent = '請輸入密碼';
-    document.getElementById('lockPwdInput').value = '';
-    document.getElementById('lockUserSelect').style.display = 'none';
-    document.getElementById('lockPasswordView').style.display = 'block';
-    document.getElementById('lockNewUserView').style.display = 'none';
-    setTimeout(() => document.getElementById('lockPwdInput').focus(), 100);
-  }
-}
-
-async function submitLockPassword() {
-  const input = document.getElementById('lockPwdInput');
-  const valid = await verifyPassword(lockSelectedUid, input.value);
-  if (valid) {
-    unlockApp(lockSelectedUid);
-  } else {
-    input.classList.add('error');
-    document.getElementById('lockError').textContent = '密碼錯誤，請再試一次';
-    setTimeout(() => input.classList.remove('error'), 500);
-    input.value = '';
-    input.focus();
-  }
-}
-
-function unlockApp(uid) {
-  document.getElementById('lockScreen').classList.add('hidden');
-  switchUser(uid);
-}
-
-function enterGuestMode() {
-  try {
-    guestMode = true;
-    const guestId = 'guest_local';
-    currentUserId = guestId;
-    setCurrentUserId(guestId);
-    data = loadUserData(guestId);
-    const lock = document.getElementById('lockScreen');
-    if (lock) lock.classList.add('hidden');
-    const nameEl = document.getElementById('currentUserName');
-    const avEl = document.getElementById('currentAvatar');
-    if (nameEl) nameEl.textContent = '訪客';
-    if (avEl) {
-      avEl.textContent = 'G';
-      avEl.className = 'user-avatar av-0';
-    }
-    if (typeof navigate === 'function') navigate('dashboard', null);
-    renderUserList();
-    renderDashboard();
-    syncTopbarUser();
-    showToast('已進入訪客模式');
-  } catch (e) {
-    console.error('enterGuestMode failed:', e);
-    try {
-      const lock = document.getElementById('lockScreen');
-      if (lock) lock.classList.add('hidden');
-      if (typeof navigate === 'function') navigate('dashboard', null);
-      showToast('已進入訪客模式');
-    } catch (_) {}
-  }
-}
-window.enterGuestMode = enterGuestMode;
-function showLockUserSelect() {
-  const us = document.getElementById('lockUserSelect');
-  const pv = document.getElementById('lockPasswordView');
-  const nv = document.getElementById('lockNewUserView');
-  if (!us || !pv || !nv) { console.warn('Lock screen DOM not ready'); return; }
-  us.style.display = 'block';
-  pv.style.display = 'none';
-  nv.style.display = 'none';
-  renderLockUserList();
-}
-
-function showNewUserForm() {
-  const us = document.getElementById('lockUserSelect');
-  const pv = document.getElementById('lockPasswordView');
-  const nv = document.getElementById('lockNewUserView');
-  if (!us || !pv || !nv) { console.warn('Lock screen DOM not ready'); return; }
-  us.style.display = 'none';
-  pv.style.display = 'none';
-  nv.style.display = 'block';
-  const nameEl = document.getElementById('lockNewName');
-  const pwdEl = document.getElementById('lockNewPwd');
-  const errEl = document.getElementById('lockNewError');
-  if (nameEl) nameEl.value = '';
-  if (pwdEl) pwdEl.value = '';
-  if (errEl) errEl.textContent = '';
-  setTimeout(() => nameEl && nameEl.focus(), 100);
-}
-
-async function submitNewUser() {
-  const name = document.getElementById('lockNewName').value.trim();
-  const pwd = document.getElementById('lockNewPwd').value;
-  const errEl = document.getElementById('lockNewError');
-  if (!name) { errEl.textContent = '請輸入名稱'; return; }
-  const users = getUsers();
-  if (users.find(u => u.name === name)) { errEl.textContent = '此名稱已存在'; return; }
-  const uid = 'user_' + Date.now();
-  users.push({ id: uid, name });
-  saveUsers(users);
-  if (pwd) await setUserPassword(uid, pwd);
-  unlockApp(uid);
-}
+// (lock screen removed)
 
 
 // ── SETTINGS PAGE ──
@@ -3610,41 +2623,18 @@ function renderSettingsPage() {
     document.getElementById('settings-avatar').textContent = initials(user.name);
     document.getElementById('settings-avatar').className = 'user-avatar ' + avatarClass(idx);
   }
-  const g = data.goals || {};
-  if (g.height) document.getElementById('settings-height').value = g.height;
-  if (g.age) document.getElementById('settings-age').value = g.age;
-  // Render gender buttons
-  ['male','female','other'].forEach(gn => {
-    const btn = document.getElementById('gender-'+gn);
-    if (btn) btn.classList.toggle('selected', g.gender === gn);
-  });
+  const h = data.goals && data.goals.height;
+  if (h) document.getElementById('settings-height').value = h;
   // clear password fields
-  ['settings-pwd-current','settings-pwd-new','settings-pwd-confirm'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.value = '';
-  });
+  
 }
 
-function selectGender(g) {
-  ['male','female','other'].forEach(k => {
-    const btn = document.getElementById('gender-'+k);
-    if (btn) btn.classList.remove('selected');
-  });
-  document.getElementById('gender-'+g)?.classList.add('selected');
-  if (!data.goals) data.goals = {};
-  data.goals.gender = g;
-}
-
-function saveSettingsProfile() {
-  const h = parseFloat(document.getElementById('settings-height').value);
-  const age = parseInt(document.getElementById('settings-age').value);
-  if (!data.goals) data.goals = {};
-  if (h && h >= 100 && h <= 250) data.goals.height = h;
-  else if (document.getElementById('settings-height').value) { showToast('請輸入有效身高（100-250cm）'); return; }
-  if (age && age >= 10 && age <= 100) data.goals.age = age;
-  else if (document.getElementById('settings-age').value) { showToast('請輸入有效年齡（10-100）'); return; }
+function saveSettingsHeight() {
+  const val = parseFloat(document.getElementById('settings-height').value);
+  if (!val || val < 100 || val > 250) { showToast('請輸入有效身高'); return; }
+  data.goals.height = val;
   saveAndSync();
-  renderDashboard();
-  showToast('✓ 個人資料已儲存，BMI 已更新');
+  showToast('✓ 身高已儲存，BMI 已更新');
 }
 
 async function changePasswordFromSettings() {
@@ -3701,27 +2691,12 @@ async function confirmDeleteSelf() {
     } catch(e) { console.warn('delete from firestore:', e); }
   }
   showToast('帳號已刪除');
-  logoutToLockScreen();
-}
-
-// ── LOGOUT → LOCK SCREEN ──
-function logoutToLockScreen() {
-  enterGuestMode();
-  showToast('已切換為訪客模式');
-}
-
-// ── SWITCH USER WITH PASSWORD ──
-// Called from sidebar user switcher — goes through lock screen
-function requestSwitchUser(uid) {
-  if (uid === currentUserId) { closeUserDropdown(); return; }
-  closeUserDropdown();
-  switchUser(uid);
 }
 
 function requestSwitchUserMobile(uid) {
   if (uid === currentUserId) { closeMobileUserModal(); return; }
-  closeMobileUserModal();
   switchUser(uid);
+  closeMobileUserModal();
 }
 
 // ── DASHBOARD ──
@@ -3778,14 +2753,12 @@ function renderDashboard() {
 
   drawChart('weightChart', ws.slice(0,30).reverse(), 560, 160);
 
-  // BMI — with age adjustment
+  // BMI
   const height = data.goals && data.goals.height;
-  const age    = data.goals && data.goals.age;
-  const gender = data.goals && data.goals.gender;
-  const bmiVal  = document.getElementById('bmi-value');
-  const bmiCat  = document.getElementById('bmi-category-badge');
-  const bmiSub  = document.getElementById('bmi-sub');
-  const bmiBar  = document.getElementById('bmi-bar-wrap');
+  const bmiVal = document.getElementById('bmi-value');
+  const bmiCat = document.getElementById('bmi-category-badge');
+  const bmiSub = document.getElementById('bmi-sub');
+  const bmiBar = document.getElementById('bmi-bar-wrap');
   const bmiMark = document.getElementById('bmi-marker');
   if (latest && height) {
     const bmi = latest.value / ((height/100) ** 2);
@@ -3793,40 +2766,18 @@ function renderDashboard() {
     bmiBar.style.opacity = '1';
     const pct = Math.min(100, Math.max(0, (bmi - 15) / (35 - 15) * 100));
     bmiMark.style.left = pct + '%';
-
-    // Age-adjusted BMI thresholds
-    // Under 18: use WHO child/teen ranges (simplified)
-    // 18-64: standard (18.5/24/27/30)
-    // 65+: slightly higher thresholds (22/27/30) — muscle loss with age
-    // Note: Asian populations often use 23/27.5 (WHO Asia-Pacific guideline)
-    let tUnder, tNormal, tOver, catName;
-    if (age && age < 18) {
-      // Teens: use standard adult thresholds as approximation
-      tUnder = 18.5; tNormal = 24; tOver = 27;
-    } else if (age && age >= 65) {
-      // Elderly: higher thresholds recommended
-      tUnder = 22; tNormal = 27; tOver = 30;
-    } else {
-      // Standard adult (WHO Asian guideline)
-      tUnder = 18.5; tNormal = 24; tOver = 27;
-    }
-
-    let cat, color, bg, ageNote = '';
-    if (bmi < tUnder)      { cat='偏瘦'; color='#34aadc'; bg='rgba(52,170,220,0.12)'; }
-    else if (bmi < tNormal){ cat='正常'; color='var(--green)'; bg='var(--green-light)'; }
-    else if (bmi < tOver)  { cat='過重'; color='var(--orange)'; bg='var(--orange-light)'; }
-    else                   { cat='肥胖'; color='var(--red)'; bg='var(--red-light)'; }
-
-    if (age && age >= 65) ageNote = ' ·長者標準';
+    let cat, color, bg;
+    if (bmi < 18.5)      { cat='偏瘦'; color='#34aadc'; bg='rgba(52,170,220,0.12)'; }
+    else if (bmi < 24)   { cat='正常'; color='var(--green)'; bg='var(--green-light)'; }
+    else if (bmi < 27)   { cat='過重'; color='var(--orange)'; bg='var(--orange-light)'; }
+    else                 { cat='肥胖'; color='var(--red)'; bg='var(--red-light)'; }
     bmiCat.textContent = cat;
     bmiCat.style.color = color;
     bmiCat.style.background = bg;
-    let sub = '身高 ' + height + ' cm · 體重 ' + latest.value.toFixed(1) + ' kg';
-    if (age) sub += ' · ' + age + '歲' + ageNote;
-    bmiSub.textContent = sub;
+    bmiSub.textContent = '身高 ' + height + ' cm · 體重 ' + latest.value.toFixed(1) + ' kg';
   } else {
     bmiVal.textContent = '—';
-    bmiSub.textContent = height ? '請記錄體重' : '請至用戶設定填寫身高和年齡';
+    bmiSub.textContent = height ? '請記錄體重' : '請至用戶設定填寫身高';
     bmiCat.textContent = '—';
     bmiCat.style.background = '#e5e5ea';
     bmiCat.style.color = 'var(--text3)';
@@ -3896,7 +2847,7 @@ function drawChart(id, weights, W, H) {
 function renderHistory(filter) {
   filter = filter || document.getElementById('history-filter').value;
   let logs = data.logs.slice();
-  if(filter!=="all") logs=logs.filter(l=>l.type===filter);
+  if(filter!=='all') logs=logs.filter(l=>l.type===filter);
   const el = document.getElementById('history-list');
   if(logs.length===0){
     el.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div>尚無訓練記錄</div>';
@@ -3904,29 +2855,24 @@ function renderHistory(filter) {
   }
   el.innerHTML = logs.map(l=>{
     const dur = l.start&&l.end ? calcDur(l.start,l.end) : null;
-    const dateText = `${l.date || ''}${l.start ? ' · ' + l.start + (l.end ? ' — ' + l.end : '') : ''}`;
-    const safeExercises = escapeHtml(l.exercises || '').replace(/\n/g, '<br>');
-    const safeNotes = escapeHtml(l.notes || '').replace(/\n/g, '<br>');
     return `<div class="workout-entry ${l.type==='rest'?'rest':''}">
       <div>
-        <div class="entry-date">${escapeHtml(dateText)}</div>
-        <div class="entry-title">${escapeHtml(typeMap[l.type]||'未知')}</div>
+        <div class="entry-date">${l.date}${l.start?' · '+l.start+(l.end?' — '+l.end:''):''}</div>
+        <div class="entry-title">${typeMap[l.type]||'未知'}</div>
         <div class="entry-meta">
           ${dur?`<span class="entry-tag">⏱ ${dur}</span>`:''}
           ${l.weight?`<span class="entry-tag">⚖ ${l.weight} kg</span>`:''}
           ${l.photos&&l.photos.length?`<span class="entry-tag green">📷 ${l.photos.length} 張</span>`:''}
           ${l.calories?`<span class="calorie-tag">🔥 ${l.calories} kcal</span>`:''}
         </div>
-        ${l.exercises?`<div class="entry-exercises">${safeExercises}</div>`:''}
-        ${l.notes?`<div class="entry-notes">${safeNotes}</div>`:''}
+        ${l.exercises?`<div class="entry-exercises">${l.exercises}</div>`:''}
+        ${l.notes?`<div class="entry-notes">${l.notes}</div>`:''}
       </div>
-      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
-        <button class="btn" style="padding:6px 12px;font-size:12px;background:var(--accent-light);color:var(--accent);border-radius:8px;" onclick="openEditLog(${l.id})">✏️ 修改</button>
-        <button class="btn btn-danger" style="padding:6px 12px;font-size:12px;" onclick="deleteLog(${l.id})">刪除</button>
-      </div>
+      <button class="btn btn-danger" onclick="deleteLog(${l.id})">刪除</button>
     </div>`;
   }).join('');
 }
+
 function calcDur(s,e){
   const [sh,sm]=s.split(':').map(Number), [eh,em]=e.split(':').map(Number);
   let m=(eh*60+em)-(sh*60+sm); if(m<=0) m+=24*60;
@@ -4046,17 +2992,11 @@ function renderPlans(){
     const total=p.start&&p.end?Math.ceil((new Date(p.end)-new Date(p.start))/86400000):0;
     const elapsed=p.start?Math.max(0,Math.ceil((new Date(today)-new Date(p.start))/86400000)):0;
     const pct=total>0?Math.min(100,Math.round(elapsed/total*100)):0;
-    const safeName = escapeHtml(p.name || '');
-    const safeStart = escapeHtml(p.start || '?');
-    const safeEnd = escapeHtml(p.end || '?');
-    const safeDesc = p.desc
-      ? `<ul class="phase-exercises">${p.desc.split('\n').filter(Boolean).map(l=>`<li>${escapeHtml(l)}</li>`).join('')}</ul>`
-      : '';
     return `<div class="phase-card ${isActive?'active-phase':''}">
       ${isActive?'<div class="active-badge">進行中</div>':''}
-      <div class="phase-name">${safeName}</div>
-      <div class="phase-duration">${safeStart} → ${safeEnd}</div>
-      ${safeDesc}
+      <div class="phase-name">${p.name}</div>
+      <div class="phase-duration">${p.start||'?'} → ${p.end||'?'}</div>
+      ${p.desc?`<ul class="phase-exercises">${p.desc.split('\n').filter(Boolean).map(l=>`<li>${l}</li>`).join('')}</ul>`:''}
       ${total>0?`<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
       <div style="font-size:11px;color:var(--text3);margin-top:6px;">${pct}% 完成 · 共 ${total} 天</div>`:''}
       <div style="margin-top:14px;">
@@ -4065,6 +3005,7 @@ function renderPlans(){
     </div>`;
   }).join('');
 }
+
 function deletePlan(id){ data.plans=data.plans.filter(p=>p.id!==id); saveAndSync(); renderPlans(); }
 
 // ── GOALS ──
@@ -4305,49 +3246,6 @@ const EXERCISES = [
     muscles:['腹直肌下段（主）','髂腰肌'],
     steps:['懸掛於單槓上，雙腿並攏。','收縮腹肌，將雙腿抬起至水平或更高。','緩慢放回，不要讓身體大幅擺盪。'],
     tips:['若做不到直腿，先從彎腿版本開始', '避免依靠慣性甩腿'] },
-
-
-  // GLUTES
-  { id:'i1', name:'槓鈴臀推', muscle:'臀部', equipment:'槓鈴', difficulty:'中級',
-    desc:'臀大肌訓練之王，針對性最強的臀部動作，能有效增加臀圍與翹度。',
-    muscles:['臀大肌（主）','腿後肌','核心'],
-    steps:['坐在臥推凳前，槓鈴置於髖關節上，可用墊子保護。','背部貼靠凳沿，雙腳平踩地面，膝蓋成90度。','深吸氣，核心收緊，以臀肌發力將髖部向上推至最高點。','頂端臀肌用力夾緊停留1-2秒，緩慢放回不碰地。'],
-    tips:['頂端時大腿和軀幹呈一直線', '膝蓋不要內扣，與腳尖同方向', '感受臀肌收縮，非腰部用力'] },
-  { id:'i2', name:'啞鈴臀推', muscle:'臀部', equipment:'啞鈴', difficulty:'初級',
-    desc:'臀推的入門版本，適合初學者建立臀肌連結感。',
-    muscles:['臀大肌（主）','腿後肌'],
-    steps:['坐在凳前，啞鈴置於髖部上，雙手扶住。','背靠凳，雙腳踩地膝蓋90度。','臀肌發力將髖部推至最高，頂端夾緊1秒。','緩慢放回。'],
-    tips:['先用輕重量熟悉動作感受', '可做單腿版本增加難度'] },
-  { id:'i3', name:'保加利亞分腿蹲', muscle:'臀部', equipment:'啞鈴', difficulty:'高級',
-    desc:'單腿訓練，臀部與股四頭的複合動作，同時挑戰平衡。',
-    muscles:['臀大肌（主）','股四頭肌','腿後肌'],
-    steps:['後腳置於凳上，前腳向前踏一大步，雙手持啞鈴。','身體保持直立，後膝向地面下沉。','前腳用力踩地站起，感受臀部收縮。','完成一側後換腳。'],
-    tips:['前腳距離凳越遠越針對臀部', '下沉時身體微向前傾', '膝蓋對準腳尖方向'] },
-  { id:'i4', name:'臀部後踢（繩索）', muscle:'臀部', equipment:'繩索', difficulty:'初級',
-    desc:'孤立訓練臀大肌的全程張力動作，感受感強。',
-    muscles:['臀大肌（主）'],
-    steps:['站於繩索機前，腳踝綁上繩索套環，雙手扶住支撐點。','核心收緊，保持上身穩定，將腿向後上方踢起。','頂端臀肌夾緊1秒，緩慢放回，不要完全放鬆。'],
-    tips:['不要依靠腰部後仰，臀肌主導', '動作幅度不用過大，感受最重要'] },
-  { id:'i5', name:'壺鈴深蹲搖擺', muscle:'臀部', equipment:'啞鈴', difficulty:'初級',
-    desc:'以臀部為核心的功能性訓練，同時鍛鍊下背與腿後肌。',
-    muscles:['臀大肌（主）','腿後肌','豎脊肌'],
-    steps:['雙腳寬於肩站立，雙手握壺鈴（啞鈴也可）置於兩腿間。','以髖部後推為主，上身前傾，讓器械向後擺。','收縮臀肌，推髖站起，器械向前擺至肩高。'],
-    tips:['用臀部推力而非手臂抬起器械', '每次重複都要感受臀部主導'] },
-  { id:'i6', name:'蚌式開合', muscle:'臀部', equipment:'徒手', difficulty:'初級',
-    desc:'側臥訓練臀中肌，改善臀部外側線條，預防膝蓋內扣。',
-    muscles:['臀中肌（主）','臀小肌'],
-    steps:['側臥，雙腿彎曲疊放，像合上的蚌殼。','保持雙腳合攏，上側膝蓋向天花板張開。','頂端停留1秒，感受臀部外側夾緊，緩慢放回。'],
-    tips:['可加彈力帶增加阻力', '上身保持穩定，不要旋轉', '每側做15-20次效果最佳'] },
-  { id:'i7', name:'臀橋', muscle:'臀部', equipment:'徒手', difficulty:'初級',
-    desc:'臀推的徒手版本，適合熱身或初學者建立臀肌連結。',
-    muscles:['臀大肌（主）','腿後肌','核心'],
-    steps:['仰臥，雙腿彎曲平踩地面，雙臂置於體側。','收縮臀肌，將髖部推離地面至最高點。','頂端夾緊臀肌停留2秒，緩慢放回。'],
-    tips:['可單腿進行增加難度', '腹部同步收緊，核心穩定', '感受到腰部而非臀部說明發力不正確'] },
-  { id:'i8', name:'深蹲側踢腿', muscle:'臀部', equipment:'徒手', difficulty:'初級',
-    desc:'結合深蹲與側踢的複合動作，同時訓練臀大肌與臀中肌。',
-    muscles:['臀大肌','臀中肌'],
-    steps:['站立，雙腳與肩同寬。','深蹲至大腿與地面平行。','站起的同時，將一腿向側方踢出。','落地重複，或每次換腳。'],
-    tips:['保持上身直立', '側踢時感受臀部外側'] },
 
   // CARDIO
   { id:'h1', name:'跑步機慢跑', muscle:'有氧', equipment:'機器', difficulty:'初級',
@@ -4722,16 +3620,10 @@ function syncTopbarUser() {
   const nm = document.getElementById('topbarUserName');
   if (el) {
     el.style.display = isMobile() ? 'flex' : 'none';
-    if (av && nm) {
-      if (guestMode || String(currentUserId).startsWith('guest_')) {
-        av.textContent = 'G';
-        av.className = 'topbar-user-avatar av-0';
-        nm.textContent = '訪客';
-      } else if (user) {
-        av.textContent = initials(user.name);
-        av.className = 'topbar-user-avatar ' + avatarClass(idx);
-        nm.textContent = user.name;
-      }
+    if (user && av && nm) {
+      av.textContent = initials(user.name);
+      av.className = 'topbar-user-avatar ' + avatarClass(idx);
+      nm.textContent = user.name;
     }
   }
 }
@@ -4770,7 +3662,7 @@ function renderMobileUserList() {
 function switchUserMobile(uid) {
   switchUser(uid);
   closeMobileUserModal();
-  syncTopbarUser();
+  _updateTopbar();
 }
 
 function addUserMobile() {
@@ -4822,610 +3714,11 @@ function startRealtimeSync(uid) {
   );
 }
 
-
-// ══════════════════════════════════════════════════════════
-// 1. DYNAMIC EXERCISE LIST (log page)
-// ══════════════════════════════════════════════════════════
-let logExercises = [];
-
-function addLogExRow(name='', sets='', weight='') {
-  logExercises.push({name, sets, weight});
-  renderLogExerciseList();
-}
-
-function removeLogExRow(i) {
-  logExercises.splice(i,1);
-  renderLogExerciseList();
-}
-
-function updateLogEx(i, field, val) {
-  logExercises[i][field] = val;
-}
-
-function renderLogExerciseList() {
-  const el = document.getElementById('logExerciseList');
-  if (!el) return;
-  if (logExercises.length === 0) {
-    el.innerHTML = '<div style="font-size:13px;color:var(--text3);padding:6px 0 4px;">尚未新增動作，點擊下方按鈕開始</div>';
-    return;
-  }
-  el.innerHTML = logExercises.map((ex,i) => `
-    <div class="ex-list-row">
-      <input class="ex-list-input" type="text" placeholder="動作名稱" value="${ex.name}"
-        oninput="updateLogEx(${i},'name',this.value)" list="exNameDatalist" autocomplete="off">
-      <input class="ex-list-input" type="number" placeholder="組" min="1" value="${ex.sets}"
-        oninput="updateLogEx(${i},'sets',this.value)" style="text-align:center;">
-      <input class="ex-list-input" type="number" placeholder="kg" step="0.5" value="${ex.weight}"
-        oninput="updateLogEx(${i},'weight',this.value)" style="text-align:center;">
-      <button onclick="removeLogExRow(${i})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:4px;border-radius:6px;" title="移除">✕</button>
-    </div>`).join('');
-}
-
-function toggleLogExPicker() {
-  const wrap = document.getElementById('logExPickerWrap');
-  wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
-  if (wrap.style.display === 'block') {
-    document.getElementById('logExPickerQ').value = '';
-    renderLogExPicker();
-    setTimeout(() => document.getElementById('logExPickerQ').focus(), 80);
-  }
-}
-
-function renderLogExPicker() {
-  const q = document.getElementById('logExPickerQ').value.toLowerCase();
-  const filtered = EXERCISES.filter(e => e.name.toLowerCase().includes(q) || e.muscle.includes(q));
-  const el = document.getElementById('logExPickerList');
-  el.innerHTML = filtered.slice(0,15).map(e => `
-    <div onclick="pickLogEx('${e.name.replace(/'/g,"\\\'")}')"
-      style="padding:9px 12px;cursor:pointer;font-size:13px;display:flex;justify-content:space-between;"
-      onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
-      <span style="font-weight:500;">${e.name}</span>
-      <span style="color:var(--text3);font-size:11px;">${e.muscle} · ${e.equipment}</span>
-    </div>`).join('') || '<div style="padding:10px 12px;color:var(--text3);font-size:13px;">找不到動作</div>';
-}
-
-function pickLogEx(name) {
-  addLogExRow(name,'','');
-  document.getElementById('logExPickerWrap').style.display = 'none';
-}
-
-function copyYesterdayExercises() {
-  const today = new Date().toISOString().split('T')[0];
-  const pastLogs = data.logs.filter(l => l.date < today);
-  if (pastLogs.length === 0) { showToast('找不到之前的訓練記錄'); return; }
-  const last = pastLogs[0];
-  if (last.exercises_structured && last.exercises_structured.length > 0) {
-    logExercises = last.exercises_structured.map(e => ({...e}));
-  } else if (last.exercises) {
-    logExercises = last.exercises.split('\n').filter(l=>l.trim()).map(l => {
-      const m = l.match(/^(.+?)\s+(\d+)\s*[x×組]\s*(?:[\d.]+\s*kg)?/) ||
-                l.match(/^(.+?)\s+(\d+)組\s*(?:×\s*[\d.]+\s*kg)?/);
-      return { name: m ? m[1].trim() : l.trim(), sets: m ? m[2] : '', weight: '' };
-    });
-  } else { showToast('上次記錄沒有訓練動作'); return; }
-  renderLogExerciseList();
-  showToast(`✓ 已複製 ${last.date} 的訓練（${logExercises.length} 個動作）`);
-}
-
-function getExercisesText() {
-  return logExercises.map(ex => {
-    let s = ex.name || '動作';
-    if (ex.sets) s += ` ${ex.sets}組`;
-    if (ex.weight) s += ` × ${ex.weight}kg`;
-    return s;
-  }).join('\n');
-}
-
-// Datalist for autocomplete
-function buildExDatalist() {
-  let dl = document.getElementById('exNameDatalist');
-  if (!dl) { dl = document.createElement('datalist'); dl.id = 'exNameDatalist'; document.body.appendChild(dl); }
-  dl.innerHTML = EXERCISES.map(e => `<option value="${e.name}">`).join('');
-}
-
-// ══════════════════════════════════════════════════════════
-// 2. WEIGHT DIFF BADGE
-// ══════════════════════════════════════════════════════════
-function updateWeightDiff() {
-  const val = parseFloat(document.getElementById('log-weight').value);
-  const badge = document.getElementById('weightDiffBadge');
-  if (!badge) return;
-  if (!val || isNaN(val)) { badge.style.display = 'none'; return; }
-  const sorted = [...data.weights].sort((a,b) => b.date.localeCompare(a.date));
-  const today = new Date().toISOString().split('T')[0];
-  const yDate = new Date(Date.now()-86400000).toISOString().split('T')[0];
-  const yW = sorted.find(w => w.date <= yDate);
-  let diff, label;
-  if (yW) {
-    diff = val - yW.value; label = '較昨日';
-  } else {
-    const w7 = sorted.filter(w => {
-      const d = new Date(w.date), now = new Date(); d.setDate(d.getDate()+7);
-      return w.date < today && d >= now;
-    });
-    const avg = w7.length ? w7.reduce((s,w)=>s+w.value,0)/w7.length : null;
-    if (avg) { diff = val - avg; label = '較上週均'; }
-    else if (sorted.length) { diff = val - sorted[0].value; label = '較上次'; }
-    else { badge.style.display = 'none'; return; }
-  }
-  const sign = diff > 0 ? '+' : '';
-  badge.textContent = `${sign}${diff.toFixed(1)}kg ${label}`;
-  badge.className = 'weight-diff-badge ' + (diff < -0.05 ? 'wdb-down' : diff > 0.05 ? 'wdb-up' : 'wdb-flat');
-  badge.style.display = 'inline-flex';
-}
-
-// ══════════════════════════════════════════════════════════
-// 3. REST TIMER
-// ══════════════════════════════════════════════════════════
-let _restDur = 30, _restRem = 30, _restTotal = 30, _restRunning = false, _restTmr = null;
-
-function setRestPreset(s, btn) {
-  document.querySelectorAll('.rest-pre-btn').forEach(b => b.classList.remove('on'));
-  btn && btn.classList.add('on');
-  _restDur = s; _restTotal = s;
-  if (!_restRunning) { _restRem = s; _renderRestClock(); _renderRestBar(1); }
-}
-
-function toggleRest() {
-  _restRunning ? _pauseRest() : _startRest();
-}
-
-function _startRest() {
-  if (_restRem <= 0) { _restRem = _restDur; _restTotal = _restDur; }
-  _restRunning = true;
-  _setRestBtn('⏸ 暫停','paused');
-  document.getElementById('restStatusTxt').textContent = '休息中...';
-  _restTmr = setInterval(_restTick, 1000);
-}
-
-function _pauseRest() {
-  _restRunning = false; clearInterval(_restTmr);
-  _setRestBtn('▶ 繼續','');
-  document.getElementById('restStatusTxt').textContent = '已暫停';
-}
-
-function resetRest() {
-  _restRunning = false; clearInterval(_restTmr);
-  _restRem = _restDur; _restTotal = _restDur;
-  _renderRestClock(); _renderRestBar(1);
-  _setRestBtn('▶ 開始休息','');
-  const rc = document.getElementById('restClock');
-  if (rc) rc.classList.remove('urgent');
-  document.getElementById('restStatusTxt').textContent = '選擇時長後開始';
-}
-
-function _restTick() {
-  _restRem--;
-  _renderRestClock();
-  _renderRestBar(_restRem / _restTotal);
-  const rc = document.getElementById('restClock');
-  if (_restRem <= 5) rc && rc.classList.add('urgent');
-  if (_restRem <= 0) {
-    clearInterval(_restTmr); _restRunning = false;
-    rc && rc.classList.remove('urgent');
-    _setRestBtn('▶ 再來一次','');
-    document.getElementById('restStatusTxt').textContent = '✅ 休息結束！';
-    _playBeep(); showToast('✅ 休息結束，繼續加油！');
-  }
-}
-
-function _renderRestClock() {
-  const el = document.getElementById('restClock');
-  if (!el) return;
-  const m = Math.floor(_restRem/60), s = _restRem%60;
-  el.textContent = pad(m)+':'+pad(s);
-}
-
-function _renderRestBar(ratio) {
-  const bar = document.getElementById('restBar');
-  if (!bar) return;
-  bar.style.width = (Math.max(0,ratio)*100)+'%';
-  bar.className = 'rest-bar'+(ratio<0.15?' urgent':'');
-}
-
-function _setRestBtn(txt, cls) {
-  const btn = document.getElementById('restGoBtn');
-  if (!btn) return;
-  btn.textContent = txt;
-  btn.className = 'rest-go-btn'+(cls?' '+cls:'');
-}
-
-function _playBeep() {
-  try {
-    const ctx = new (window.AudioContext||window.webkitAudioContext)();
-    [0,0.18,0.36].forEach(t => {
-      const o = ctx.createOscillator(), g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.frequency.value = 880;
-      g.gain.setValueAtTime(0.28, ctx.currentTime+t);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+t+0.14);
-      o.start(ctx.currentTime+t); o.stop(ctx.currentTime+t+0.15);
-    });
-  } catch(e){}
-}
-
-// ══════════════════════════════════════════════════════════
-// 4. EDIT LOG
-// ══════════════════════════════════════════════════════════
-function openEditLog(id) {
-  // Normalize: id may be number or string depending on JSON parse
-  id = Number(id);
-  const log = data.logs.find(l => Number(l.id) === id);
-  if (!log) { showToast('找不到此記錄'); return; }
-  document.getElementById('edit-log-id').value = id;
-  document.getElementById('edit-log-date').value = log.date || '';
-  document.getElementById('edit-log-type').value = log.type || '';
-  document.getElementById('edit-log-start').value = log.start || '';
-  document.getElementById('edit-log-end').value = log.end || '';
-  document.getElementById('edit-log-weight').value = log.weight || '';
-  // Support both structured and text exercises
-  if (log.exercises_structured && log.exercises_structured.length > 0) {
-    document.getElementById('edit-log-exercises').value =
-      log.exercises_structured.map(e => {
-        let s = e.name || '';
-        if (e.sets) s += ' ' + e.sets + '組';
-        if (e.weight) s += ' × ' + e.weight + 'kg';
-        return s;
-      }).join('
-');
-  } else {
-    document.getElementById('edit-log-exercises').value = log.exercises || '';
-  }
-  document.getElementById('edit-log-notes').value = log.notes || '';
-  document.getElementById('edit-log-duration').value = log.duration || '';
-  document.getElementById('editLogModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeEditLog() {
-  document.getElementById('editLogModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function saveEditLog() {
-  const id = Number(document.getElementById('edit-log-id').value);
-  const log = data.logs.find(l => Number(l.id) === id);
-  if (!log) { showToast('找不到記錄，請重試'); return; }
-  log.date = document.getElementById('edit-log-date').value;
-  log.type = document.getElementById('edit-log-type').value;
-  log.start = document.getElementById('edit-log-start').value;
-  log.end = document.getElementById('edit-log-end').value;
-  log.exercises = document.getElementById('edit-log-exercises').value;
-  log.exercises_structured = null; // cleared when manually edited
-  log.notes = document.getElementById('edit-log-notes').value;
-  const dur = parseInt(document.getElementById('edit-log-duration').value);
-  if (dur > 0) log.duration = dur;
-  const w = parseFloat(document.getElementById('edit-log-weight').value);
-  if (w) {
-    log.weight = w;
-    // Update weight tracking
-    const wIdx = data.weights.findIndex(e => e.date === log.date);
-    if (wIdx >= 0) data.weights[wIdx].value = w;
-    else { data.weights.push({date:log.date,value:w}); data.weights.sort((a,b)=>b.date.localeCompare(a.date)); }
-    // Recalculate calories if duration available
-    if (log.duration) log.calories = calcCalories(log.type, log.duration, w);
-  }
-  // Re-sort logs by date descending
-  data.logs.sort((a,b) => b.date.localeCompare(a.date) || Number(b.id) - Number(a.id));
-  saveAndSync();
-  closeEditLog();
-  renderHistory();
-  showToast('✓ 記錄已修改');
-}
-
-// ══════════════════════════════════════════════════════════
-// 5. PERIOD TRACKING
-// ══════════════════════════════════════════════════════════
-const SYMPTOMS = ['腹痛', '腰痛', '頭痛', '噁心', '疲倦', '情緒低落', '水腫', '食欲增加', '胸部脹痛', '痘痘'];
-let _selectedFlow = 'none';
-let _periodTab = 'overview';
-let _periodMonthOffset = 0; // 0 = current month
-
-function switchPeriodTab(tab) {
-  _periodTab = tab;
-  ['overview','month','log'].forEach(t => {
-    const btn = document.getElementById('ptab-'+t);
-    const con = document.getElementById('ptab-'+t+'-content');
-    if (btn) btn.classList.toggle('active', t===tab);
-    if (con) con.style.display = t===tab ? '' : 'none';
-  });
-  if (tab === 'month') renderPeriodMonth();
-  if (tab === 'log') renderSymptomSelector();
-}
-
-function selectPeriodStatus(flow) {
-  _selectedFlow = flow;
-  ['none','light','medium','heavy'].forEach(k => {
-    const btn = document.getElementById('fb-'+k);
-    if (btn) btn.classList.toggle('selected', k===flow);
-  });
-}
-
-function renderSymptomSelector() {
-  const el = document.getElementById('symptomSelector');
-  if (!el) return;
-  const date = document.getElementById('period-date')?.value;
-  const existing = date ? (data.period||[]).find(p=>p.date===date) : null;
-  const sel = existing?.symptoms || [];
-  el.innerHTML = SYMPTOMS.map(s =>
-    `<button onclick="this.classList.toggle('selected')" class="symptom-chip${sel.includes(s)?' selected':''}">${s}</button>`
-  ).join('');
-}
-
-function getSelectedSymptoms() {
-  return [...document.querySelectorAll('#symptomSelector .symptom-chip.selected')].map(b=>b.textContent);
-}
-
-function savePeriodEntry() {
-  if (!data.period) data.period = [];
-  const date = document.getElementById('period-date').value;
-  if (!date) { showToast('請選擇日期'); return; }
-  const existing = data.period.findIndex(p => p.date === date);
-  const entry = {
-    date, flow: _selectedFlow,
-    symptoms: getSelectedSymptoms(),
-    note: document.getElementById('period-note').value
-  };
-  if (existing >= 0) data.period[existing] = entry;
-  else { data.period.push(entry); data.period.sort((a,b)=>b.date.localeCompare(a.date)); }
-  saveAndSync();
-  renderPeriod();
-  showToast('✓ 生理週期記錄已儲存');
-}
-
-// Compute cycle data (shared)
-function _computePeriodData() {
-  if (!data.period) data.period = [];
-  const menDays = data.period.filter(p=>p.flow&&p.flow!=='none').map(p=>p.date).sort();
-  // Detect cycle starts (gap > 7 days = new cycle)
-  const cycleStarts = [];
-  menDays.forEach((d,i) => {
-    if (i===0) { cycleStarts.push(d); return; }
-    const gap = (new Date(d)-new Date(menDays[i-1]))/86400000;
-    if (gap > 7) cycleStarts.push(d);
-  });
-  const cycleLen = cycleStarts.length >= 2
-    ? Math.round(cycleStarts.slice(1).reduce((sum,d,i)=>(new Date(d)-new Date(cycleStarts[i]))/86400000+sum,0)/(cycleStarts.length-1))
-    : null;
-  const durations = cycleStarts.map(start => {
-    let n=0, d=new Date(start);
-    for(let i=0;i<14;i++){
-      const ds=d.toISOString().split('T')[0];
-      if(data.period.find(p=>p.date===ds&&p.flow&&p.flow!=='none')) n++;
-      else if(n>0) break;
-      d.setDate(d.getDate()+1);
-    }
-    return n;
-  }).filter(d=>d>0);
-  const periodDur = durations.length ? Math.round(durations.reduce((s,d)=>s+d,0)/durations.length) : null;
-  const lastStart = cycleStarts[cycleStarts.length-1];
-  const today = new Date().toISOString().split('T')[0];
-  let nextDays = null;
-  if (lastStart && cycleLen) {
-    const nextDate = new Date(lastStart); nextDate.setDate(nextDate.getDate()+cycleLen);
-    nextDays = Math.round((nextDate-new Date(today))/86400000);
-  }
-  // Ovulation days
-  const ovulationDays = cycleStarts.map(s=>{ const d=new Date(s); d.setDate(d.getDate()+14); return d.toISOString().split('T')[0]; });
-  // Fertile window
-  const fertileDays = new Set();
-  ovulationDays.forEach(ov=>{ for(let i=-2;i<=2;i++){ const d=new Date(ov); d.setDate(d.getDate()+i); fertileDays.add(d.toISOString().split('T')[0]); } });
-  // Predicted next period dates
-  const predictedDays = new Set();
-  if (lastStart && cycleLen) {
-    for(let i=0;i<6;i++){ const d=new Date(lastStart); d.setDate(d.getDate()+cycleLen+i); predictedDays.add(d.toISOString().split('T')[0]); }
-  }
-  return { cycleLen, periodDur, nextDays, cycleStarts, ovulationDays, fertileDays, predictedDays, menDays };
-}
-
-function renderPeriod() {
-  if (!data.period) data.period = [];
-  const today = new Date().toISOString().split('T')[0];
-  const dateEl = document.getElementById('period-date');
-  if (dateEl && !dateEl.value) dateEl.value = today;
-
-  // Today label
-  const todayEntry = data.period.find(p=>p.date===today);
-  const todayLabel = document.getElementById('periodTodayLabel');
-  if (todayLabel) {
-    const flowMap = {light:'少量',medium:'中量',heavy:'大量'};
-    todayLabel.textContent = todayEntry && todayEntry.flow && todayEntry.flow!=='none'
-      ? `今日：${flowMap[todayEntry.flow]||''}生理期`
-      : todayEntry ? '今日：已記錄（無）' : '今日尚未記錄';
-  }
-
-  // Pre-fill existing entry
-  if (todayEntry) {
-    _selectedFlow = todayEntry.flow || 'none';
-    selectPeriodStatus(_selectedFlow);
-    const noteEl = document.getElementById('period-note');
-    if (noteEl) noteEl.value = todayEntry.note || '';
-  }
-  renderSymptomSelector();
-
-  const pd = _computePeriodData();
-  // Update stats
-  const cl = document.getElementById('periodCycleLen');
-  const nd = document.getElementById('periodNextDays');
-  const pdEl = document.getElementById('periodDuration');
-  const tl = document.getElementById('periodTotalLogs');
-  if (cl) cl.textContent = pd.cycleLen ? pd.cycleLen+'天' : '—';
-  if (nd) nd.textContent = pd.nextDays!==null ? (pd.nextDays<=0?'今天!':pd.nextDays+'天') : '—';
-  if (pdEl) pdEl.textContent = pd.periodDur ? pd.periodDur+'天' : '—';
-  if (tl) tl.textContent = pd.cycleStarts.length+'次';
-
-  // 60-day strip calendar
-  const calEl = document.getElementById('periodCalendar');
-  if (calEl) {
-    // Start from a Sunday, going back ~60 days
-    const refDate = new Date(today);
-    // Step back to last Sunday (or today if Sunday)
-    const dow = refDate.getDay();
-    refDate.setDate(refDate.getDate() - dow - 56); // Go back ~8 weeks
-    const days = [];
-    for (let i=0; i<63; i++) {
-      const d = new Date(refDate); d.setDate(refDate.getDate()+i);
-      days.push(d.toISOString().split('T')[0]);
-    }
-    calEl.innerHTML = days.map(d => {
-      const entry = data.period.find(p=>p.date===d);
-      const isMen = entry && entry.flow && entry.flow!=='none';
-      const isOv = pd.ovulationDays.includes(d);
-      const isFer = pd.fertileDays.has(d) && !isMen && !isOv;
-      const isPred = pd.predictedDays.has(d) && !isMen;
-      const isToday = d===today;
-      const dn = parseInt(d.split('-')[2]);
-      let cls = 'period-strip-day';
-      if (isMen) cls += ' menstrual';
-      else if (isOv) cls += ' ovulation';
-      else if (isFer) cls += ' fertile';
-      else if (isPred) cls += ' predicted';
-      if (isToday) cls += ' today';
-      return `<div class="${cls}" title="${d}" onclick="setEditPeriodDate('${d}')">${dn}</div>`;
-    }).join('');
-  }
-
-  // History list
-  const histEl = document.getElementById('periodHistoryList');
-  if (histEl) {
-    const entries = data.period.filter(p=>p.flow&&p.flow!=='none').slice(0,20);
-    if (!entries.length) {
-      histEl.innerHTML = '<div class="empty-state"><div class="empty-icon">🌸</div>尚無生理期記錄<br><span style="font-size:12px;color:var(--text3);">點擊「記錄」標籤開始記錄</span></div>';
-    } else {
-      const flowMap = {light:'少量',medium:'中量',heavy:'大量'};
-      histEl.innerHTML = entries.map(p => `
-        <div class="period-log-row">
-          <div style="display:flex;align-items:center;flex:1;min-width:0;">
-            <span class="period-dot-sm"></span>
-            <div>
-              <div style="font-weight:600;">${p.date} · ${flowMap[p.flow]||''}</div>
-              ${p.symptoms?.length?`<div style="font-size:11px;color:var(--text3);margin-top:2px;">${p.symptoms.join('、')}</div>`:''}
-            </div>
-          </div>
-          <button onclick="setEditPeriodDate('${p.date}')" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:12px;padding:4px 8px;border-radius:6px;">修改</button>
-          <button onclick="deletePeriodEntry('${p.date}')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;padding:4px;">✕</button>
-        </div>`).join('');
-    }
-  }
-
-  // Update month view if visible
-  if (_periodTab === 'month') renderPeriodMonth();
-}
-
-// ── MONTH VIEW ──
-function periodMonthNav(delta) {
-  _periodMonthOffset += delta;
-  renderPeriodMonth();
-}
-
-function renderPeriodMonth() {
-  const pd = _computePeriodData();
-  const now = new Date();
-  now.setMonth(now.getMonth() + _periodMonthOffset);
-  const year = now.getFullYear();
-  const month = now.getMonth();
-  const today = new Date().toISOString().split('T')[0];
-  const monthTitle = document.getElementById('periodMonthTitle');
-  if (monthTitle) monthTitle.textContent = year+'年'+(month+1)+'月';
-
-  const gridEl = document.getElementById('periodMonthGrid');
-  if (!gridEl) return;
-
-  // First day of month
-  const firstDay = new Date(year, month, 1);
-  const startDow = firstDay.getDay(); // 0=Sun
-  const daysInMonth = new Date(year, month+1, 0).getDate();
-
-  let html = '';
-  // Empty cells before first day
-  for (let i=0; i<startDow; i++) {
-    const prevD = new Date(year, month, 1-startDow+i);
-    const ds = prevD.toISOString().split('T')[0];
-    html += _pmDayCell(ds, prevD.getDate(), 'other-month', pd, today);
-  }
-  // Days in month
-  for (let d=1; d<=daysInMonth; d++) {
-    const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    html += _pmDayCell(ds, d, '', pd, today);
-  }
-  // Fill remaining cells
-  const totalCells = startDow + daysInMonth;
-  const remaining = (7 - totalCells % 7) % 7;
-  for (let i=1; i<=remaining; i++) {
-    const nextD = new Date(year, month+1, i);
-    const ds = nextD.toISOString().split('T')[0];
-    html += _pmDayCell(ds, i, 'other-month', pd, today);
-  }
-  gridEl.innerHTML = html;
-}
-
-function _pmDayCell(ds, dn, extraCls, pd, today) {
-  const entry = (data.period||[]).find(p=>p.date===ds);
-  const isMen = entry && entry.flow && entry.flow!=='none';
-  const isOv = pd.ovulationDays.includes(ds);
-  const isPred = pd.predictedDays.has(ds) && !isMen;
-  let cls = 'pm-day '+extraCls;
-  if (ds===today) cls += ' today';
-  if (isMen) cls += ' menstrual';
-  else if (isOv) cls += ' ovulation';
-  else if (isPred) cls += ' predicted';
-  let dot = '';
-  if (isMen) dot = '<div class="pm-day-dot men"></div>';
-  else if (isOv) dot = '<div class="pm-day-dot ov"></div>';
-  else if (isPred) dot = '<div class="pm-day-dot pred"></div>';
-  return `<button class="${cls}" onclick="pmDayClick('${ds}')">${dn}${dot}</button>`;
-}
-
-function pmDayClick(ds) {
-  // Switch to log tab with this date pre-filled
-  switchPeriodTab('log');
-  const dateEl = document.getElementById('period-date');
-  if (dateEl) { dateEl.value = ds; }
-  setEditPeriodDate(ds);
-}
-
-function setEditPeriodDate(d) {
-  const dateEl = document.getElementById('period-date');
-  if (dateEl) dateEl.value = d;
-  if (_periodTab !== 'log') switchPeriodTab('log');
-  const entry = (data.period||[]).find(p=>p.date===d);
-  if (entry) {
-    _selectedFlow = entry.flow || 'none';
-    selectPeriodStatus(_selectedFlow);
-    const noteEl = document.getElementById('period-note');
-    if (noteEl) noteEl.value = entry.note || '';
-  } else {
-    _selectedFlow = 'none';
-    selectPeriodStatus('none');
-    const noteEl = document.getElementById('period-note');
-    if (noteEl) noteEl.value = '';
-  }
-  renderSymptomSelector();
-  const entry2 = (data.period||[]).find(p=>p.date===d);
-  if (entry2?.symptoms?.length) {
-    setTimeout(()=>{
-      document.querySelectorAll('#symptomSelector .symptom-chip').forEach(btn=>{
-        btn.classList.toggle('selected', entry2.symptoms.includes(btn.textContent));
-      });
-    }, 50);
-  }
-}
-
-function deletePeriodEntry(date) {
-  data.period = (data.period||[]).filter(p=>p.date!==date);
-  saveAndSync(); renderPeriod();
-  showToast('已刪除記錄');
-}
-
-// ══════════════════════════════════════════════════════════
-// UPDATED saveLog — uses logExercises array
-// ══════════════════════════════════════════════════════════
-
 // ── INIT ──
-buildExDatalist();
-renderLogExerciseList();
+
 
 </script>
+
 
 </body>
 </html>
