@@ -1339,10 +1339,12 @@
   <div class="sidebar-header">
     <div class="logo">
       <div class="logo-icon">
-        <svg viewBox="0 0 20 20" fill="none">
-          <path d="M10 2.5C10 2.5 6 5 6 9.5C6 11.5 7.5 13 10 13C12.5 13 14 11.5 14 9.5C14 5 10 2.5 10 2.5Z" fill="white" opacity="0.9"/>
-          <path d="M7 13.5C7 13.5 7 16 10 17C13 16 13 13.5 13 13.5" stroke="white" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
-          <line x1="10" y1="13" x2="10" y2="17" stroke="white" stroke-width="1.3" stroke-linecap="round"/>
+        <svg viewBox="0 0 24 24" fill="none" aria-label="Dumbbell">
+          <rect x="2" y="10" width="3" height="4" rx="1" fill="white" opacity="0.95"/>
+          <rect x="5" y="9" width="2" height="6" rx="0.5" fill="white"/>
+          <line x1="7" y1="12" x2="17" y2="12" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+          <rect x="17" y="9" width="2" height="6" rx="0.5" fill="white"/>
+          <rect x="19" y="10" width="3" height="4" rx="1" fill="white" opacity="0.95"/>
         </svg>
       </div>
       <div class="logo-text">
@@ -1989,7 +1991,7 @@ const GUEST_ID  = 'guest';
 function getUsers() {
   let users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
   if (!users.find(u => u.id === GUEST_ID)) {
-    users.unshift({ id: GUEST_ID, name: '訪客' });
+    users.unshift({ id: GUEST_ID, name: 'Guest' });
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
   }
   return users;
@@ -2049,7 +2051,7 @@ function initials(name) { return (name||'?').trim().slice(0, 2).toUpperCase() ||
 
 function _updateTopbar() {
   const users = getUsers();
-  const user  = users.find(u => u.id === currentUserId) || { name: '訪客', id: GUEST_ID };
+  const user  = users.find(u => u.id === currentUserId) || { name: 'Guest', id: GUEST_ID };
   const idx   = users.indexOf(user);
   const av = document.getElementById('currentAvatar');
   const nm = document.getElementById('currentUserName');
@@ -2091,7 +2093,7 @@ function renderUserList() {
   el.innerHTML = users.map((u, i) => `
     <div class="user-item ${u.id===currentUserId?'selected':''}" onclick="switchUser('${u.id}')">
       <div class="user-item-avatar ${avatarClass(i)}">${initials(u.name)}</div>
-      <div class="user-item-name">${u.name}${u.id===GUEST_ID?' <span style="font-size:10px;opacity:.55">訪客</span>':''}</div>
+      <div class="user-item-name">${u.name}${u.id===GUEST_ID?' <span style="font-size:10px;opacity:.55">Guest</span>':''}</div>
       <span class="user-item-check">${u.id===currentUserId?'✓':''}</span>
     </div>`).join('');
 }
@@ -2118,7 +2120,7 @@ function renderSettingsUserList() {
     <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);">
       <div class="user-avatar ${avatarClass(i)}" style="width:36px;height:36px;font-size:13px;flex-shrink:0;">${initials(u.name)}</div>
       <div style="flex:1;min-width:0;">
-        <div style="font-size:14px;font-weight:600;">${u.name}${u.id===GUEST_ID?' <span style="font-size:11px;color:var(--text3);font-weight:400;">（訪客）</span>':''}</div>
+        <div style="font-size:14px;font-weight:600;">${u.name}${u.id===GUEST_ID?' <span style="font-size:11px;color:var(--text3);font-weight:400;">（Guest）</span>':''}</div>
         ${u.id===currentUserId?'<div style="font-size:11px;color:var(--accent);margin-top:1px;">▶ 目前使用中</div>':''}
       </div>
       ${u.id!==currentUserId?`<button onclick="switchUser('${u.id}')" style="padding:5px 12px;border-radius:8px;background:var(--accent-light);color:var(--accent);border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">切換</button>`:''}
@@ -2142,7 +2144,7 @@ function settingsAddUser() {
 }
 
 function deleteUser(uid) {
-  if (uid === GUEST_ID) { showToast('訪客帳號無法刪除'); return; }
+  if (uid === GUEST_ID) { showToast('Guest 帳號無法刪除'); return; }
   if (!confirm('確定刪除此用戶及全部資料？')) return;
   const users = getUsers().filter(u => u.id !== uid);
   saveUsers(users);
@@ -2173,7 +2175,7 @@ document.addEventListener('click', e => {
 
 function renderSettingsPage() {
   const users = getUsers();
-  const user  = users.find(u => u.id === currentUserId) || { name: '訪客', id: GUEST_ID };
+  const user  = users.find(u => u.id === currentUserId) || { name: 'Guest', id: GUEST_ID };
   const idx   = users.indexOf(user);
   const av = document.getElementById('settings-avatar');
   const nm = document.getElementById('settings-username');
@@ -2350,7 +2352,7 @@ function addUser() {
 }
 
 function deleteUser(uid) {
-  if (uid === GUEST_ID) { showToast('訪客帳號無法刪除'); return; }
+  if (uid === GUEST_ID) { showToast('Guest 帳號無法刪除'); return; }
   const users = getUsers();
   const user = users.find(u => u.id === uid);
   if (!user) return;
